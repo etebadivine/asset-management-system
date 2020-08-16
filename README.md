@@ -4,26 +4,23 @@ This README would normally document whatever steps are necessary to get your app
 
 ### What is this repository for? ###
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* Management of FinanceMobile assets
+* 0.0.1-SNAPSHOT
 
-### How do I get set up? ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+### Requirements? ###
 
-### Contribution guidelines ###
+* Maven >=3.3
+* Java 8
+* Mysql
 
-* Writing tests
-* Code review
-* Other guidelines
+
+### Create DB User ###
+
+* `GRANT ALL PRIVILEGES ON fmassets.* TO 'fmassets'@'%' IDENTIFIED BY 'ask4help';`
 
 ### Who do I talk to? ###
 
-* Repo owner or admin
-* Other community or team contact
+* Samuel 
+* Godfred
+* Albert
