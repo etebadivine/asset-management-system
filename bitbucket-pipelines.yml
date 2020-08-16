@@ -1,5 +1,4 @@
 # This is a sample build configuration for Java (Maven).
-# Check our guides at https://confluence.atlassian.com/x/zd-5Mw for more examples.
 # Only use spaces to indent your .yml configuration.
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
@@ -17,6 +16,8 @@ pipelines:
           - mvn -B verify
         artifacts:
           - target/**
+        services:
+          - mysql
     - step:
         name: Build and Push Docker Image
         image: google/cloud-sdk:latest
@@ -37,8 +38,8 @@ pipelines:
 
           # DEPLOYMENT
 #            - kubectl set image deployment $K8s_DEPLOYMENT_NAME $K8s_DEPLOYMENT_NAME=$DOCKER_GCR_REPO_URL/$GCLOUD_PROJECT_ID/$BITBUCKET_BRANCH/$DOCKER_IMAGE_NAME:${BITBUCKET_COMMIT} --record --namespace=$K8S_NAMESPACE
-        services: 
-          - mysql
+
+
 definitions:
   services:
     mysql:
