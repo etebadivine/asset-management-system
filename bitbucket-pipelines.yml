@@ -8,7 +8,35 @@ image: maven:3.6.1
 pipelines:
   default:
     - step:
+        name: Maven Build
+        image: maven:3.6.1
         caches:
           - maven
-        script: # Modify the commands below to build your repository.
-          - mvn -B verify # -B batch mode makes Maven less verbose
+        script:
+          - mvn clean package
+          - mvn -B verify
+        artifacts:
+          - target/**
+    - step:
+        name: Build and Push Docker Image
+        image: google/cloud-sdk:latest
+        script:
+          - echo $GCLOUD_API_KEYFILE > ~/.gcloud-api-key.json
+
+          - gcloud auth activate-service-account --key-file ~/.gcloud-api-key.json
+
+          - docker login -u _json_key --password-stdin https://$DOCKER_GCR_REPO_URL < ~/.gcloud-api-key.json
+
+          - docker build -t $DOCKER_IMAGE_NAME:${BITBUCKET_COMMIT} .
+
+          - docker tag $DOCKER_IMAGE_NAME:${BITBUCKET_COMMIT} $DOCKER_GCR_REPO_URL/$GCLOUD_PROJECT_ID/$BITBUCKET_BRANCH/$DOCKER_IMAGE_NAME:${BITBUCKET_COMMIT}
+
+          - docker push $DOCKER_GCR_REPO_URL/$GCLOUD_PROJECT_ID/$BITBUCKET_BRANCH/$DOCKER_IMAGE_NAME:${BITBUCKET_COMMIT}
+
+  #            - gcloud container clusters get-credentials $K8s_CLUSTER_NAME --zone=$GCLOUD_ZONE --project $GCLOUD_PROJECT_ID
+
+          # DEPLOYMENT
+  #            - kubectl set image deployment $K8s_DEPLOYMENT_NAME $K8s_DEPLOYMENT_NAME=$DOCKER_GCR_REPO_URL/$GCLOUD_PROJECT_ID/$BITBUCKET_BRANCH/$DOCKER_IMAGE_NAME:${BITBUCKET_COMMIT} --record --namespace=$K8S_NAMESPACE
+
+options:
+  docker: true
