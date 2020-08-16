@@ -19,6 +19,35 @@ This README would normally document whatever steps are necessary to get your app
 
 * `GRANT ALL PRIVILEGES ON fmassets.* TO 'fmassets'@'%' IDENTIFIED BY 'ask4help';`
 
+### Create Pull Request / Merge Request
+* Push your latest change to your remote branch.
+* Go online onto the project page on Bitbucket. 
+* On the project menu click [Pull Request](https://bitbucket.org/investmobile/fm-assets/pull-requests/).
+* Click on `Create Pull Request` .
+* Select your branch and click `Create Pull Request` button.
+
+### Commands ###
+* Run Maven tests
+
+	`mvn clean test`
+	
+
+* Verify Code Coverage
+
+	`mvn -B verify`
+	
+* Run Application on commandline with Maven
+
+	`./mvnw spring-boot:run`
+	
+	
+* Run from IntelliJ
+
+	- Right click on the main class(`FmassetsApplication`).
+	- And click on `Run `FmassetsApplication'`
+	
+
+
 ### Who do I talk to? ###
 
 * Samuel 
