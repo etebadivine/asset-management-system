@@ -13,6 +13,15 @@ This README would normally document whatever steps are necessary to get your app
 * Java 8
 * Mysql
 
+### Cloning the Repo ###
+* Click on `files` in you IntelliJ IDEA.
+* Click on `New`
+* Select `Project from Version Control`.
+* Then Select `Git`.
+* Enter the Repo URL (https://bitbucket.org/fm-internship/fm-assets.git)
+* Specify the folder location to clone to.
+* Then click `Clone`.
+
 
 ### Create DB User ###
 
