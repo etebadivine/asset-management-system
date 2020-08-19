@@ -7,17 +7,31 @@ This README would normally document whatever steps are necessary to get your app
 * Management of FinanceMobile assets
 * 0.0.1-SNAPSHOT
 
-
 ### Requirements? ###
 
 * Maven >=3.3
 * Java 8
 * Mysql
 
+### Cloning the Repo ###
+* Click on `files` in you IntelliJ IDEA.
+* Click on `New`
+* Select `Project from Version Control`.
+* Then Select `Git`.
+* Enter the Repo URL (https://bitbucket.org/fm-internship/fm-assets.git)
+* Specify the folder location to clone to.
+* Then click `Clone`.
+
 
 ### Create DB User ###
 
 * `GRANT ALL PRIVILEGES ON fmassets.* TO 'fmassets'@'%' IDENTIFIED BY 'ask4help';`
+
+### Coding Style ###
+
+* Every developer will create their own feature braches and merge changes only when done.
+* Every written code must be accompanied by appropraite test suites.
+* Feature Braches are only mergeable into `Staging` branch. 
 
 ### Create Pull Request / Merge Request
 * Push your latest change to your remote branch.
