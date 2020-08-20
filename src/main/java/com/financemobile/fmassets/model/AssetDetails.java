@@ -6,6 +6,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -35,4 +37,6 @@ public class AssetDetails {
     @Column(name = "date_modified")
     private Date dateModified;
 
+    @OneToOne(mappedBy = "asset_details", fetch = FetchType.LAZY)
+    private Set<Asset> assets = new HashSet<>();
 }
