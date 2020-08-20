@@ -9,7 +9,7 @@ import java.util.Date;
 public class Asset {
 
 
-    private long id;
+    private Long id;
     private String model;
     private String status;
     private String description;

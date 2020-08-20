@@ -79,6 +79,7 @@
                 <configuration>
                     <excludes>
                         <exclude>com/financemobile/fmassets/model/**/*</exclude>
+                        <exclude>com/financemobile/fmassets/enums/**/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>

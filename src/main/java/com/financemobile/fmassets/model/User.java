@@ -1,5 +1,6 @@
 package com.financemobile.fmassets.model;
 
+import com.financemobile.fmassets.enums.UserStatus;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -9,23 +10,23 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "asset_details")
-public class AssetDetails {
+@Table(name="user")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String warranty;
-    private String licenses;
-    private String model;
-    private String manufacturer;
-    private String color;
-    @Column(name = "serial_number")
-    private Long serialNumber;
-    @Column(name = "image_bytes")
-    private String imageBytes;
-    @Column(name = "purchased_date")
-    private Date purchasedDate;
+    private String name;
+    @Enumerated(value = EnumType.STRING)
+    private UserStatus status;
+    private String email;
+    private String phone;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "department_id")
+    private Department department;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id")
+    private Role role;
     @Column(name = "created_by")
     private String createdBy;
     @CreationTimestamp

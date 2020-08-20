@@ -12,7 +12,7 @@ public class AssignmentHistory {
     private Date dateCreated;
     private Date dateModified;
     private Asset asset;
-    private Employee employee;
+    private User user;
 
 }
 
