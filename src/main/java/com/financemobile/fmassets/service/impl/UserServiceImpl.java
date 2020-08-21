@@ -1,4 +1,9 @@
 package com.financemobile.fmassets.service.impl;
 
-public class UserServiceImpl {
+import com.financemobile.fmassets.service.UserService;
+import org.springframework.stereotype.Service;
+
+
+@Service
+public class UserServiceImpl implements UserService {
 }
