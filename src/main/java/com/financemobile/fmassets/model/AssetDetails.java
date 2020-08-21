@@ -9,27 +9,28 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "AssetDetails")
+@Table(name = "asset_details")
 public class AssetDetails {
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long serialNumber;
     private String warranty;
     private String licenses;
     private String model;
-    private String createdBy;
     private String manufacturer;
-    private String colorField;
-
-  @CreationTimestamp
-  @Column(name = "date_created")
-  private Date dateCreated;
-  @Column(name = "purchased_date")
-  private Date purchasedDate;
-  @UpdateTimestamp
-  @Column(name = "date_modified")
-  private Date dateModified;
+    private String color;
+    @Column(name = "serial_number")
+    private Long serialNumber;
+    @Column(name = "purchased_date")
+    private Date purchasedDate;
+    @Column(name = "created_by")
+    private String createdBy;
+    @CreationTimestamp
+    @Column(name = "date_created")
+    private Date dateCreated;
+    @UpdateTimestamp
+    @Column(name = "date_modified")
+    private Date dateModified;
 
 }

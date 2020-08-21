@@ -9,14 +9,16 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "Location")
+@Table(name = "location")
 public class Location {
+
     @Id
-   @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
     private String city;
     private String country;
+    @Column(name = "created_by")
     private String createdBy;
     @CreationTimestamp
     @Column(name = "date_created")
