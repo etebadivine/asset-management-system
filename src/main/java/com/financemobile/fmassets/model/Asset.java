@@ -15,6 +15,8 @@ import java.util.Set;
 public class Asset {
 
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String model;
     private String status;
@@ -23,12 +25,12 @@ public class Asset {
     @JoinColumn(name = "category_id")
     private Category category;
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "asset_detail_id")
+    @JoinColumn(name = "asset_details_id")
     private AssetDetails assetDetails;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id")
     private Department department;
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "location_id")
     private Location location;
     @Column(name = "created_by")
@@ -40,7 +42,7 @@ public class Asset {
     @Column(name = "date_modified")
     private Date dateModified;
 
-    @OneToMany(mappedBy = "Asset", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "asset", fetch = FetchType.LAZY)
     private Set<AssignmentHistory> assignmentHistories = new HashSet<>();
 
 

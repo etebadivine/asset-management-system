@@ -30,7 +30,7 @@ public class Location {
     private Date dateModified;
 
 
-    @OneToOne(mappedBy = "location", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "location", fetch = FetchType.LAZY)
     private Set<Asset> assets = new HashSet<>();
 
 }

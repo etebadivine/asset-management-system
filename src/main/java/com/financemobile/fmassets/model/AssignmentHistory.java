@@ -12,6 +12,9 @@ import java.util.Date;
 @Table(name = "assigment_history")
 public class AssignmentHistory {
 
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "asset_id")

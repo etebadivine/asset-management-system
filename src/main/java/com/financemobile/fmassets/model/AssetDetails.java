@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+
 @Data
 @Entity
 @Table(name = "asset_details")
@@ -37,6 +38,6 @@ public class AssetDetails {
     @Column(name = "date_modified")
     private Date dateModified;
 
-    @OneToOne(mappedBy = "asset_details", fetch = FetchType.LAZY)
-    private Set<Asset> assets = new HashSet<>();
+    @OneToOne(mappedBy = "assetDetails", fetch = FetchType.LAZY)
+    private Asset assets;
 }
