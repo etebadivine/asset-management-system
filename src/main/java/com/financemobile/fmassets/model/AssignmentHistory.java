@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "assigment_history")
+@Table(name = "assignment_history")
 public class AssignmentHistory {
 
 
