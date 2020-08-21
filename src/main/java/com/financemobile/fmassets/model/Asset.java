@@ -1,3 +1,4 @@
+
 package com.financemobile.fmassets.model;
 
 import lombok.Data;
