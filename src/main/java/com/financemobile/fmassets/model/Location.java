@@ -6,6 +6,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -27,5 +29,8 @@ public class Location {
     @Column(name = "date_modified")
     private Date dateModified;
 
+
+    @OneToMany(mappedBy = "location", fetch = FetchType.LAZY)
+    private Set<Asset> assets = new HashSet<>();
 
 }

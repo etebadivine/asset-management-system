@@ -7,6 +7,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -36,4 +38,6 @@ public class User {
     @Column(name = "date_modified")
     private Date dateModified;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private Set<AssignmentHistory> assignmentHistories = new HashSet<>();
 }

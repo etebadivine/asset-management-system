@@ -31,5 +31,7 @@ public class Department {
 
     @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
     private Set<User> users = new HashSet<>();
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
+    private Set<Asset> assets = new HashSet<>();
 
 }
