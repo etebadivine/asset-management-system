@@ -19,7 +19,7 @@ public class Asset {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String model;
+    private String name;
     private String status;
     private String description;
     @ManyToOne(fetch = FetchType.EAGER)
