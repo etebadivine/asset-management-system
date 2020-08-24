@@ -1,31 +1,63 @@
 package com.financemobile.fmassets.service.impl;
 
 
+import com.financemobile.fmassets.exception.AlreadyExistException;
+import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.Location;
+import com.financemobile.fmassets.repository.LocationRepository;
 import com.financemobile.fmassets.service.LocationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LocationServiceImpl implements LocationService {
+
+    @Autowired
+    private LocationRepository locationRepository;
+
     @Override
     public Location addLocation(String name, String city, String country) {
-        return null;
+
+        if(locationRepository.existsByName(name))
+            throw new AlreadyExistException("record already exists");
+
+        Location location = new Location();
+        location.setName(name);
+        location.setCity(city);
+        location.setCountry(country);
+        location.setCreatedBy("divine");
+        return locationRepository.save(location);
+
     }
 
     @Override
     public Location getLocationByName(String name) {
-        return null;
+        Optional<Location> locationOptional =
+                locationRepository.findByName(name);
+
+        if(locationOptional.isPresent()){
+            return locationOptional.get();
+        }
+
+        throw new DataNotFoundException("record not found");
+
     }
 
     @Override
     public Location getLocationById(Long id) {
-        return null;
+            Optional<Location> locationOptional = locationRepository.findById(id);
+
+            if(locationOptional.isPresent()){
+                return locationOptional.get();
+            }
+
+            throw new DataNotFoundException("record not found");
+
     }
 
     @Override
-    public List<Location> getAllLocations() {
-        return null;
-    }
+    public List<Location> getAllLocations() { return locationRepository.findAll(); }
 }
