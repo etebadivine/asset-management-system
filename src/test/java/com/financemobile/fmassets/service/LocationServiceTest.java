@@ -48,7 +48,7 @@ public class LocationServiceTest {
 
     @Test
     public void test_addLocation_duplicate() {
-        String name = "Com 8";
+        String name = "Comm 8";
         String city = "Tema";
         String country = "Ghana";
         locationService.addLocation(name, city, country);
@@ -60,7 +60,7 @@ public class LocationServiceTest {
 
     @Test
     public void test_getLocationByName() {
-        String name = "com 8";
+        String name = "comm 8";
         String city = "Tema";
         String country = "Ghana";
         Location location = locationService.addLocation(name, city, country);
@@ -83,7 +83,7 @@ public class LocationServiceTest {
 
     @Test
     public void test_getLocationById(){
-        String name = "com 8";
+        String name = "comm 8";
         String city = "Tema";
         String country = "Ghana";
         Location location = locationService.addLocation(name, city, country);
@@ -107,7 +107,7 @@ public class LocationServiceTest {
 
     @Test
     public void test_getAllLocations(){
-        String name = "com 8";
+        String name = "comm 8";
         String city = "Tema";
         String country = "Ghana";
         Location location = locationService.addLocation(name, city,country);
