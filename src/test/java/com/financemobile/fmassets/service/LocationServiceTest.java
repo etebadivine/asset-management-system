@@ -4,7 +4,6 @@ import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.Location;
 import com.financemobile.fmassets.repository.LocationRepository;
-import org.assertj.core.api.AssertionsForInterfaceTypes;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -100,7 +99,7 @@ public class LocationServiceTest {
     @Test
     public void test_getLocationById_notfound(){
         Assertions.assertThrows(DataNotFoundException.class, () -> {
-            locationService.getLocationById(4L);
+            locationService.getLocationById(3L);
         });
     }
 
