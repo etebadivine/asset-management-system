@@ -30,7 +30,6 @@ public class LocationServiceImpl implements LocationService {
         location.setCountry(country);
         location.setCreatedBy("divine");
         return locationRepository.save(location);
-
     }
 
     @Override
@@ -43,7 +42,6 @@ public class LocationServiceImpl implements LocationService {
         }
 
         throw new DataNotFoundException("record not found");
-
     }
 
     @Override
@@ -55,7 +53,6 @@ public class LocationServiceImpl implements LocationService {
             }
 
             throw new DataNotFoundException("record not found");
-
     }
 
     @Override
