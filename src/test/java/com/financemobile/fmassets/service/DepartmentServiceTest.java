@@ -1,5 +1,7 @@
 package com.financemobile.fmassets.service;
 
+import com.financemobile.fmassets.exception.AlreadyExistException;
+import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.Department;
 import com.financemobile.fmassets.repository.DepartmentRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -46,6 +48,16 @@ public class DepartmentServiceTest {
 
     }
 
+    @Test
+    public void test_addDepartment_duplicate(){
+        String name = "Human Resource";
+        Long numberOfAssets = 1L;
+        departmentService.addDepartment(name, numberOfAssets);
+
+        Assertions.assertThrows(AlreadyExistException.class, () ->{
+            departmentService.addDepartment(name,1L );
+        });
+    }
 
     @Test
     public void test_getDepartmentByName(){
@@ -64,6 +76,14 @@ public class DepartmentServiceTest {
     }
 
     @Test
+    public void test_getDepartmentByName_notFound(){
+        Assertions.assertThrows(DataNotFoundException.class, () ->{
+            departmentService.getDepartmentByName("Cleaners");
+        });
+
+    }
+
+    @Test
     public void test_getDepartmentById(){
 
         String name = "Human Resource";
@@ -74,6 +94,14 @@ public class DepartmentServiceTest {
         Assertions.assertEquals(department.getId(), dept.getId());
         Assertions.assertEquals(department.getName(), name);
         Assertions.assertEquals(department.getNumberOfAssets(), numberOfAssets);
+    }
+
+    @Test
+    public void test_getDepartmentId_notFound(){
+        Assertions.assertThrows(DataNotFoundException.class, () ->{
+            departmentService.getDepartmentById(3L);
+        });
+
     }
 
     @Test

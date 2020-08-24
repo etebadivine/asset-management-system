@@ -12,4 +12,6 @@ public interface DepartmentRepository extends PagingAndSortingRepository<Departm
     Optional<Department> findByName(String name);
 
     List<Department> findAll();
+
+    Boolean existsByName(String name);
 }

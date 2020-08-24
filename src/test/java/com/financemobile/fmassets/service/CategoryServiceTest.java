@@ -71,7 +71,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    public void test_getCategory_notfound(){
+    public void test_getCategory_notFound(){
         Assertions.assertThrows(DataNotFoundException.class, () -> {
             categoryService.getCategory(4L);
         });
@@ -91,7 +91,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    public void test_getCategoryByName_notfound(){
+    public void test_getCategoryByName_notFound(){
         Assertions.assertThrows(DataNotFoundException.class, () -> {
             categoryService.getCategoryByName("Electronics");
         });
