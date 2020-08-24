@@ -19,7 +19,7 @@ public class Department {
     private Long id;
     private String name;
     @Column(name = "number_of_assets")
-    private Long numberOfAssets;
+    private Long numberOfAssets = 0L;
     @Column(name = "created_by")
     private String createdBy;
     @CreationTimestamp

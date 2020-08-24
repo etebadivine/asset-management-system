@@ -18,15 +18,12 @@ public class DepartmentServiceImpl implements DepartmentService {
     private DepartmentRepository departmentRepository;
 
     @Override
-    public Department addDepartment(String name, Long numberOfAssets) {
-
+    public Department addDepartment(String name) {
        if(departmentRepository.existsByName(name))
            throw new AlreadyExistException("record already exists");
-        //creating department object to set values for testing
-        //will call the values in the dep. testing class
+
        Department department = new Department();
        department.setName(name);
-       department.setNumberOfAssets(numberOfAssets);
        department.setCreatedBy("Kevin");
        return departmentRepository.save(department);
     }
@@ -52,7 +49,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             return departmentOptional.get();
         }
 
-        throw new DataNotFoundException("record not found exception");
+        throw new DataNotFoundException("record not found");
     }
 
     @Override
