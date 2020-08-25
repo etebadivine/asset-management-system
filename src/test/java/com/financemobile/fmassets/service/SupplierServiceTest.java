@@ -120,7 +120,7 @@ public class SupplierServiceTest {
         CreateSupplierDto createSupplierDto = new CreateSupplierDto(name, address, telephone, mobile);
         Supplier supplier =  supplierService.addSupplier(createSupplierDto);
 
-        List<Supplier> suplrList = supplierService.getAllSupplier();
+        List<Supplier> suplrList = supplierService.getAllSuppliers();
         Assertions.assertEquals(suplrList.size(), 1);
         Assertions.assertEquals(suplrList.get(0).getName(), name);
         Assertions.assertEquals(suplrList.get(0).getAddress(), address);

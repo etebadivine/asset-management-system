@@ -3,15 +3,16 @@ package com.financemobile.fmassets.dto;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-
 @Data
 public class CreateSupplierDto {
 
-    @NotBlank
+
     private String name;
+
     private String address;
+
     private String telephone;
+
     private String mobile;
 
 
@@ -21,4 +22,6 @@ public class CreateSupplierDto {
         this.telephone = telephone;
         this.mobile = mobile;
     }
+
+    public CreateSupplierDto(){}
 }

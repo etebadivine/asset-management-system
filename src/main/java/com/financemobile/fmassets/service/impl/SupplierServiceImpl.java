@@ -58,14 +58,13 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public List<Supplier> getAllSupplier() {
+    public List<Supplier> getAllSuppliers() {
         return supplierRepository.findAll();
     }
 
     @Override
     public void removeSupplier(Long id) {
         supplierRepository.deleteById(id);
-
     }
 }
 
