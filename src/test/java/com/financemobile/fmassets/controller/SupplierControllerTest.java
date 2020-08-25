@@ -15,7 +15,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+
 import static org.hamcrest.Matchers.is;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -80,5 +83,25 @@ public class SupplierControllerTest {
                 .andExpect(jsonPath("data.address", is(supplier.getAddress())))
                 .andExpect((jsonPath("data.telephone", is(supplier.getTelephone()))))
                 .andExpect((jsonPath("data.mobile", is(supplier.getMobile()))));
+    }
+
+    @Test
+    public void test_getAllSuppliers(){
+
+        // mock repo and response
+        Supplier supplier = new Supplier();
+        supplier.setId(3L);
+        supplier.setName("Kantanka");
+        supplier.setAddress("Acrra");
+        supplier.setTelephone("+211 54 222 9887");
+        supplier.setMobile("+233 54 259 5566");
+        supplier.setCreatedBy("Reynolds");
+        supplier.setDateCreated(new Date());
+        supplier.setDateModified(new Date());
+
+        List<Supplier> supplierList = Arrays.asList(supplier);
+
+        Mockito.when(supplierRepository.findAll())
+                .thenReturn(supplierList);
     }
 }
