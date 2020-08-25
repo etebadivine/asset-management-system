@@ -9,9 +9,14 @@ import javax.validation.constraints.NotBlank;
 public class CreateLocationDto {
 
         @NotBlank
-        private String name;
-        private String city;
+        private String name ;
+
+        @NotBlank
+        private String city ;
+
+        @NotBlank
         private String country;
+
 }
 
 
