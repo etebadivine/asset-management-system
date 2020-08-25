@@ -1,10 +1,7 @@
 package com.financemobile.fmassets.controller;
 
-import com.financemobile.fmassets.dto.CreateCategoryDto;
 import com.financemobile.fmassets.dto.CreateRoleDto;
-import com.financemobile.fmassets.model.Category;
 import com.financemobile.fmassets.model.Role;
-import com.financemobile.fmassets.repository.CategoryRepository;
 import com.financemobile.fmassets.repository.RoleRepository;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.AfterEach;
@@ -47,12 +44,10 @@ public class RoleControllerTest {
 
     }
 
-
     @AfterEach
     public void tearDown(){
 
     }
-
 
     @Test
     public void test_addRole() throws Exception {

@@ -89,6 +89,7 @@
                     <excludes>
                         <exclude>com/financemobile/fmassets/model/**/*</exclude>
                         <exclude>com/financemobile/fmassets/enums/**/*</exclude>
+                        <exclude>com/financemobile/fmassets/dto/**/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -115,7 +116,7 @@
                                 <rule>
                                     <limits>
                                         <limit>
-                                            <minimum>0.5</minimum>
+                                            <minimum>0.9</minimum>
                                         </limit>
                                     </limits>
                                 </rule>

@@ -16,9 +16,9 @@ import java.util.List;
 @SpringBootTest
 public class RoleServiceTest {
 
+
     @Autowired
     private RoleService roleService;
-
 
     @Autowired
     private RoleRepository roleRepository;
@@ -40,7 +40,6 @@ public class RoleServiceTest {
         Assertions.assertNotNull(role.getId());
         Assertions.assertEquals(role.getName(), name);
         Assertions.assertNotNull(role.getDateCreated());
-
     }
 
     @Test
@@ -58,14 +57,8 @@ public class RoleServiceTest {
         String name = "Management";
         Long id = 204L;
         Role role = roleService.addRole(name);
-
-
-
-
         Role role1 = roleService.getRoleById(role.getId());
         Assertions.assertEquals(role.getId(), role1.getId());
-
-
     }
 
     @Test
@@ -73,7 +66,6 @@ public class RoleServiceTest {
         Assertions.assertThrows(DataNotFoundException.class, () -> {
             roleService.getRoleById(204L);
         });
-
     }
 
     @Test
@@ -86,5 +78,4 @@ public class RoleServiceTest {
         Assertions.assertEquals(roleList.size(), 1);
         Assertions.assertEquals(roleList.get(0).getName(), name);
     }
-
 }

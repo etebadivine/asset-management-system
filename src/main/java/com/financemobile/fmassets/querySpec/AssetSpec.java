@@ -9,13 +9,12 @@ import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
 import org.springframework.data.jpa.domain.Specification;
 
 @Or({
-        @Spec(path = "name", params="portfolio_id", spec = Equal.class),
-        @Spec(path = "status", params="portfolio_id", spec = Equal.class),
-        @Spec(path = "category.name", params="portfolio_id", spec = Equal.class),
-        @Spec(path = "location.name", params="portfolio_id", spec = Equal.class),
-        @Spec(path = "department.name", params="portfolio_id", spec = Equal.class),
-        @Spec(path = "user.name", params="portfolio_id", spec = Equal.class),
-        @Spec(path = "supplier.name", params="portfolio_id", spec = Equal.class),
+        @Spec(path = "name", params="name", spec = Equal.class),
+        @Spec(path = "status", params="status", spec = Equal.class),
+        @Spec(path = "category.name", params="category", spec = Equal.class),
+        @Spec(path = "location.name", params="location", spec = Equal.class),
+        @Spec(path = "department.name", params="department", spec = Equal.class),
+        @Spec(path = "supplier.name", params="supplier", spec = Equal.class),
         @Spec(path = "dateCreated", params={"created_after", "created_before"}, spec = DateBetween.class, config="yyyy-MM-dd")
 
 })

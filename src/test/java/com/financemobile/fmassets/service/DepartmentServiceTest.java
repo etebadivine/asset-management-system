@@ -78,7 +78,7 @@ public class DepartmentServiceTest {
         String name = "Human Resource";
         Department department = departmentService.addDepartment(name);
 
-        Department dept = departmentService.getDepartmentByName(name);
+        Department dept = departmentService.getDepartmentById(department.getId());
         Assertions.assertEquals(department.getId(), dept.getId());
         Assertions.assertEquals(department.getName(), name);
         Assertions.assertEquals(department.getNumberOfAssets(), 0L);
