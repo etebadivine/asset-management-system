@@ -13,5 +13,4 @@ public interface SupplierService {
     Supplier getSupplierByName(String name);
     List<Supplier> getAllSuppliers();
     void removeSupplier(Long id);
-
 }
