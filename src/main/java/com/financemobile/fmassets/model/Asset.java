@@ -6,9 +6,11 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
 
 @Data
 @Entity
@@ -34,6 +36,9 @@ public class Asset {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "location_id")
     private Location location;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "supplier_id")
+    private Supplier supplier;
     @Column(name = "created_by")
     private String createdBy;
     @CreationTimestamp
@@ -45,6 +50,4 @@ public class Asset {
 
     @OneToMany(mappedBy = "asset", fetch = FetchType.LAZY)
     private Set<AssignmentHistory> assignmentHistories = new HashSet<>();
-
-
 }
