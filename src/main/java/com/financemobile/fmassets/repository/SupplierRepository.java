@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SupplierRepository extends PagingAndSortingRepository<Supplier,Long>, JpaSpecificationExecutor<Supplier> {
-
     Boolean existsByName(String name);
     Optional<Supplier> findByName(String name);
     List<Supplier> findAll();

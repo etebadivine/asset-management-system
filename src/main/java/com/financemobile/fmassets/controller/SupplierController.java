@@ -21,13 +21,9 @@ public class SupplierController {
 
     @PostMapping(value = "")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse createSupplier(@RequestBody CreateSupplierDto createSupplierDto){
+    public ApiResponse createSupplier(@RequestBody CreateSupplierDto createSupplierDto) {
 
-        Supplier supplier = supplierService.addSupplier(
-               createSupplierDto
-                );
-
-
+        Supplier supplier = supplierService.addSupplier(createSupplierDto);
         ApiResponse response = new ApiResponse();
         response.setStatus(true);
         response.setMessage("Success");
@@ -36,11 +32,11 @@ public class SupplierController {
     }
 
     @GetMapping
-    public ApiResponse findAll(){
-    ApiResponse response = new ApiResponse();
-    response.setStatus(true);
-    response.setMessage("Success");
-    response.setData(supplierService.getAllSuppliers());
-    return  response;
+    public ApiResponse findAll() {
+        ApiResponse response = new ApiResponse();
+        response.setStatus(true);
+        response.setMessage("Success");
+        response.setData(supplierService.getAllSuppliers());
+        return response;
     }
 }
