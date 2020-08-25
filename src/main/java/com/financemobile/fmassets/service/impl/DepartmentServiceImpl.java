@@ -36,7 +36,6 @@ public class DepartmentServiceImpl implements DepartmentService {
         if(departmentOptional.isPresent()){
             return departmentOptional.get();
         }
-
         throw new DataNotFoundException(("record not found"));
     }
 
@@ -48,7 +47,6 @@ public class DepartmentServiceImpl implements DepartmentService {
         if(departmentOptional.isPresent()){
             return departmentOptional.get();
         }
-
         throw new DataNotFoundException("record not found");
     }
 
