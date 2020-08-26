@@ -1,6 +1,7 @@
 
 package com.financemobile.fmassets.model;
 
+import com.financemobile.fmassets.enums.AssetStatus;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -20,7 +21,8 @@ public class Asset {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    private String status;
+    @Enumerated(value = EnumType.STRING)
+    private AssetStatus status;
     private String description;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
