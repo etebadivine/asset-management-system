@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+
 @Data
 @Entity
 @Table(name = "location")
@@ -34,5 +35,4 @@ public class Location {
 
     @OneToMany(mappedBy = "location", fetch = FetchType.LAZY)
     private Set<Asset> assets = new HashSet<>();
-
 }

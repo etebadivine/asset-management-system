@@ -31,5 +31,4 @@ public class UserServiceImpl implements UserService {
             return usersPage.getContent();
         return null;
     }
-
 }

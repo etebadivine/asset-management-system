@@ -1,5 +1,6 @@
 package com.financemobile.fmassets.model;
 
+
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -19,6 +20,7 @@ public class Asset {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
+//  @Enumerated(value = EnumType.STRING)
     private String status;
     private String description;
     @ManyToOne(fetch = FetchType.EAGER)
