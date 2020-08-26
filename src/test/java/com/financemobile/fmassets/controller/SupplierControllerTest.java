@@ -1,5 +1,6 @@
 package com.financemobile.fmassets.controller;
 
+
 import com.financemobile.fmassets.dto.CreateSupplierDto;
 import com.financemobile.fmassets.model.Supplier;
 import com.financemobile.fmassets.repository.SupplierRepository;
@@ -14,16 +15,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -86,7 +88,7 @@ public class SupplierControllerTest {
     }
 
     @Test
-    public void test_getAllSuppliers(){
+    public void test_getAllSuppliers() throws Exception {
 
         // mock repo and response
         Supplier supplier = new Supplier();
@@ -103,5 +105,18 @@ public class SupplierControllerTest {
 
         Mockito.when(supplierRepository.findAll())
                 .thenReturn(supplierList);
+
+        // fire request
+        mockMvc.perform(get("/supplier")
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("$.data", hasSize(1)))
+                .andExpect(jsonPath("$.data[0].id", is(supplier.getId().intValue())))
+                .andExpect(jsonPath("$.data[0].name", is(supplier.getName())))
+                .andExpect(jsonPath("$.data[0].address", is(supplier.getAddress())))
+                .andExpect(jsonPath("$.data[0].telephone", is(supplier.getTelephone())))
+                .andExpect(jsonPath("$.data[0].mobile", is(supplier.getMobile())));
     }
 }
