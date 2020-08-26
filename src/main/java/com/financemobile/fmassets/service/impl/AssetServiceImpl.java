@@ -1,5 +1,7 @@
 package com.financemobile.fmassets.service.impl;
 
+import com.financemobile.fmassets.dto.CreateLocationDto;
+import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.Asset;
 import com.financemobile.fmassets.querySpec.AssetSpec;
 import com.financemobile.fmassets.repository.AssetRepository;
@@ -27,46 +29,7 @@ public class AssetServiceImpl implements AssetService {
         Page<Asset> assetsPage = assetRepository.findAll(assetSpec, pageable);
         if(assetsPage.hasContent())
             return assetsPage.getContent();
-        return null;
-    }
-
-    @Override
-    public Asset getAssetByName(String name) {
-
-        Optional<Asset> assetOptional =
-                assetRepository.findByName(name);
-
-        if(assetOptional.isPresent()){
-            return assetOptional.get();
-        }
-
-        return null;
-    }
-
-    @Override
-    public Asset getAssetByLocation(String name) {
-
-        Optional<Asset> assetOptional =
-                assetRepository.findByName(name);
-
-        if(assetOptional.isPresent()){
-            return assetOptional.get();
-        }
-
-        return null;
-    }
-
-    @Override
-    public Asset getAssetByDepartment(String name) {
-
-        Optional<Asset> assetOptional =
-                assetRepository.findByName(name);
-
-        if(assetOptional.isPresent()){
-            return assetOptional.get();
-        }
-
-        return null;
+        return assetList;
     }
 }
 

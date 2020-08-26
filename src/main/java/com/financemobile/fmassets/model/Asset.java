@@ -1,7 +1,6 @@
-
 package com.financemobile.fmassets.model;
 
-import com.financemobile.fmassets.enums.AssetStatus;
+
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -21,8 +20,8 @@ public class Asset {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    @Enumerated(value = EnumType.STRING)
-    private AssetStatus status;
+//    @Enumerated(value = EnumType.STRING)
+    private String status;
     private String description;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
@@ -47,6 +46,4 @@ public class Asset {
 
     @OneToMany(mappedBy = "asset", fetch = FetchType.LAZY)
     private Set<AssignmentHistory> assignmentHistories = new HashSet<>();
-
-
 }

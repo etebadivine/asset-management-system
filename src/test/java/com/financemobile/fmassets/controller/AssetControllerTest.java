@@ -1,6 +1,5 @@
 package com.financemobile.fmassets.controller;
 
-import com.financemobile.fmassets.enums.AssetStatus;
 import com.financemobile.fmassets.model.Asset;
 import com.financemobile.fmassets.model.Department;
 import com.financemobile.fmassets.model.Location;
@@ -30,6 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
 @SpringBootTest
 @AutoConfigureMockMvc
 public class AssetControllerTest {
@@ -39,12 +39,6 @@ public class AssetControllerTest {
 
     @MockBean
     private AssetRepository assetRepository;
-
-    @MockBean
-    private DepartmentRepository departmentRepository;
-
-    @MockBean
-    private LocationRepository locationRepository;
 
     private final Gson gson = new Gson();
 
@@ -64,19 +58,12 @@ public class AssetControllerTest {
         asset.setName("Laptop");
         asset.setLocation(null);
         asset.setDepartment(null);
-        asset.setStatus(AssetStatus.ACTIVE);
         asset.setDepartment(department);
         asset.setLocation(location);
         Page<Asset> assetPage = new PageImpl(Arrays.asList(asset));
 
         Mockito.when(assetRepository.findAll(Mockito.any(AssetSpec.class), Mockito.any(Pageable.class)))
                 .thenReturn(assetPage);
-
-        Mockito.when(locationRepository.save(Mockito.any(Location.class)))
-                .thenReturn(location);
-
-        Mockito.when(departmentRepository.save(Mockito.any(Department.class)))
-                .thenReturn(department);
 
         mockMvc.perform(get("/asset?name=laptop")
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -85,6 +72,5 @@ public class AssetControllerTest {
                 .andExpect(jsonPath("message", is("Success")))
                 .andExpect(jsonPath("$.data", hasSize(1)))
                 .andExpect(jsonPath("$.data[0].name", is(asset.getName())));
-
     }
 }

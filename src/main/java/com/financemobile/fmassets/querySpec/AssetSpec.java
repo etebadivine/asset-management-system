@@ -8,6 +8,7 @@ import net.kaczmarzyk.spring.data.jpa.web.annotation.Or;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
 import org.springframework.data.jpa.domain.Specification;
 
+
 @Or({
         @Spec(path = "name", params="name", spec = Equal.class),
         @Spec(path = "status", params="status", spec = Equal.class),
@@ -18,6 +19,5 @@ import org.springframework.data.jpa.domain.Specification;
         @Spec(path = "dateCreated", params={"created_after", "created_before"}, spec = DateBetween.class, config="yyyy-MM-dd")
 
 })
-public interface AssetSpec extends Specification<Asset> {
 
-}
+public interface AssetSpec extends Specification<Asset> { }

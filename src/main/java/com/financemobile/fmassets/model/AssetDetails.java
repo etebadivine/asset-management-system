@@ -8,7 +8,6 @@ import javax.persistence.*;
 import java.util.Date;
 
 
-
 @Data
 @Entity
 @Table(name = "asset_details")

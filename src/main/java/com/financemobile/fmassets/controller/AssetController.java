@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RequestMapping("/asset")
 @RestController
 public class AssetController {
@@ -31,18 +32,9 @@ public class AssetController {
         response.setData(assetList);
         response.setMessage("Success");
 
-
-        ApiResponse getAssetByName;
-        Asset asset = assetService.getAssetByName("laptop");
-
-        ApiResponse getAssetByLocation;
-        Asset asset1 = assetService.getAssetByLocation("Tema");
-
-        ApiResponse getAssetByDepartment;
-        Asset asset2 = assetService.getAssetByDepartment("finance");
-
         return response;
     }
+
 }
 
 

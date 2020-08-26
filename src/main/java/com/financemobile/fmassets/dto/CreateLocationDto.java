@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 
+
 @Data
 public class CreateLocationDto {
 
@@ -16,7 +17,6 @@ public class CreateLocationDto {
 
         @NotBlank
         private String country;
-
 }
 
 

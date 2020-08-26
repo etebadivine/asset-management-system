@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+
 @Data
 @Entity
 @Table(name = "department")
@@ -33,5 +34,4 @@ public class Department {
     private Set<User> users = new HashSet<>();
     @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
     private Set<Asset> assets = new HashSet<>();
-
 }
