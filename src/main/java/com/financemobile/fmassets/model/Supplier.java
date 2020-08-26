@@ -8,17 +8,18 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-
 @Data
 @Entity
-@Table(name = "category")
-public class Category {
+@Table(name = "supplier")
+public class Supplier {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    private String description;
+    private String address;
+    private String telephone;
+    private String mobile;
     @Column(name = "created_by")
     private String createdBy;
     @CreationTimestamp
@@ -28,7 +29,6 @@ public class Category {
     @Column(name = "date_modified")
     private Date dateModified;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
     private Set<Asset> assets = new HashSet<>();
-
 }
