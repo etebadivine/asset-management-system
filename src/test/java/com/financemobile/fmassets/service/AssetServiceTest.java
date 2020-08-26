@@ -44,37 +44,37 @@ public class AssetServiceTest {
         locationRepository.deleteAll();
     }
 
-        @Test
-        public void test_searchAssets () {
-            Department department = new Department();
-            department.setName("Finance");
-            department = departmentRepository.save(department);
+    @Test
+    public void test_searchAssets () {
+        Department department = new Department();
+        department.setName("Finance");
+        department = departmentRepository.save(department);
 
-            Location location = new Location();
-            location.setName("Tema");
-            location.setCreatedBy("divine");
-            location = locationRepository.save(location);
+        Location location = new Location();
+        location.setName("Tema");
+        location.setCreatedBy("divine");
+        location = locationRepository.save(location);
 
-            Asset asset = new Asset();
-            asset.setName("Laptop");
-            asset.setLocation(location);
-            asset.setDepartment(department);
-            asset.getAssetDetails();
-            asset.getDateCreated();
-            assetRepository.save(asset);
+        Asset asset = new Asset();
+        asset.setName("Laptop");
+        asset.getAssetDetails();
+        asset.getDateCreated();
+        assetRepository.save(asset);
 
-            Sort sort = Sort.by(Sort.Direction.DESC, "dateCreated");
-            Pageable pageable = PageRequest.of(0, 10, sort);
+        Sort sort = Sort.by(Sort.Direction.DESC, "dateCreated");
+        Pageable pageable = PageRequest.of(0, 10, sort);
 
-            AssetSpec assetSpec = (AssetSpec) (root, query, builder) -> {
-                Predicate equal =
-                        builder.equal(root.get("name"), asset.getName());
-                return equal;
-            };
+        AssetSpec assetSpec = (AssetSpec) (root, query, builder) -> {
+            Predicate equal =
+                    builder.equal(root.get("name"), asset.getName());
+            return equal;
+        };
 
-            List<Asset> assetList = assetService.searchAssets(assetSpec, pageable);
-            Assertions.assertEquals(assetList.size(), 1);
-            Assertions.assertEquals(assetList.get(0).getName(), asset.getName());
+        List<Asset> assetList = assetService.searchAssets(assetSpec, pageable);
+        Assertions.assertEquals(assetList.size(), 1);
+        Assertions.assertEquals(assetList.get(0).getName(), asset.getName());
+        Assertions.assertEquals(assetList.get(0).getLocation(), asset.getLocation());
+        Assertions.assertEquals(assetList.get(0).getDepartment(), asset.getDepartment());
     }
 }
 

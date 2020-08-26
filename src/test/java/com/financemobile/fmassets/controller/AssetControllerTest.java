@@ -5,8 +5,6 @@ import com.financemobile.fmassets.model.Department;
 import com.financemobile.fmassets.model.Location;
 import com.financemobile.fmassets.querySpec.AssetSpec;
 import com.financemobile.fmassets.repository.AssetRepository;
-import com.financemobile.fmassets.repository.DepartmentRepository;
-import com.financemobile.fmassets.repository.LocationRepository;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -53,13 +51,13 @@ public class AssetControllerTest {
 
         Location location = new Location();
         location.setCreatedBy("divine");
+        location.setName("Tema");
 
         Asset asset = new Asset();
         asset.setName("Laptop");
-        asset.setLocation(null);
-        asset.setDepartment(null);
-        asset.setDepartment(department);
-        asset.setLocation(location);
+        asset.setDateCreated(new Date());
+        asset.setDateModified(new Date());
+
         Page<Asset> assetPage = new PageImpl(Arrays.asList(asset));
 
         Mockito.when(assetRepository.findAll(Mockito.any(AssetSpec.class), Mockito.any(Pageable.class)))
@@ -71,6 +69,8 @@ public class AssetControllerTest {
                 .andExpect(jsonPath("status", is(true)))
                 .andExpect(jsonPath("message", is("Success")))
                 .andExpect(jsonPath("$.data", hasSize(1)))
-                .andExpect(jsonPath("$.data[0].name", is(asset.getName())));
+                .andExpect(jsonPath("$.data[0].name", is(asset.getName())))
+                .andExpect(jsonPath("$.data[0].department", is(asset.getDepartment())))
+                .andExpect(jsonPath("$.data[0].location", is(asset.getLocation())));
     }
 }
