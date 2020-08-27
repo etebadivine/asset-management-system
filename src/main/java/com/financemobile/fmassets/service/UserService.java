@@ -8,4 +8,9 @@ import java.util.List;
 
 public interface UserService {
     List<User> searchUsers(UserSpec userSpec, Pageable pageable);
+
+    public User getUserByEmail(String email);
+
 }
+
+

@@ -9,6 +9,7 @@ import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.repository.DepartmentRepository;
 import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.repository.UserRepository;
+import com.financemobile.fmassets.service.impl.UserServiceImpl;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -25,6 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -41,6 +43,9 @@ public class UserControllerTest {
 
     @MockBean
     private UserRepository userRepository;
+
+    @Autowired
+    private UserServiceImpl userService;
 
     @Autowired
     private DepartmentRepository departmentRepository;
@@ -89,4 +94,55 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.data[0].phone", is(user.getPhone())))
                 .andExpect(jsonPath("$.data[0].status", is(user.getStatus().toString())));
     }
+
+
+    @Test
+    public void test_getUserByEmail() throws Exception {
+        //create dummy user
+        Department department = new Department();
+        department.setId(43L);
+        department.setName("Engineering");
+        department.setCreatedBy("Admin");
+        department.setDateCreated(new Date());
+        department.setDateModified(new Date());
+        Role role = new Role();
+        role.setId(3L);
+        role.setName("USER");
+        role.setDateCreated(new Date());
+
+        User user = new User();
+        user.setId(200L);
+        user.setFirstName("Atta");
+        user.setLastName("Dwoa");
+        user.setEmail("me@gmail.com");
+        user.setPhone("+233241428119");
+        user.setStatus(UserStatus.ACTIVE);
+        user.setDepartment(department);
+        user.setRole(role);
+//        Optional<User> userOptional = Optional.of(user);
+//
+//        Mockito.when(userRepository.findOne(Mockito.any(UserSpec.class)))
+//                .thenReturn(userOptional);
+        Page<User> userPage = new PageImpl(Arrays.asList(user));
+
+        Mockito.when(userRepository.findAll(Mockito.any(UserSpec.class), Mockito.any(Pageable.class)))
+                .thenReturn(userPage);
+
+
+        mockMvc.perform(get("/user?email=me@gmail.com")
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("$.data[0].id", is(user.getId().intValue())))
+                .andExpect(jsonPath("$.data[0].firstName", is(user.getFirstName())))
+                .andExpect(jsonPath("$.data[0].lastName", is(user.getLastName())))
+                .andExpect(jsonPath("$.data[0].email", is(user.getEmail())))
+                .andExpect(jsonPath("$.data[0].phone", is(user.getPhone())))
+                .andExpect(jsonPath("$.data[0].status", is(user.getStatus().toString())));
+    }
+
+
+
+
 }

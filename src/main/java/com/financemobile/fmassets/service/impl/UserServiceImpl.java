@@ -1,5 +1,7 @@
 package com.financemobile.fmassets.service.impl;
 
+
+import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.repository.UserRepository;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -31,5 +34,18 @@ public class UserServiceImpl implements UserService {
             return usersPage.getContent();
         return null;
     }
+
+    @Override
+    public User getUserByEmail(String email) {
+        Optional<User> userOptional =
+                userRepository.findByEmail(email);
+
+        if(userOptional.isPresent()){
+            return userOptional.get();
+        }
+
+        throw new DataNotFoundException("record not found");
+    }
+
 
 }
