@@ -87,6 +87,8 @@
                 <version>0.8.2</version>
                 <configuration>
                     <excludes>
+                        <exclude>com/financemobile/fmassets/config/**/*</exclude>
+                        <exclude>com/financemobile/fmassets/filter/**/*</exclude>
                         <exclude>com/financemobile/fmassets/model/**/*</exclude>
                         <exclude>com/financemobile/fmassets/enums/**/*</exclude>
                         <exclude>com/financemobile/fmassets/dto/**/*</exclude>
