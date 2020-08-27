@@ -76,6 +76,22 @@ public class AssetServiceTest {
         Assertions.assertEquals(assetList.get(0).getLocation(), asset.getLocation());
         Assertions.assertEquals(assetList.get(0).getDepartment(), asset.getDepartment());
     }
+
+    @Test
+    public void test_searchAssets_emptyResults () {
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "dateCreated");
+        Pageable pageable = PageRequest.of(0, 10, sort);
+
+        AssetSpec assetSpec = (AssetSpec) (root, query, builder) -> {
+            Predicate equal =
+                    builder.equal(root.get("name"), "non_existent_asset");
+            return equal;
+        };
+
+        List<Asset> assetList = assetService.searchAssets(assetSpec, pageable);
+        Assertions.assertEquals(assetList.size(), 0);
+    }
 }
 
 

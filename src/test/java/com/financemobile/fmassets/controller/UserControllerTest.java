@@ -1,6 +1,7 @@
 package com.financemobile.fmassets.controller;
 
 
+import com.financemobile.fmassets.dto.FindByEmailDto;
 import com.financemobile.fmassets.enums.UserStatus;
 import com.financemobile.fmassets.model.Department;
 import com.financemobile.fmassets.model.Role;
@@ -123,20 +124,19 @@ public class UserControllerTest {
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);
-//        Page<User> userPage = new PageImpl(Arrays.asList(user));
 
-        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.of(user));
+        Mockito.when(userRepository.findByEmail(Mockito.anyString()))
+                .thenReturn(Optional.of(user));
 
-        FindBE createUserDto = new CreateUserDto();
-        createUserDto.setEmail("email");
+        FindByEmailDto emailDto = new FindByEmailDto();
+        emailDto.setEmail("email");
 
         mockMvc.perform(post("/user/one")
-                .content(gson.toJson(createUserDto))
+                .content(gson.toJson(emailDto))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", is(true)))
                 .andExpect(jsonPath("message", is("Success")))
-//                .andExpect(jsonPath("$.data", hasSize(1)))
                 .andExpect(jsonPath("$.data.id", is(user.getId().intValue())))
                 .andExpect(jsonPath("$.data.firstName", is(user.getFirstName())))
                 .andExpect(jsonPath("$.data.lastName", is(user.getLastName())))
