@@ -73,5 +73,4 @@ public class UserServiceImpl implements UserService {
 
         throw new DataNotFoundException("role not found");
     }
-
 }

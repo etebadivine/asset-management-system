@@ -1,7 +1,6 @@
 package com.financemobile.fmassets.controller;
 
 
-import com.financemobile.fmassets.dto.CreateUserDto;
 import com.financemobile.fmassets.enums.UserStatus;
 import com.financemobile.fmassets.model.Department;
 import com.financemobile.fmassets.model.Role;
@@ -10,6 +9,7 @@ import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.repository.DepartmentRepository;
 import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.repository.UserRepository;
+import com.financemobile.fmassets.service.UserService;
 import com.financemobile.fmassets.service.impl.UserServiceImpl;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Assertions;
@@ -25,7 +25,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
@@ -36,6 +35,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -48,7 +48,7 @@ public class UserControllerTest {
     private UserRepository userRepository;
 
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @Autowired
     private DepartmentRepository departmentRepository;
@@ -127,7 +127,7 @@ public class UserControllerTest {
 
         Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.of(user));
 
-        CreateUserDto createUserDto = new CreateUserDto();
+        FindBE createUserDto = new CreateUserDto();
         createUserDto.setEmail("email");
 
         mockMvc.perform(post("/user/one")

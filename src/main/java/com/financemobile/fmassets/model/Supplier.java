@@ -3,26 +3,23 @@ package com.financemobile.fmassets.model;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-
 @Data
 @Entity
-@Table(name = "location")
-public class Location {
+@Table(name = "supplier")
+public class Supplier {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    private String city;
-    private String country;
+    private String address;
+    private String telephone;
+    private String mobile;
     @Column(name = "created_by")
     private String createdBy;
     @CreationTimestamp
@@ -32,7 +29,6 @@ public class Location {
     @Column(name = "date_modified")
     private Date dateModified;
 
-
-    @OneToMany(mappedBy = "location", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
     private Set<Asset> assets = new HashSet<>();
 }
