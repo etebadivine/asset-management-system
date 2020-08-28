@@ -1,14 +1,13 @@
 package com.financemobile.fmassets.controller;
 
 import com.financemobile.fmassets.dto.ApiResponse;
+import com.financemobile.fmassets.dto.CreateUserDto;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.service.UserService;
+import com.financemobile.fmassets.service.impl.UserServiceImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +18,7 @@ public class UserController {
 
     private UserService userService;
 
-    public UserController(UserService userService) {
+    public UserController(UserServiceImpl userService) {
         this.userService = userService;
     }
 
@@ -35,15 +34,19 @@ public class UserController {
         return response;
     }
 
-    @GetMapping("user/email")
-    public ApiResponse getUsersByEmail(String email) {
+    @PostMapping("/one")
+    public ApiResponse findByEmail(@RequestBody CreateUserDto createUserDto){
+        System.out.println("findByEmail: " + createUserDto);
+        User user = userService.getUserByEmail(
+                createUserDto.getEmail());
 
-        Optional<User> userOptional = Optional.of(userService.getUserByEmail(email));
+        System.out.println("user:" + user);
         ApiResponse response = new ApiResponse();
         response.setStatus(true);
-        response.setData(userOptional);
         response.setMessage("Success");
+        response.setData(user);
         return response;
     }
 
+//
 }

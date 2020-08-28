@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface UserRepository extends PagingAndSortingRepository<User,Long>, JpaSpecificationExecutor<User> {
 
      Optional<User> findByEmail(String email);
+
+
 }

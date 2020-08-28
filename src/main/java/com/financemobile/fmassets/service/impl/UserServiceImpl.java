@@ -1,6 +1,8 @@
 package com.financemobile.fmassets.service.impl;
 
 
+import com.financemobile.fmassets.dto.CreateUserDto;
+import com.financemobile.fmassets.enums.UserStatus;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
@@ -26,26 +28,52 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
+//    @Override
+//    public User addUser(CreateUserDto createUserDto) {
+////        if(userRepository.existsByName(createUserDto.getName()))
+////        throw new AlreadyExistException("record already exists");
+//        User user = new User();
+////        user.setFirstName(createUserDto.getFirstName());
+////        user.setLastName(createUserDto.getLastName());
+//        user.setEmail(createUserDto.getEmail());
+////        user.setPhone(createUserDto.getPhone());
+////        user.setStatus(createUserDto.getUserStatus);
+////        user.setDepartment(createUserDto.getDepartment);
+////        user.setRole(createUserDto.getRole);
+//        return userRepository.save(user);
+//    }
+
     @Override
     public List<User> searchUsers(UserSpec userSpec, Pageable pageable) {
         List<User> userList = new ArrayList<>();
         Page<User> usersPage = userRepository.findAll(userSpec, pageable);
         if(usersPage.hasContent())
             return usersPage.getContent();
-        return null;
+        return userList;
     }
 
     @Override
     public User getUserByEmail(String email) {
-        Optional<User> userOptional =
-                userRepository.findByEmail(email);
+//        User user = new User();
+//        user.setId(200L);
+//        user.setFirstName("Atta");
+//        user.setLastName("Dwoa");
+//        user.setEmail("me@gmail.com");
+//        user.setPhone("+233241428119");
+//        user.setStatus(UserStatus.ACTIVE);
+//        user.setDepartment(department);
+//        user.setRole(role);
+//        return user;
 
-        if(userOptional.isPresent()){
+        System.out.println("getUserByEmail: " + email);
+        Optional<User> userOptional = userRepository.findByEmail(email);
+
+        System.out.println("userOptional: " + userOptional);
+        if (userOptional.isPresent()){
             return userOptional.get();
         }
-
+        System.out.println("userOptional noT NOT");
         throw new DataNotFoundException("record not found");
     }
-
 
 }

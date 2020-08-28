@@ -1,6 +1,7 @@
 package com.financemobile.fmassets.controller;
 
 
+import com.financemobile.fmassets.dto.CreateUserDto;
 import com.financemobile.fmassets.enums.UserStatus;
 import com.financemobile.fmassets.model.Department;
 import com.financemobile.fmassets.model.Role;
@@ -11,6 +12,7 @@ import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.repository.UserRepository;
 import com.financemobile.fmassets.service.impl.UserServiceImpl;
 import com.google.gson.Gson;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,7 @@ import java.util.Optional;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -51,6 +54,7 @@ public class UserControllerTest {
     private DepartmentRepository departmentRepository;
 
     private final Gson gson = new Gson();
+
 
     @Test
     public void test_searchUsers() throws Exception {
@@ -95,9 +99,8 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.data[0].status", is(user.getStatus().toString())));
     }
 
-
     @Test
-    public void test_getUserByEmail() throws Exception {
+    public void test_findUserByEmail() throws Exception {
         //create dummy user
         Department department = new Department();
         department.setId(43L);
@@ -105,6 +108,7 @@ public class UserControllerTest {
         department.setCreatedBy("Admin");
         department.setDateCreated(new Date());
         department.setDateModified(new Date());
+
         Role role = new Role();
         role.setId(3L);
         role.setName("USER");
@@ -119,30 +123,25 @@ public class UserControllerTest {
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);
-//        Optional<User> userOptional = Optional.of(user);
-//
-//        Mockito.when(userRepository.findOne(Mockito.any(UserSpec.class)))
-//                .thenReturn(userOptional);
-        Page<User> userPage = new PageImpl(Arrays.asList(user));
+//        Page<User> userPage = new PageImpl(Arrays.asList(user));
 
-        Mockito.when(userRepository.findAll(Mockito.any(UserSpec.class), Mockito.any(Pageable.class)))
-                .thenReturn(userPage);
+        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.of(user));
 
+        CreateUserDto createUserDto = new CreateUserDto();
+        createUserDto.setEmail("eemail");
 
-        mockMvc.perform(get("/user?email=me@gmail.com")
+        mockMvc.perform(post("/user/one")
+                .content(gson.toJson(createUserDto))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", is(true)))
                 .andExpect(jsonPath("message", is("Success")))
-                .andExpect(jsonPath("$.data[0].id", is(user.getId().intValue())))
-                .andExpect(jsonPath("$.data[0].firstName", is(user.getFirstName())))
-                .andExpect(jsonPath("$.data[0].lastName", is(user.getLastName())))
-                .andExpect(jsonPath("$.data[0].email", is(user.getEmail())))
-                .andExpect(jsonPath("$.data[0].phone", is(user.getPhone())))
-                .andExpect(jsonPath("$.data[0].status", is(user.getStatus().toString())));
+//                .andExpect(jsonPath("$.data", hasSize(1)))
+                .andExpect(jsonPath("$.data.id", is(user.getId().intValue())))
+                .andExpect(jsonPath("$.data.firstName", is(user.getFirstName())))
+                .andExpect(jsonPath("$.data.lastName", is(user.getLastName())))
+                .andExpect(jsonPath("$.data.email", is(user.getEmail())))
+                .andExpect(jsonPath("$.data.phone", is(user.getPhone())))
+                .andExpect(jsonPath("$.data.status", is(user.getStatus().toString())));
     }
-
-
-
-
 }
