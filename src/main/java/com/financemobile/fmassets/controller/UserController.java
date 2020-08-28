@@ -1,13 +1,13 @@
 package com.financemobile.fmassets.controller;
 
 import com.financemobile.fmassets.dto.ApiResponse;
+import com.financemobile.fmassets.dto.UpdateUserStatusDto;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.service.UserService;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,5 +32,18 @@ public class UserController {
         response.setData(userList);
         response.setMessage("Success");
         return response;
+    }
+
+    @PostMapping(value = "/status")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse updateStatus(@RequestBody UpdateUserStatusDto updateUserStatusDto){
+
+         User user = userService.UpdateStatus(updateUserStatusDto);
+
+         ApiResponse response = new ApiResponse();
+         response.setStatus(true);
+         response.setMessage("Success");
+         response.setData(user);
+         return response;
     }
 }

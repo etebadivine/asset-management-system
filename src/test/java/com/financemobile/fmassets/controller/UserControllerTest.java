@@ -1,14 +1,17 @@
 package com.financemobile.fmassets.controller;
 
 
+import com.financemobile.fmassets.dto.UpdateUserStatusDto;
 import com.financemobile.fmassets.enums.UserStatus;
 import com.financemobile.fmassets.model.Department;
 import com.financemobile.fmassets.model.Role;
+import com.financemobile.fmassets.model.Supplier;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.repository.DepartmentRepository;
 import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.repository.UserRepository;
+import com.financemobile.fmassets.service.UserService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -24,9 +27,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Optional;
+
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -40,6 +46,8 @@ public class UserControllerTest {
 
     @MockBean
     private UserRepository userRepository;
+
+    private UserService userService;
 
     @Autowired
     private DepartmentRepository departmentRepository;
@@ -87,5 +95,29 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.data[0].email", is(user.getEmail())))
                 .andExpect(jsonPath("$.data[0].phone", is(user.getPhone())))
                 .andExpect(jsonPath("$.data[0].status", is(user.getStatus().toString())));
+    }
+
+    @Test
+    public void test_updateStatus() throws Exception{
+
+        User user = new User();
+        user.setId(20L);
+        user.setStatus(UserStatus.BLOCKED);
+
+        Mockito.when(userService.UpdateStatus(Mockito.any(UpdateUserStatusDto.class)))
+                .thenReturn(user);
+
+        UpdateUserStatusDto updateUserStatusDto = new UpdateUserStatusDto();
+        updateUserStatusDto.setId(user.getId());
+        updateUserStatusDto.setStatus(user.getStatus());
+
+        mockMvc.perform(post("/user/status")
+                .content(gson.toJson(updateUserStatusDto))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data.id", is(user.getId().intValue())))
+                .andExpect(jsonPath("data.status", is(user.getStatus().toString())));
     }
 }
