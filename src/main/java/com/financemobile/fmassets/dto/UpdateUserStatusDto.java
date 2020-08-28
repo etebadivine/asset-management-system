@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 public class UpdateUserStatusDto {
 
     @NotBlank
-    private long Id;
+    private Long userId;
 
     @NotBlank
     private UserStatus status;

@@ -25,7 +25,7 @@ public class LocationController {
                 createLocationDto.getName(),
                 createLocationDto.getCity(),
                 createLocationDto.getCountry()
-        );
+         );
 
         ApiResponse response = new ApiResponse();
         response.setStatus(true);

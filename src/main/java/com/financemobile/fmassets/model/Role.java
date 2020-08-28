@@ -22,6 +22,6 @@ public class Role {
     @Column(name = "date_created")
     private Date dateCreated;
 
-    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<User> users = new HashSet<>();
 }
