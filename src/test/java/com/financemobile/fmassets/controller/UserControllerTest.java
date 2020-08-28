@@ -128,7 +128,7 @@ public class UserControllerTest {
         Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.of(user));
 
         CreateUserDto createUserDto = new CreateUserDto();
-        createUserDto.setEmail("eemail");
+        createUserDto.setEmail("email");
 
         mockMvc.perform(post("/user/one")
                 .content(gson.toJson(createUserDto))

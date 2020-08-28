@@ -19,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+
 import javax.persistence.criteria.Predicate;
 import java.util.Date;
 import java.util.List;
@@ -41,7 +42,7 @@ public class UserServiceTest {
     private RoleRepository roleRepository;
 
     @AfterEach
-    public void tearDown(){
+    public void tearDown() {
         userRepository.deleteAll();
         departmentRepository.deleteAll();
         roleRepository.deleteAll();
@@ -67,8 +68,8 @@ public class UserServiceTest {
         user.setRole(role);
         userRepository.save(user);
 
-        Sort sort = Sort.by(Sort.Direction.DESC,"dateCreated");
-        Pageable pageable = PageRequest.of(0,10,sort);
+        Sort sort = Sort.by(Sort.Direction.DESC, "dateCreated");
+        Pageable pageable = PageRequest.of(0, 10, sort);
 
         UserSpec userSpec = (UserSpec) (root, query, builder) -> {
             Predicate equal =
@@ -103,8 +104,8 @@ public class UserServiceTest {
         user.setRole(role);
         userRepository.save(user);
 
-        Sort sort = Sort.by(Sort.Direction.DESC,"dateCreated");
-        Pageable pageable = PageRequest.of(0,10,sort);
+        Sort sort = Sort.by(Sort.Direction.DESC, "dateCreated");
+        Pageable pageable = PageRequest.of(0, 10, sort);
 
         UserSpec userSpec = (UserSpec) (root, query, builder) -> {
             Predicate equal =
@@ -119,40 +120,6 @@ public class UserServiceTest {
         Assertions.assertEquals(user1.getEmail(), user1.getEmail());
 
     }
-
-//    @Test
-//    public void test_addUser(){
-//        String firstName = "Felix";
-//        String lastName = "Duedu";
-//        String  email= "me@gmail.com";
-//        String  phone= "+233 54 567 4665";
-//        CreateUserDto createUserDto = new CreateUserDto();
-//        createUserDto.setEmail("me@gmail.com");
-//        User user =  userService.addUser(createUserDto);
-//
-//        System.out.println("createUserDto: " + user);
-//
-//        Assertions.assertNotNull(user.getId());
-//        Assertions.assertEquals(user.getFirstName(), firstName);
-//        Assertions.assertEquals(user.getLastName(),  lastName);
-//        Assertions.assertEquals(user.getEmail(), email);
-//        Assertions.assertEquals(user.getPhone(), phone);
-//    }
-//
-//    @Test
-//    public void test_getUserByEmail(){
-//        String  email= "me@gmail.com";
-//        CreateUserDto createSupplierDto = new CreateUserDto(email);
-//        User user =  userService.addUser(createSupplierDto);
-//
-//        User usr = userService.getUserByEmail(email);
-//        Assertions.assertEquals(user.getId(), usr.getId());
-//        Assertions.assertEquals(user.getFirstName(), usr.getFirstName());
-//        Assertions.assertEquals(user.getLastName(), usr.getLastName());
-//        Assertions.assertEquals(user.getEmail(), usr.getEmail());
-//
-//    }
-//
 
 
 }

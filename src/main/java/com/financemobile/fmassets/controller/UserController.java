@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping("/one")
-    public ApiResponse findByEmail(@RequestBody CreateUserDto createUserDto){
+    public ApiResponse findByEmail(@RequestBody CreateUserDto createUserDto) {
         System.out.println("findByEmail: " + createUserDto);
         User user = userService.getUserByEmail(
                 createUserDto.getEmail());
@@ -48,5 +48,5 @@ public class UserController {
         return response;
     }
 
-//
+
 }
