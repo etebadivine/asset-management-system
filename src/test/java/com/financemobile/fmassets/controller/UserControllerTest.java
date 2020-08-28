@@ -1,6 +1,7 @@
 package com.financemobile.fmassets.controller;
 
 
+import com.financemobile.fmassets.dto.CreateUserDto;
 import com.financemobile.fmassets.dto.FindByEmailDto;
 import com.financemobile.fmassets.enums.UserStatus;
 import com.financemobile.fmassets.model.Department;
@@ -56,6 +57,59 @@ public class UserControllerTest {
 
     private final Gson gson = new Gson();
 
+    @Test
+    public void test_addUser() throws Exception {
+
+        // mock repo and response
+        Department department = new Department();
+        department.setId(43L);
+        department.setName("Engineering");
+        department.setCreatedBy("Admin");
+        department.setDateCreated(new Date());
+        department.setDateModified(new Date());
+
+        Role role = new Role();
+        role.setId(3L);
+        role.setName("USER");
+        role.setDateCreated(new Date());
+
+        User user = new User();
+        user.setId(200L);
+        user.setFirstName("Reynolds");
+        user.setLastName("Adanu");
+        user.setEmail("you@gmail.com");
+        user.setPhone("+233240456008");
+        user.setPassword("password");
+        user.setStatus(UserStatus.ACTIVE);
+        user.setDepartment(department);
+        user.setRole(role);
+        user.setCreatedBy("Reynolds");
+        user.setDateCreated(new Date());
+        user.setDateModified(new Date());
+
+        Mockito.when(userRepository.save(Mockito.any(User.class)))
+                .thenReturn(user);
+
+        // payload for the endpoint
+        CreateUserDto createUserDto = new CreateUserDto();
+        createUserDto.setFirstName(user.getFirstName());
+        createUserDto.setLastName(user.getLastName());
+        createUserDto.setEmail(user.getEmail());
+        createUserDto.setPassword(user.getPassword());
+
+        // fire request
+        mockMvc.perform(post("/user")
+                .content(gson.toJson(createUserDto))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data.id", is(user.getId().intValue())))
+                .andExpect(jsonPath("data.firstName", is(user.getFirstName())))
+                .andExpect(jsonPath("data.lastName", is(user.getLastName())))
+                .andExpect(jsonPath("data.email", is(user.getEmail())))
+                .andExpect(jsonPath("data.password", is(user.getPassword())));
+    }
 
     @Test
     public void test_searchUsers() throws Exception {

@@ -8,9 +8,9 @@ import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.service.UserService;
 import com.financemobile.fmassets.service.impl.UserServiceImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-
 
 
 @RequestMapping("/user")
@@ -21,6 +21,17 @@ public class UserController {
 
     public UserController(UserServiceImpl userService) {
         this.userService = userService;
+    }
+
+    @PostMapping(value = "")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse addUser(@RequestBody CreateUserDto createUserDto){
+        User user = userService.addUser(createUserDto);
+        ApiResponse response = new ApiResponse();
+        response.setStatus(true);
+        response.setMessage("Success");
+        response.setData(user);
+        return response;
     }
 
     @GetMapping
@@ -48,6 +59,4 @@ public class UserController {
         response.setData(user);
         return response;
     }
-
-
 }

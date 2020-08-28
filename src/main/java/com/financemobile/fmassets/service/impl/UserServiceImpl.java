@@ -1,6 +1,7 @@
 package com.financemobile.fmassets.service.impl;
 
 
+import com.financemobile.fmassets.dto.CreateUserDto;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
@@ -25,6 +26,20 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
+    @Override
+    public User addUser(CreateUserDto createUserDto) {
+
+        User user = new User();
+        user.setFirstName(createUserDto.getFirstName());
+        user.setLastName(createUserDto.getLastName());
+        user.setEmail(createUserDto.getEmail());
+        user.setPhone(createUserDto.getPhone());
+        user.setPassword(createUserDto.getPassword());
+
+        return userRepository.save(user);
+    }
+
 
     @Override
     public List<User> searchUsers(UserSpec userSpec, Pageable pageable) {
