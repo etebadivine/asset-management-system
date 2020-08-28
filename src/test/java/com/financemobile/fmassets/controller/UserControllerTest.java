@@ -195,9 +195,28 @@ public class UserControllerTest {
     @Test
     public void test_updateStatus() throws Exception{
 
+        //create dummy user
+        Department department = new Department();
+        department.setId(43L);
+        department.setName("Engineering");
+        department.setCreatedBy("Admin");
+        department.setDateCreated(new Date());
+        department.setDateModified(new Date());
+
+        Role role = new Role();
+        role.setId(3L);
+        role.setName("USER");
+        role.setDateCreated(new Date());
+
         User user = new User();
-        user.setId(20L);
-        user.setStatus(UserStatus.BLOCKED);
+        user.setId(200L);
+        user.setFirstName("Atta");
+        user.setLastName("Dwoa");
+        user.setEmail("me@gmail.com");
+        user.setPhone("+233241428119");
+        user.setStatus(UserStatus.ACTIVE);
+        user.setDepartment(department);
+        user.setRole(role);
 
         Mockito.when(userRepository.findById(Mockito.any(Long.class)))
                 .thenReturn(Optional.of(user));

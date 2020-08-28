@@ -5,7 +5,6 @@ import com.financemobile.fmassets.dto.CreateUserDto;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.dto.UpdateUserStatusDto;
-import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.repository.UserRepository;
@@ -46,7 +45,6 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.save(user);
     }
-
 
     @Override
     public List<User> searchUsers(UserSpec userSpec, Pageable pageable) {
