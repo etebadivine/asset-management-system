@@ -2,6 +2,7 @@ package com.financemobile.fmassets.service.impl;
 
 
 import com.financemobile.fmassets.dto.CreateUserDto;
+import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
@@ -29,6 +30,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addUser(CreateUserDto createUserDto) {
+
+        if(userRepository.existsByEmail(createUserDto.getEmail())){
+            throw new AlreadyExistException("User already exist");
+        }
 
         User user = new User();
         user.setFirstName(createUserDto.getFirstName());
@@ -58,6 +63,6 @@ public class UserServiceImpl implements UserService {
             return userOptional.get();
         }
 
-        throw new DataNotFoundException("role not found");
+        throw new DataNotFoundException("record not found");
     }
 }

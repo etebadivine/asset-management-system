@@ -11,4 +11,6 @@ public interface UserRepository extends PagingAndSortingRepository<User,Long>, J
 
      Optional<User> findByEmail(String email);
 
+     Boolean existsByEmail(String email);
+
 }
