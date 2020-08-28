@@ -1,5 +1,6 @@
 package com.financemobile.fmassets.service;
 
+import com.financemobile.fmassets.dto.CreateUserDto;
 import com.financemobile.fmassets.enums.UserStatus;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.Department;
@@ -41,6 +42,25 @@ public class UserServiceTest {
         userRepository.deleteAll();
         departmentRepository.deleteAll();
         roleRepository.deleteAll();
+    }
+
+    @Test
+    public void test_addUser(){
+        String firstName = "Reynolds";
+        String lastName = "Adanu";
+        String email = "you@gmail.com";
+        String phone = "+233240456008";
+        String password = "password";
+        CreateUserDto createUserDto = new CreateUserDto(firstName,lastName,email,phone,password);
+        User user = userService.addUser(createUserDto);
+
+
+        Assertions.assertNotNull(user.getId());
+        Assertions.assertEquals(user.getFirstName(), firstName);
+        Assertions.assertEquals(user.getLastName(), lastName);
+        Assertions.assertEquals(user.getEmail(), email);
+        Assertions.assertEquals(user.getPhone(), phone);
+        Assertions.assertEquals(user.getPassword(), password);
     }
 
     @Test
