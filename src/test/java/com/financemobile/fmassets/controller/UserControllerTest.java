@@ -3,18 +3,15 @@ package com.financemobile.fmassets.controller;
 
 import com.financemobile.fmassets.dto.CreateUserDto;
 import com.financemobile.fmassets.dto.FindByEmailDto;
+import com.financemobile.fmassets.dto.UpdateUserStatusDto;
 import com.financemobile.fmassets.enums.UserStatus;
 import com.financemobile.fmassets.model.Department;
 import com.financemobile.fmassets.model.Role;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.repository.DepartmentRepository;
-import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.repository.UserRepository;
-import com.financemobile.fmassets.service.UserService;
-import com.financemobile.fmassets.service.impl.UserServiceImpl;
 import com.google.gson.Gson;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +20,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -48,9 +44,6 @@ public class UserControllerTest {
 
     @MockBean
     private UserRepository userRepository;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private DepartmentRepository departmentRepository;
@@ -197,5 +190,51 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.data.email", is(user.getEmail())))
                 .andExpect(jsonPath("$.data.phone", is(user.getPhone())))
                 .andExpect(jsonPath("$.data.status", is(user.getStatus().toString())));
+    }
+
+    @Test
+    public void test_updateStatus() throws Exception{
+
+        //create dummy user
+        Department department = new Department();
+        department.setId(43L);
+        department.setName("Engineering");
+        department.setCreatedBy("Admin");
+        department.setDateCreated(new Date());
+        department.setDateModified(new Date());
+
+        Role role = new Role();
+        role.setId(3L);
+        role.setName("USER");
+        role.setDateCreated(new Date());
+
+        User user = new User();
+        user.setId(200L);
+        user.setFirstName("Atta");
+        user.setLastName("Dwoa");
+        user.setEmail("me@gmail.com");
+        user.setPhone("+233241428119");
+        user.setStatus(UserStatus.ACTIVE);
+        user.setDepartment(department);
+        user.setRole(role);
+
+        Mockito.when(userRepository.findById(Mockito.any(Long.class)))
+                .thenReturn(Optional.of(user));
+
+        Mockito.when(userRepository.save(Mockito.any(User.class)))
+                .thenReturn(user);
+
+        UpdateUserStatusDto updateUserStatusDto = new UpdateUserStatusDto();
+        updateUserStatusDto.setUserId(user.getId());
+        updateUserStatusDto.setStatus(user.getStatus());
+
+        mockMvc.perform(post("/user/status")
+                .content(gson.toJson(updateUserStatusDto))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data.id", is(user.getId().intValue())))
+                .andExpect(jsonPath("data.status", is(user.getStatus().toString())));
     }
 }

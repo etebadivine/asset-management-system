@@ -4,6 +4,7 @@ package com.financemobile.fmassets.service.impl;
 import com.financemobile.fmassets.dto.CreateUserDto;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
+import com.financemobile.fmassets.dto.UpdateUserStatusDto;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.repository.UserRepository;
@@ -45,7 +46,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-
     @Override
     public List<User> searchUsers(UserSpec userSpec, Pageable pageable) {
         List<User> userList = new ArrayList<>();
@@ -61,6 +61,21 @@ public class UserServiceImpl implements UserService {
 
         if(userOptional.isPresent()){
             return userOptional.get();
+        }
+
+        throw new DataNotFoundException("record not found");
+    }
+
+    @Override
+    public User updateStatus(UpdateUserStatusDto updateUserStatusDto) {
+
+        Optional<User> userOptional =
+                userRepository.findById(updateUserStatusDto.getUserId());
+
+        if (userOptional.isPresent()){
+            User user = userOptional.get();
+            user.setStatus(updateUserStatusDto.getStatus());
+            return userRepository.save(user);
         }
 
         throw new DataNotFoundException("record not found");
