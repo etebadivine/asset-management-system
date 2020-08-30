@@ -3,6 +3,7 @@ package com.financemobile.fmassets.controller;
 import com.financemobile.fmassets.dto.ApiResponse;
 import com.financemobile.fmassets.dto.CreateUserDto;
 import com.financemobile.fmassets.dto.FindByEmailDto;
+import com.financemobile.fmassets.dto.ResetPasswordDto;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.service.UserService;
@@ -52,6 +53,19 @@ public class UserController {
         User user = userService.getUserByEmail(
                 findByEmailDto.getEmail()
         );
+
+        ApiResponse response = new ApiResponse();
+        response.setStatus(true);
+        response.setMessage("Success");
+        response.setData(user);
+        return response;
+    }
+
+    @PostMapping(value = "/password-reset")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse resetPassword(@RequestBody ResetPasswordDto resetPasswordDto){
+
+        User user = userService.resetPassword(resetPasswordDto);
 
         ApiResponse response = new ApiResponse();
         response.setStatus(true);

@@ -2,8 +2,10 @@ package com.financemobile.fmassets.service.impl;
 
 
 import com.financemobile.fmassets.dto.CreateUserDto;
+import com.financemobile.fmassets.dto.ResetPasswordDto;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
+import com.financemobile.fmassets.exception.PasswordMismatchException;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.repository.UserRepository;
@@ -21,6 +23,7 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -31,7 +34,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User addUser(CreateUserDto createUserDto) {
 
-        if(userRepository.existsByEmail(createUserDto.getEmail())){
+        if (userRepository.existsByEmail(createUserDto.getEmail())) {
             throw new AlreadyExistException("User already exist");
         }
 
@@ -50,7 +53,7 @@ public class UserServiceImpl implements UserService {
     public List<User> searchUsers(UserSpec userSpec, Pageable pageable) {
         List<User> userList = new ArrayList<>();
         Page<User> usersPage = userRepository.findAll(userSpec, pageable);
-        if(usersPage.hasContent())
+        if (usersPage.hasContent())
             return usersPage.getContent();
         return userList;
     }
@@ -59,10 +62,25 @@ public class UserServiceImpl implements UserService {
     public User getUserByEmail(String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
 
-        if(userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             return userOptional.get();
         }
 
         throw new DataNotFoundException("record not found");
+    }
+
+    @Override
+    public User resetPassword(ResetPasswordDto resetPasswordDto) {
+        Optional<User> userOptional =
+                userRepository.findById(resetPasswordDto.getUserId());
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            if (user.getPassword().equals(resetPasswordDto.getOldPassword())) {
+                user.setPassword(resetPasswordDto.getNewPassword());
+                return userRepository.save(user);
+            }
+            throw new PasswordMismatchException("password mismatch");
+        }
+        throw new DataNotFoundException("user not found");
     }
 }
