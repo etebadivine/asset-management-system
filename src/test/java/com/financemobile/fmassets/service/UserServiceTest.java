@@ -1,9 +1,12 @@
 package com.financemobile.fmassets.service;
 
 import com.financemobile.fmassets.dto.CreateUserDto;
+import com.financemobile.fmassets.dto.ResetPasswordDto;
 import com.financemobile.fmassets.dto.UpdateUserStatusDto;
 import com.financemobile.fmassets.enums.UserStatus;
+import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
+import com.financemobile.fmassets.exception.PasswordMismatchException;
 import com.financemobile.fmassets.model.Department;
 import com.financemobile.fmassets.model.Role;
 import com.financemobile.fmassets.model.User;
@@ -13,13 +16,13 @@ import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-
 import javax.persistence.criteria.Predicate;
 import java.util.List;
 
@@ -39,12 +42,19 @@ public class UserServiceTest {
     @Autowired
     private RoleRepository roleRepository;
 
-    @AfterEach
-    public void tearDown() {
+    @BeforeEach
+    public void Setup() {
         userRepository.deleteAll();
         departmentRepository.deleteAll();
         roleRepository.deleteAll();
     }
+
+//    @AfterEach
+//    public void tearDown() {
+//        userRepository.deleteAll();
+//        departmentRepository.deleteAll();
+//        roleRepository.deleteAll();
+//    }
 
     @Test
     public void test_addUser(){
@@ -66,6 +76,21 @@ public class UserServiceTest {
     }
 
     @Test
+    public void test_addUser_duplicate(){
+        String firstName = "Reynolds";
+        String lastName = "Adanu";
+        String email = "you@gmail.com";
+        String phone = "+233240456008";
+        String password = "password";
+        CreateUserDto createUserDto = new CreateUserDto(firstName,lastName,email,phone,password);
+        userService.addUser(createUserDto);
+
+        Assertions.assertThrows(AlreadyExistException.class, ()->{
+            userService.addUser(createUserDto);
+        });
+    }
+
+    @Test
     public void test_searchUsers() {
         Department department = new Department();
         department.setName("Engineering");
@@ -80,6 +105,7 @@ public class UserServiceTest {
         user.setLastName("Addy");
         user.setEmail("me@gmail.com");
         user.setPhone("+233241428114");
+        user.setPassword("password");
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);
@@ -132,6 +158,7 @@ public class UserServiceTest {
         user.setLastName("Dwoa");
         user.setEmail("me@gmail.com");
         user.setPhone("+233241428114");
+        user.setPassword("password");
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);
@@ -147,7 +174,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void test_getUserByEmail_notFound() {
+    public void test_getUserByEnail_notFound() {
         Assertions.assertThrows(DataNotFoundException.class, () -> {
             userService.getUserByEmail("unknow@fm.com");
         });
@@ -184,7 +211,68 @@ public class UserServiceTest {
             userService.updateStatus(updateUserStatusDto);
         });
     }
+    @Test
+    public void test_resetPassword() {
+        Department department = new Department();
+        department.setName("Engineering");
+        department = departmentRepository.save(department);
+
+        Role role = new Role();
+        role.setName("USER");
+        role = roleRepository.save(role);
+
+        User user = new User();
+        user.setId(200L);
+        user.setFirstName("Reynolds");
+        user.setLastName("Adanu");
+        user.setEmail("you@gmail.com");
+        user.setPhone("+233241428114");
+        user.setPassword("password");
+        user.setStatus(UserStatus.ACTIVE);
+        user.setDepartment(department);
+        user.setRole(role);
+        user = userRepository.save(user);
+
+        ResetPasswordDto resetPasswordDto = new ResetPasswordDto(user.getId(), user.getPassword(), "newpassword");
+        userService.resetPassword(resetPasswordDto);
+    }
+
+    @Test
+    public void test_resetPassword_notFound() {
+        ResetPasswordDto resetPasswordDto = new ResetPasswordDto();
+        resetPasswordDto.setUserId(30L);
+        Assertions.assertThrows(DataNotFoundException.class, ()->{
+            userService.resetPassword(resetPasswordDto);
+        });
+    }
+
+    @Test
+    public void test_resetPassword_passwordMismatch() {
+        Department department = new Department();
+        department.setName("Engineering");
+        department = departmentRepository.save(department);
+
+        Role role = new Role();
+        role.setName("USER");
+        role = roleRepository.save(role);
+
+        User user = new User();
+        user.setId(200L);
+        user.setFirstName("Reynolds");
+        user.setLastName("Adanu");
+        user.setEmail("you@gmail.com");
+        user.setPhone("+233241428114");
+        user.setPassword("password");
+        user.setStatus(UserStatus.ACTIVE);
+        user.setDepartment(department);
+        user.setRole(role);
+        user = userRepository.save(user);
+
+        ResetPasswordDto resetPasswordDto = new ResetPasswordDto();
+        resetPasswordDto.setOldPassword("wrong_password");
+        resetPasswordDto.setUserId(user.getId());
+        Assertions.assertThrows(PasswordMismatchException.class, ()->{
+            userService.resetPassword(resetPasswordDto);
+        });
+    }
 }
-
-
-

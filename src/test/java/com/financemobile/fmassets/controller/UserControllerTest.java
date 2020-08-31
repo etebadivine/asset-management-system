@@ -4,14 +4,19 @@ package com.financemobile.fmassets.controller;
 import com.financemobile.fmassets.dto.CreateUserDto;
 import com.financemobile.fmassets.dto.FindByEmailDto;
 import com.financemobile.fmassets.dto.UpdateUserStatusDto;
+import com.financemobile.fmassets.dto.ResetPasswordDto;
 import com.financemobile.fmassets.enums.UserStatus;
 import com.financemobile.fmassets.model.Department;
 import com.financemobile.fmassets.model.Role;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.repository.DepartmentRepository;
+import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.repository.UserRepository;
+import com.financemobile.fmassets.service.UserService;
+import com.financemobile.fmassets.service.impl.UserServiceImpl;
 import com.google.gson.Gson;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +25,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -44,6 +50,9 @@ public class UserControllerTest {
 
     @MockBean
     private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private DepartmentRepository departmentRepository;
@@ -236,5 +245,72 @@ public class UserControllerTest {
                 .andExpect(jsonPath("message", is("Success")))
                 .andExpect(jsonPath("data.id", is(user.getId().intValue())))
                 .andExpect(jsonPath("data.status", is(user.getStatus().toString())));
+    }
+
+    @Test
+    public void test_resetPassword() throws Exception{
+
+        // mock repo and response
+        Department department = new Department();
+        department.setId(43L);
+        department.setName("Engineering");
+        department.setCreatedBy("Admin");
+        department.setDateCreated(new Date());
+        department.setDateModified(new Date());
+
+        Role role = new Role();
+        role.setId(3L);
+        role.setName("USER");
+        role.setDateCreated(new Date());
+
+        final User user = new User();
+        user.setId(200L);
+        user.setFirstName("Reynolds");
+        user.setLastName("Adanu");
+        user.setEmail("you@gmail.com");
+        user.setPhone("+233240456008");
+        user.setPassword("password");
+        user.setStatus(UserStatus.ACTIVE);
+        user.setDepartment(department);
+        user.setRole(role);
+        user.setCreatedBy("Reynolds");
+        user.setDateCreated(new Date());
+        user.setDateModified(new Date());
+
+
+        Mockito.when(userRepository.findById(user.getId()))
+                .thenReturn(Optional.of(user));
+
+        ResetPasswordDto resetPasswordDto = new ResetPasswordDto();
+        resetPasswordDto.setUserId(200L);
+        resetPasswordDto.setOldPassword("password");
+        resetPasswordDto.setNewPassword("newpassword");
+
+        User usr = new User();
+        usr.setId(200L);
+        usr.setFirstName("Atta");
+        usr.setLastName("Dwoa");
+        usr.setEmail("me@gmail.com");
+        usr.setPhone("+233241428119");
+        usr.setStatus(UserStatus.ACTIVE);
+        usr.setDepartment(department);
+        usr.setRole(role);
+        usr.setPassword(resetPasswordDto.getNewPassword());
+        Mockito.when(userRepository.save(Mockito.any(User.class)))
+                .thenReturn(usr);
+
+        mockMvc.perform(post("/user/password-reset")
+                .content(gson.toJson(resetPasswordDto))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("$.data.id", is(usr.getId().intValue())))
+                .andExpect(jsonPath("$.data.firstName", is(usr.getFirstName())))
+                .andExpect(jsonPath("$.data.lastName", is(usr.getLastName())))
+                .andExpect(jsonPath("$.data.email", is(usr.getEmail())))
+                .andExpect(jsonPath("$.data.phone", is(usr.getPhone())))
+                .andExpect(jsonPath("$.data.status", is(usr.getStatus().toString())))
+                .andExpect(jsonPath("$.data.password", is(usr.getPassword())));
     }
 }
