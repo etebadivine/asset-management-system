@@ -269,7 +269,7 @@ public class UserControllerTest {
         user.setLastName("Adanu");
         user.setEmail("you@gmail.com");
         user.setPhone("+233240456008");
-        user.setPassword("");
+        user.setPassword("password");
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);
@@ -286,11 +286,8 @@ public class UserControllerTest {
         resetPasswordDto.setOldPassword("password");
         resetPasswordDto.setNewPassword("newpassword");
 
-        user.setPassword(resetPasswordDto.getNewPassword());
         Mockito.when(userRepository.save(Mockito.any(User.class)))
                 .thenReturn(user);
-
-
 
         mockMvc.perform(post("/user/password-reset")
                 .content(gson.toJson(resetPasswordDto))
