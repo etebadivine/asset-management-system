@@ -1,12 +1,14 @@
 package com.financemobile.fmassets.controller;
 
 import com.financemobile.fmassets.dto.ApiResponse;
+import com.financemobile.fmassets.dto.CreateAssetDto;
 import com.financemobile.fmassets.model.Asset;
 import com.financemobile.fmassets.querySpec.AssetSpec;
 import com.financemobile.fmassets.service.AssetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -33,6 +35,17 @@ public class AssetController {
         response.setMessage("Success");
 
         return response;
+    }
+
+    @PostMapping
+    public ApiResponse createAsset(@RequestBody CreateAssetDto createAssetDto){
+        return null;
+    }
+
+
+    @PostMapping("/image")
+    public ApiResponse uploadImage(@RequestParam("file") MultipartFile file){
+        return null;
     }
 
 }

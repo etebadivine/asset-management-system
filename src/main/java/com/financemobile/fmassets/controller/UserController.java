@@ -5,6 +5,7 @@ import com.financemobile.fmassets.dto.CreateUserDto;
 import com.financemobile.fmassets.dto.FindByEmailDto;
 import com.financemobile.fmassets.dto.UpdateUserStatusDto;
 import com.financemobile.fmassets.dto.ResetPasswordDto;
+import com.financemobile.fmassets.dto.*;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.service.UserService;
@@ -86,5 +87,15 @@ public class UserController {
          response.setMessage("Success");
          response.setData(user);
          return response;
+    }
+
+    @PostMapping(value = "/role")
+    public ApiResponse updateRole(UpdateuserRoleDto updateuserRoleDto){
+        return null;
+    }
+
+    @PostMapping(value = "/forgot-password")
+    public ApiResponse forgotPassword(ForgotPasswordDto forgotPasswordDto){
+        return null;
     }
 }

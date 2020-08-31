@@ -1,5 +1,6 @@
 package com.financemobile.fmassets.service.impl;
 
+import com.financemobile.fmassets.dto.CreateAssetDto;
 import com.financemobile.fmassets.dto.CreateLocationDto;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.Asset;
@@ -30,6 +31,17 @@ public class AssetServiceImpl implements AssetService {
         if(assetsPage.hasContent())
             return assetsPage.getContent();
         return assetList;
+    }
+
+    @Override
+    public Asset addAsset(CreateAssetDto createAssetDto) {
+        //check if the asset already exist existByName(...)
+        //check if the location exist
+        //check if the department exist
+        //check if the supplier exist
+        //check if the category exist
+        // check if the image is base64 encoded
+        return null;
     }
 }
 
