@@ -90,9 +90,9 @@ public class UserServiceImpl implements UserService {
                 userRepository.findById(resetPasswordDto.getUserId());
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-        if (user.getPassword().equals(resetPasswordDto.getOldPassword())) {
-                user.setPassword(resetPasswordDto.getNewPassword());
-                return userRepository.save(user);
+            if (user.getPassword().equals(resetPasswordDto.getOldPassword())) {
+                    user.setPassword(resetPasswordDto.getNewPassword());
+                    return userRepository.save(user);
             }
         throw new PasswordMismatchException("password mismatch");
         }

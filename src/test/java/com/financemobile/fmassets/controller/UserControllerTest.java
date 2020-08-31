@@ -263,7 +263,7 @@ public class UserControllerTest {
         role.setName("USER");
         role.setDateCreated(new Date());
 
-        User user = new User();
+        final User user = new User();
         user.setId(200L);
         user.setFirstName("Reynolds");
         user.setLastName("Adanu");
@@ -278,7 +278,7 @@ public class UserControllerTest {
         user.setDateModified(new Date());
 
 
-        Mockito.when(userRepository.findById(Mockito.any(Long.class)))
+        Mockito.when(userRepository.findById(user.getId()))
                 .thenReturn(Optional.of(user));
 
         ResetPasswordDto resetPasswordDto = new ResetPasswordDto();
@@ -286,8 +286,18 @@ public class UserControllerTest {
         resetPasswordDto.setOldPassword("password");
         resetPasswordDto.setNewPassword("newpassword");
 
+        User usr = new User();
+        usr.setId(200L);
+        usr.setFirstName("Atta");
+        usr.setLastName("Dwoa");
+        usr.setEmail("me@gmail.com");
+        usr.setPhone("+233241428119");
+        usr.setStatus(UserStatus.ACTIVE);
+        usr.setDepartment(department);
+        usr.setRole(role);
+        usr.setPassword(resetPasswordDto.getNewPassword());
         Mockito.when(userRepository.save(Mockito.any(User.class)))
-                .thenReturn(user);
+                .thenReturn(usr);
 
         mockMvc.perform(post("/user/password-reset")
                 .content(gson.toJson(resetPasswordDto))
@@ -295,12 +305,12 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", is(true)))
                 .andExpect(jsonPath("message", is("Success")))
-                .andExpect(jsonPath("$.data.id", is(user.getId().intValue())))
-                .andExpect(jsonPath("$.data.firstName", is(user.getFirstName())))
-                .andExpect(jsonPath("$.data.lastName", is(user.getLastName())))
-                .andExpect(jsonPath("$.data.email", is(user.getEmail())))
-                .andExpect(jsonPath("$.data.phone", is(user.getPhone())))
-                .andExpect(jsonPath("$.data.status", is(user.getStatus().toString())))
-                .andExpect(jsonPath("$.data.password", is(user.getPassword())));
+                .andExpect(jsonPath("$.data.id", is(usr.getId().intValue())))
+                .andExpect(jsonPath("$.data.firstName", is(usr.getFirstName())))
+                .andExpect(jsonPath("$.data.lastName", is(usr.getLastName())))
+                .andExpect(jsonPath("$.data.email", is(usr.getEmail())))
+                .andExpect(jsonPath("$.data.phone", is(usr.getPhone())))
+                .andExpect(jsonPath("$.data.status", is(usr.getStatus().toString())))
+                .andExpect(jsonPath("$.data.password", is(usr.getPassword())));
     }
 }

@@ -212,7 +212,7 @@ public class UserServiceTest {
         });
     }
     @Test
-    public void test_resetPassword() throws  Exception{
+    public void test_resetPassword() {
         Department department = new Department();
         department.setName("Engineering");
         department = departmentRepository.save(department);
@@ -242,6 +242,36 @@ public class UserServiceTest {
         ResetPasswordDto resetPasswordDto = new ResetPasswordDto();
         resetPasswordDto.setUserId(30L);
         Assertions.assertThrows(DataNotFoundException.class, ()->{
+            userService.resetPassword(resetPasswordDto);
+        });
+    }
+
+    @Test
+    public void test_resetPassword_passwordMismatch() {
+        Department department = new Department();
+        department.setName("Engineering");
+        department = departmentRepository.save(department);
+
+        Role role = new Role();
+        role.setName("USER");
+        role = roleRepository.save(role);
+
+        User user = new User();
+        user.setId(200L);
+        user.setFirstName("Reynolds");
+        user.setLastName("Adanu");
+        user.setEmail("you@gmail.com");
+        user.setPhone("+233241428114");
+        user.setPassword("password");
+        user.setStatus(UserStatus.ACTIVE);
+        user.setDepartment(department);
+        user.setRole(role);
+        user = userRepository.save(user);
+
+        ResetPasswordDto resetPasswordDto = new ResetPasswordDto();
+        resetPasswordDto.setOldPassword("wrong_password");
+        resetPasswordDto.setUserId(user.getId());
+        Assertions.assertThrows(PasswordMismatchException.class, ()->{
             userService.resetPassword(resetPasswordDto);
         });
     }
