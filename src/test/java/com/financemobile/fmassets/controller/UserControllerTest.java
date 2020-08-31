@@ -303,5 +303,4 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.data.status", is(user.getStatus().toString())))
                 .andExpect(jsonPath("$.data.password", is(user.getPassword())));
     }
-
 }
