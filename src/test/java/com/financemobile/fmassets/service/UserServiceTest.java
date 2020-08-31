@@ -2,6 +2,7 @@ package com.financemobile.fmassets.service;
 
 import com.financemobile.fmassets.dto.CreateUserDto;
 import com.financemobile.fmassets.dto.ResetPasswordDto;
+import com.financemobile.fmassets.dto.UpdateUserStatusDto;
 import com.financemobile.fmassets.enums.UserStatus;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
@@ -165,12 +166,43 @@ public class UserServiceTest {
     }
 
     @Test
-    public void test_getUserByEmail_notFound() {
+    public void test_getUserByEnail_notFound() {
         Assertions.assertThrows(DataNotFoundException.class, () -> {
             userService.getUserByEmail("unknow@fm.com");
         });
     }
 
+    @Test
+    public void test_updateStatus() throws Exception {
+        Department department = new Department();
+        department.setName("Engineering");
+        department = departmentRepository.save(department);
+
+        Role role = new Role();
+        role.setName("USER");
+        role = roleRepository.save(role);
+
+        User user = new User();
+        user.setFirstName("James");
+        user.setLastName("Anifrani");
+        user.setEmail("me@gmail.com");
+        user.setPhone("+233241428114");
+        user.setStatus(UserStatus.ACTIVE);
+        user.setDepartment(department);
+        user.setRole(role);
+        user = userRepository.save(user);
+        UpdateUserStatusDto updateUserStatusDto = new UpdateUserStatusDto(user.getId(),user.getStatus());
+        User user3 =  userService.updateStatus(updateUserStatusDto);
+    }
+
+    @Test
+    public void test_updateStatus_notFound() throws Exception {
+        UpdateUserStatusDto updateUserStatusDto =
+                new UpdateUserStatusDto(4L,UserStatus.BLOCKED);
+        Assertions.assertThrows(DataNotFoundException.class, () -> {
+            userService.updateStatus(updateUserStatusDto);
+        });
+    }
     @Test
     public void test_resetPassword() throws  Exception{
         Department department = new Department();
@@ -194,7 +226,7 @@ public class UserServiceTest {
         user = userRepository.save(user);
 
         ResetPasswordDto resetPasswordDto = new ResetPasswordDto(user.getId(), user.getPassword(), "newpassword");
-         userService.resetPassword(resetPasswordDto);
+        userService.resetPassword(resetPasswordDto);
     }
 
     @Test
@@ -206,4 +238,3 @@ public class UserServiceTest {
         });
     }
 }
-

@@ -3,6 +3,7 @@ package com.financemobile.fmassets.controller;
 import com.financemobile.fmassets.dto.ApiResponse;
 import com.financemobile.fmassets.dto.CreateUserDto;
 import com.financemobile.fmassets.dto.FindByEmailDto;
+import com.financemobile.fmassets.dto.UpdateUserStatusDto;
 import com.financemobile.fmassets.dto.ResetPasswordDto;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
@@ -72,5 +73,18 @@ public class UserController {
         response.setMessage("Success");
         response.setData(user);
         return response;
+    }
+
+    @PostMapping(value = "/status")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse updateStatus(@RequestBody UpdateUserStatusDto updateUserStatusDto){
+
+         User user = userService.updateStatus(updateUserStatusDto);
+
+         ApiResponse response = new ApiResponse();
+         response.setStatus(true);
+         response.setMessage("Success");
+         response.setData(user);
+         return response;
     }
 }
