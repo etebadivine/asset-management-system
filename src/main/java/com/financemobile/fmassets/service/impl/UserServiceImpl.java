@@ -1,12 +1,10 @@
 package com.financemobile.fmassets.service.impl;
 
 
-import com.financemobile.fmassets.dto.CreateUserDto;
-import com.financemobile.fmassets.dto.ResetPasswordDto;
+import com.financemobile.fmassets.dto.*;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.exception.PasswordMismatchException;
-import com.financemobile.fmassets.dto.UpdateUserStatusDto;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.repository.UserRepository;
@@ -35,7 +33,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User addUser(CreateUserDto createUserDto) {
 
-        if(userRepository.existsByEmail(createUserDto.getEmail())){
+        if (userRepository.existsByEmail(createUserDto.getEmail())) {
             throw new AlreadyExistException("User already exist");
         }
 
@@ -53,7 +51,7 @@ public class UserServiceImpl implements UserService {
     public List<User> searchUsers(UserSpec userSpec, Pageable pageable) {
         List<User> userList = new ArrayList<>();
         Page<User> usersPage = userRepository.findAll(userSpec, pageable);
-        if(usersPage.hasContent())
+        if (usersPage.hasContent())
             return usersPage.getContent();
         return userList;
     }
@@ -62,7 +60,7 @@ public class UserServiceImpl implements UserService {
     public User getUserByEmail(String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
 
-        if(userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             return userOptional.get();
         }
 
@@ -75,7 +73,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> userOptional =
                 userRepository.findById(updateUserStatusDto.getUserId());
 
-        if (userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             User user = userOptional.get();
             user.setStatus(updateUserStatusDto.getStatus());
             return userRepository.save(user);
@@ -91,11 +89,44 @@ public class UserServiceImpl implements UserService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             if (user.getPassword().equals(resetPasswordDto.getOldPassword())) {
-                    user.setPassword(resetPasswordDto.getNewPassword());
-                    return userRepository.save(user);
+                user.setPassword(resetPasswordDto.getNewPassword());
+                return userRepository.save(user);
             }
-        throw new PasswordMismatchException("password mismatch");
+            throw new PasswordMismatchException("password mismatch");
         }
         throw new DataNotFoundException("user not found");
     }
+
+    @Override
+    public Boolean resetPasswordByEmail(ForgotPasswordDto forgotPasswordDto) {
+
+        if (!userRepository.existsByEmail(forgotPasswordDto.getEmail())) {
+            User user = new User();
+            user.setEmail(forgotPasswordDto.getEmail());
+            return true;
+        }
+
+        throw new DataNotFoundException("email user does not exist");
+    }
+
+    @Override
+    public Boolean updateUserRole (UpdateuserRoleDto updateuserRoleDto) {
+
+        Optional<User> userOptional =
+                userRepository.findById(updateuserRoleDto.getUserId());
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setRole(updateuserRoleDto.getRole());
+            return true;
+        }
+
+        throw new DataNotFoundException("record not found");
+    }
 }
+
+
+
+
+
+

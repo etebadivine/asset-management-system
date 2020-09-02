@@ -1,6 +1,7 @@
 package com.financemobile.fmassets.dto;
 
 
+import com.financemobile.fmassets.model.Role;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -9,8 +10,10 @@ import javax.validation.constraints.NotBlank;
 public class UpdateuserRoleDto {
 
     @NotBlank
-    private String userId;
+    private Long userId;
     @NotBlank
-    private String role;
+    private Role role;
 
+    public UpdateuserRoleDto() {
+    }
 }

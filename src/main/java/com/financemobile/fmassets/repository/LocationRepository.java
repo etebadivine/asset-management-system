@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface LocationRepository extends PagingAndSortingRepository<Location, Long>, JpaSpecificationExecutor<Location> {
 
-    Boolean existsByName(String name);
+            Boolean existsByName(String name);
 
     Optional<Location> findByName(String name);
 
