@@ -49,12 +49,12 @@ public class UserServiceTest {
         roleRepository.deleteAll();
     }
 
-//    @AfterEach
-//    public void tearDown() {
-//        userRepository.deleteAll();
-//        departmentRepository.deleteAll();
-//        roleRepository.deleteAll();
-//    }
+    @AfterEach
+    public void tearDown() {
+        userRepository.deleteAll();
+        departmentRepository.deleteAll();
+        roleRepository.deleteAll();
+    }
 
     @Test
     public void test_addUser(){
@@ -174,7 +174,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void test_getUserByEnail_notFound() {
+    public void test_getUserByEmail_notFound() {
         Assertions.assertThrows(DataNotFoundException.class, () -> {
             userService.getUserByEmail("unknow@fm.com");
         });

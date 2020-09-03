@@ -25,14 +25,15 @@ public class LocationServiceTest {
     @BeforeEach
     public void setup() { locationRepository.deleteAll(); }
 
-    @AfterEach
-    public void tearDown() {
-    }
+//    @AfterEach
+//    public void tearDown() {
+//    }
+
 
     @Test
     public void test_addLocation() {
 
-        String name = "Com 8";
+        String name = "Comm 8";
         String city = "Tema";
         String country = "Ghana";
         Location location = locationService.addLocation(name, city, country);

@@ -59,6 +59,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserById(Long id) {
+        Optional<User> userOptional = userRepository.findById(id);
+
+        if(userOptional.isPresent()){
+            return userOptional.get();
+        }
+
+        throw new DataNotFoundException("user not found");
+    }
+
+    @Override
     public User getUserByEmail(String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
 

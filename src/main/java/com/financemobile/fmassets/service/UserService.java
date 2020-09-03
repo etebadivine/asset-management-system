@@ -15,6 +15,7 @@ public interface UserService {
 
     List<User> searchUsers(UserSpec userSpec, Pageable pageable);
     User addUser(CreateUserDto createUserDto);
+    User getUserById(Long id);
     User getUserByEmail(String email);
     User resetPassword(ResetPasswordDto resetPasswordDto);
     User updateStatus(UpdateUserStatusDto updateUserStatusDto);
