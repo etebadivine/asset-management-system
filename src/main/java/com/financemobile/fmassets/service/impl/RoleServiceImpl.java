@@ -5,6 +5,7 @@ import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.Role;
 import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.service.RoleService;
+import org.apache.tomcat.jni.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

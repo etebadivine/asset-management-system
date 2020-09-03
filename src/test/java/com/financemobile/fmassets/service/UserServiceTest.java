@@ -55,13 +55,13 @@ public class UserServiceTest {
     }
 
     @Test
-    public void test_addUser(){
+    public void test_addUser() {
         String firstName = "Reynolds";
         String lastName = "Adanu";
         String email = "you@gmail.com";
         String phone = "+233240456008";
         String password = "password";
-        CreateUserDto createUserDto = new CreateUserDto(firstName,lastName,email,phone,password);
+        CreateUserDto createUserDto = new CreateUserDto(firstName, lastName, email, phone, password);
         User user = userService.addUser(createUserDto);
 
 
@@ -74,16 +74,16 @@ public class UserServiceTest {
     }
 
     @Test
-    public void test_addUser_duplicate(){
+    public void test_addUser_duplicate() {
         String firstName = "Reynolds";
         String lastName = "Adanu";
         String email = "you@gmail.com";
         String phone = "+233240456008";
         String password = "password";
-        CreateUserDto createUserDto = new CreateUserDto(firstName,lastName,email,phone,password);
+        CreateUserDto createUserDto = new CreateUserDto(firstName, lastName, email, phone, password);
         userService.addUser(createUserDto);
 
-        Assertions.assertThrows(AlreadyExistException.class, ()->{
+        Assertions.assertThrows(AlreadyExistException.class, () -> {
             userService.addUser(createUserDto);
         });
     }
@@ -197,14 +197,14 @@ public class UserServiceTest {
         user.setDepartment(department);
         user.setRole(role);
         user = userRepository.save(user);
-        UpdateUserStatusDto updateUserStatusDto = new UpdateUserStatusDto(user.getId(),user.getStatus());
-        User user3 =  userService.updateStatus(updateUserStatusDto);
+        UpdateUserStatusDto updateUserStatusDto = new UpdateUserStatusDto(user.getId(), user.getStatus());
+        User user3 = userService.updateStatus(updateUserStatusDto);
     }
 
     @Test
     public void test_updateStatus_notFound() throws Exception {
         UpdateUserStatusDto updateUserStatusDto =
-                new UpdateUserStatusDto(4L,UserStatus.BLOCKED);
+                new UpdateUserStatusDto(4L, UserStatus.BLOCKED);
         Assertions.assertThrows(DataNotFoundException.class, () -> {
             userService.updateStatus(updateUserStatusDto);
         });
@@ -240,7 +240,7 @@ public class UserServiceTest {
     public void test_resetPassword_notFound() {
         ResetPasswordDto resetPasswordDto = new ResetPasswordDto();
         resetPasswordDto.setUserId(30L);
-        Assertions.assertThrows(DataNotFoundException.class, ()->{
+        Assertions.assertThrows(DataNotFoundException.class, () -> {
             userService.resetPassword(resetPasswordDto);
         });
     }
@@ -270,7 +270,7 @@ public class UserServiceTest {
         ResetPasswordDto resetPasswordDto = new ResetPasswordDto();
         resetPasswordDto.setOldPassword("wrong_password");
         resetPasswordDto.setUserId(user.getId());
-        Assertions.assertThrows(PasswordMismatchException.class, ()->{
+        Assertions.assertThrows(PasswordMismatchException.class, () -> {
             userService.resetPassword(resetPasswordDto);
         });
     }
@@ -315,13 +315,13 @@ public class UserServiceTest {
         department = departmentRepository.save(department);
 
         Role role = new Role();
-        role.setName("USER");
         role.setId(200L);
+        role.setName("USER");
         role = roleRepository.save(role);
 
         User user = new User();
-        user.setFirstName("Atta");
-        user.setLastName("Dwoa");
+        user.setFirstName("Divine");
+        user.setLastName("Eteba");
         user.setEmail("me@gmail.com");
         user.setPhone("+233241428114");
         user.setPassword("password");
@@ -330,16 +330,18 @@ public class UserServiceTest {
         user.setRole(role);
         userRepository.save(user);
 
-        UpdateuserRoleDto updateuserRoleDto = new UpdateuserRoleDto(user.getId(),user.getRole().getName());
-        User user1 =  userService.updateUserRole(updateuserRoleDto);
+        UpdateuserRoleDto updateuserRoleDto = new UpdateuserRoleDto(user.getId(),"Monkey");
+        userService.updateUserRole(updateuserRoleDto);
     }
 
     @Test
     public void test_updateUserRole_notFound() throws Exception {
         UpdateuserRoleDto updateuserRoleDto =
-                new UpdateuserRoleDto(4L,"Manager");
+                new UpdateuserRoleDto(4L,"CTO");
         Assertions.assertThrows(DataNotFoundException.class, () -> {
             userService.updateUserRole(updateuserRoleDto);
         });
     }
 }
+
+

@@ -23,6 +23,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import javax.naming.Name;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
@@ -360,7 +362,7 @@ public class UserControllerTest {
         department.setDateModified(new Date());
 
         Role role = new Role();
-        role.setName("Manager");
+        role.setName("USER");
         role.setId(200L);
 
         User user = new User();
@@ -381,7 +383,7 @@ public class UserControllerTest {
 
         UpdateuserRoleDto updateuserRoleDto = new UpdateuserRoleDto();
         updateuserRoleDto.setUserId(user.getId());
-        updateuserRoleDto.setRole(user.getRole().getName());
+        updateuserRoleDto.setRole("Monkey");
 
         mockMvc.perform(post("/user/role")
                 .content(gson.toJson(updateuserRoleDto))

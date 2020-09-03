@@ -5,11 +5,14 @@ import com.financemobile.fmassets.dto.*;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.exception.PasswordMismatchException;
+import com.financemobile.fmassets.model.Role;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.repository.UserRepository;
+import com.financemobile.fmassets.service.RoleService;
 import com.financemobile.fmassets.service.UserService;
+import io.micrometer.core.instrument.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +30,13 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private RoleService roleService;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository) {
@@ -59,6 +68,18 @@ public class UserServiceImpl implements UserService {
             return usersPage.getContent();
         return userList;
     }
+
+//    @Override
+//    public User getUserById(Long id) {
+//        Optional<User> userOptional = userRepository.findById(id);
+//
+//        if(userOptional.isPresent()){
+//            return userOptional.get();
+//        }
+//
+//        throw new DataNotFoundException("user not found");
+//    }
+
 
     @Override
     public User getUserByEmail(String email) {
@@ -114,18 +135,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUserRole(UpdateuserRoleDto updateuserRoleDto) {
-
-        Optional<User> userOptional =
-                userRepository.findById(updateuserRoleDto.getUserId());
-
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            user.setRole(user.getRole());
-            return userRepository.save(user);
-        }
-
-        throw new DataNotFoundException("record not found");
+    public User updateUserRole(UpdateuserRoleDto updateuserRoleDto){
+           User user = new User();
+           if(updateuserRoleDto.getRole() ==null){
+               throw new DataNotFoundException("role not found");
+           }
+           else{
+               Role role = roleService.getRoleById(updateuserRoleDto.getUserId());
+               role.setName(updateuserRoleDto.getRole());
+               return userRepository.save(user);
+           }
     }
 }
 
