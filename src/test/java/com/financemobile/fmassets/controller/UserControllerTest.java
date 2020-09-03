@@ -383,7 +383,7 @@ public class UserControllerTest {
 
         UpdateuserRoleDto updateuserRoleDto = new UpdateuserRoleDto();
         updateuserRoleDto.setUserId(user.getId());
-        updateuserRoleDto.setRole("Monkey");
+        updateuserRoleDto.setRole("CTO");
 
         mockMvc.perform(post("/user/role")
                 .content(gson.toJson(updateuserRoleDto))

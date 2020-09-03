@@ -330,7 +330,7 @@ public class UserServiceTest {
         user.setRole(role);
         userRepository.save(user);
 
-        UpdateuserRoleDto updateuserRoleDto = new UpdateuserRoleDto(user.getId(),"Monkey");
+        UpdateuserRoleDto updateuserRoleDto = new UpdateuserRoleDto(user.getRole().getId(), "CTO");
         userService.updateUserRole(updateuserRoleDto);
     }
 
