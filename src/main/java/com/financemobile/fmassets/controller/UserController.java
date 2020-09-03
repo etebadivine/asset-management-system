@@ -89,19 +89,6 @@ public class UserController {
         return response;
     }
 
-    @PostMapping(value = "/role")
-    @ResponseStatus(HttpStatus.OK)
-    public ApiResponse updateRole(@RequestBody UpdateuserRoleDto updateuserRoleDto) {
-
-        Boolean user = userService.updateUserRole(updateuserRoleDto);
-
-        ApiResponse response = new ApiResponse();
-        response.setStatus(true);
-        response.setMessage("Success");
-        response.setData(user);
-        return response;
-    }
-
     @PostMapping(value = "/forgot-password")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse forgotPassword(@RequestBody ForgotPasswordDto forgotPasswordDto){
@@ -109,6 +96,18 @@ public class UserController {
         Boolean user = userService.resetPasswordByEmail(forgotPasswordDto);
 
         // To Do:reset by email
+        ApiResponse response = new ApiResponse();
+        response.setStatus(true);
+        response.setMessage("Success");
+        response.setData(user);
+        return response;
+    }
+
+    @PostMapping(value = "/role")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse updateRole(@RequestBody UpdateuserRoleDto updateuserRoleDto) {
+
+        User user = userService.updateUserRole(updateuserRoleDto);
         ApiResponse response = new ApiResponse();
         response.setStatus(true);
         response.setMessage("Success");

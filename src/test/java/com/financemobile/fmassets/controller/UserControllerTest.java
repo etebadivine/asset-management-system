@@ -8,6 +8,7 @@ import com.financemobile.fmassets.model.Role;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.repository.DepartmentRepository;
+import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.repository.UserRepository;
 import com.financemobile.fmassets.service.UserService;
 import com.google.gson.Gson;
@@ -49,6 +50,9 @@ public class UserControllerTest {
 
     @Autowired
     private DepartmentRepository departmentRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     private final Gson gson = new Gson();
 
@@ -356,10 +360,11 @@ public class UserControllerTest {
         department.setDateModified(new Date());
 
         Role role = new Role();
-        role.setName("User");
+        role.setName("Manager");
         role.setId(200L);
 
         User user = new User();
+        user.setId(200L);
         user.setFirstName("Mayeden");
         user.setLastName("Roy");
         user.setEmail("me@gmail.com");
@@ -367,7 +372,6 @@ public class UserControllerTest {
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);
-        user.setId(200L);
 
         Mockito.when(userRepository.findById(Mockito.any(Long.class)))
                 .thenReturn(Optional.of(user));
@@ -377,7 +381,7 @@ public class UserControllerTest {
 
         UpdateuserRoleDto updateuserRoleDto = new UpdateuserRoleDto();
         updateuserRoleDto.setUserId(user.getId());
-        updateuserRoleDto.setRole(user.getRole());
+        updateuserRoleDto.setRole(user.getRole().getName());
 
         mockMvc.perform(post("/user/role")
                 .content(gson.toJson(updateuserRoleDto))
@@ -385,7 +389,7 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", is(true)))
                 .andExpect(jsonPath("message", is("Success")))
-                .andExpect(jsonPath("$.data", is((true))))
-                .andExpect(jsonPath("$.data", is((true))));
+                .andExpect(jsonPath("data.id", is(user.getId().intValue())))
+                .andExpect(jsonPath("data.role.name", is(user.getRole().getName())));
     }
 }

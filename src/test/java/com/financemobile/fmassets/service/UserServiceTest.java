@@ -209,6 +209,7 @@ public class UserServiceTest {
             userService.updateStatus(updateUserStatusDto);
         });
     }
+
     @Test
     public void test_resetPassword() {
         Department department = new Department();
@@ -301,6 +302,13 @@ public class UserServiceTest {
     }
 
     @Test
+    public void test_resetPasswordByEmail_notFound() {
+        Assertions.assertThrows(DataNotFoundException.class, () -> {
+            userService.getUserByEmail("notfound@gmail.com");
+        });
+    }
+
+    @Test
     public void test_updateUserRole() {
         Department department = new Department();
         department.setName("Engineering");
@@ -322,10 +330,16 @@ public class UserServiceTest {
         user.setRole(role);
         userRepository.save(user);
 
-        UpdateuserRoleDto updateuserRoleDto = new UpdateuserRoleDto();
-        updateuserRoleDto.setRole(role);
-        updateuserRoleDto.setUserId(200L);
-        Assertions.assertTrue(true);
+        UpdateuserRoleDto updateuserRoleDto = new UpdateuserRoleDto(user.getId(),user.getRole().getName());
+        User user1 =  userService.updateUserRole(updateuserRoleDto);
+    }
 
+    @Test
+    public void test_updateUserRole_notFound() throws Exception {
+        UpdateuserRoleDto updateuserRoleDto =
+                new UpdateuserRoleDto(4L,"Manager");
+        Assertions.assertThrows(DataNotFoundException.class, () -> {
+            userService.updateUserRole(updateuserRoleDto);
+        });
     }
 }

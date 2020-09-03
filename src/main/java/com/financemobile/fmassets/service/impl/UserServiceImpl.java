@@ -7,6 +7,7 @@ import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.exception.PasswordMismatchException;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
+import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.repository.UserRepository;
 import com.financemobile.fmassets.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository) {
@@ -110,20 +114,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean updateUserRole (UpdateuserRoleDto updateuserRoleDto) {
+    public User updateUserRole(UpdateuserRoleDto updateuserRoleDto) {
 
         Optional<User> userOptional =
                 userRepository.findById(updateuserRoleDto.getUserId());
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            user.setRole(updateuserRoleDto.getRole());
-            return true;
+            user.setRole(user.getRole());
+            return userRepository.save(user);
         }
 
         throw new DataNotFoundException("record not found");
     }
 }
+
 
 
 

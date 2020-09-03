@@ -17,7 +17,7 @@ public interface UserService {
     User resetPassword(ResetPasswordDto resetPasswordDto);
     User updateStatus(UpdateUserStatusDto updateUserStatusDto);
     Boolean resetPasswordByEmail(ForgotPasswordDto forgotPasswordDto);
-    Boolean updateUserRole(UpdateuserRoleDto updateuserRoleDto);
+    User updateUserRole(UpdateuserRoleDto updateuserRoleDto);
 }
 
 

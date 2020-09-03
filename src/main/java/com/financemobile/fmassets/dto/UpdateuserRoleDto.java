@@ -11,8 +11,14 @@ public class UpdateuserRoleDto {
 
     @NotBlank
     private Long userId;
+
     @NotBlank
-    private Role role;
+    private String role;
+
+    public UpdateuserRoleDto(@NotBlank Long userId, @NotBlank String role) {
+        this.userId = userId;
+        this.role = role;
+    }
 
     public UpdateuserRoleDto() {
     }
