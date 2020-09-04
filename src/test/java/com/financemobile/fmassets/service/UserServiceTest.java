@@ -330,14 +330,19 @@ public class UserServiceTest {
         user.setRole(role);
         userRepository.save(user);
 
-        UpdateuserRoleDto updateuserRoleDto = new UpdateuserRoleDto(user.getRole().getId(), "CTO");
-        userService.updateUserRole(updateuserRoleDto);
+        Role role1 = new Role();
+        role1.setName("CTO");
+
+        UpdateUserRoleDto updateuserRoleDto = new UpdateUserRoleDto();
+        updateuserRoleDto.setRole(role1.getName());
     }
 
     @Test
     public void test_updateUserRole_notFound() throws Exception {
-        UpdateuserRoleDto updateuserRoleDto =
-                new UpdateuserRoleDto(4L,"CTO");
+        UpdateUserRoleDto updateuserRoleDto =
+                new UpdateUserRoleDto();
+        updateuserRoleDto.setRole("CTO");
+        updateuserRoleDto.setUserId(200L);
         Assertions.assertThrows(DataNotFoundException.class, () -> {
             userService.updateUserRole(updateuserRoleDto);
         });

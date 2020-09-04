@@ -10,7 +10,6 @@ import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.repository.DepartmentRepository;
 import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.repository.UserRepository;
-import com.financemobile.fmassets.service.UserService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -24,7 +23,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.naming.Name;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
@@ -48,12 +46,9 @@ public class UserControllerTest {
     private UserRepository userRepository;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private DepartmentRepository departmentRepository;
 
-    @Autowired
+    @MockBean
     private RoleRepository roleRepository;
 
     private final Gson gson = new Gson();
@@ -276,7 +271,6 @@ public class UserControllerTest {
         user.setDateCreated(new Date());
         user.setDateModified(new Date());
 
-
         Mockito.when(userRepository.findById(user.getId()))
                 .thenReturn(Optional.of(user));
 
@@ -378,12 +372,15 @@ public class UserControllerTest {
         Mockito.when(userRepository.findById(Mockito.any(Long.class)))
                 .thenReturn(Optional.of(user));
 
+        Mockito.when(roleRepository.findByName(Mockito.any(String.class)))
+                .thenReturn(Optional.of(user.getRole()));
+
         Mockito.when(userRepository.save(Mockito.any(User.class)))
                 .thenReturn(user);
 
-        UpdateuserRoleDto updateuserRoleDto = new UpdateuserRoleDto();
-        updateuserRoleDto.setUserId(user.getId());
-        updateuserRoleDto.setRole("CTO");
+        UpdateUserRoleDto updateuserRoleDto = new UpdateUserRoleDto();
+        updateuserRoleDto.setUserId(200L);
+        updateuserRoleDto.setRole("USER");
 
         mockMvc.perform(post("/user/role")
                 .content(gson.toJson(updateuserRoleDto))

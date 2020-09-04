@@ -7,7 +7,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class UpdateuserRoleDto {
+public class UpdateUserRoleDto {
 
     @NotBlank
     private Long userId;
@@ -15,11 +15,11 @@ public class UpdateuserRoleDto {
     @NotBlank
     private String role;
 
-    public UpdateuserRoleDto(@NotBlank Long userId, @NotBlank String role) {
+    public UpdateUserRoleDto(@NotBlank Long userId, @NotBlank String role) {
         this.userId = userId;
         this.role = role;
     }
 
-    public UpdateuserRoleDto() {
+    public UpdateUserRoleDto() {
     }
 }

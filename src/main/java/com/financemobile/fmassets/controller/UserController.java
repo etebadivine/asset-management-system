@@ -105,7 +105,7 @@ public class UserController {
 
     @PostMapping(value = "/role")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse updateRole(@RequestBody UpdateuserRoleDto updateuserRoleDto) {
+    public ApiResponse updateRole(@RequestBody UpdateUserRoleDto updateuserRoleDto) {
 
         User user = userService.updateUserRole(updateuserRoleDto);
         ApiResponse response = new ApiResponse();

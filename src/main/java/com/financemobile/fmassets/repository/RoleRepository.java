@@ -12,7 +12,7 @@ public interface RoleRepository extends PagingAndSortingRepository<Role,Long>, J
 
     Boolean existsByName (String name);
 
-    Optional<Role> findByName(String name);
+    Optional<Role>  findByName(String name);
 
     Optional<Role> findById(Long id);
 
