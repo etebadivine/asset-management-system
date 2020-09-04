@@ -339,8 +339,7 @@ public class UserServiceTest {
 
     @Test
     public void test_updateUserRole_notFound() throws Exception {
-        UpdateUserRoleDto updateuserRoleDto =
-                new UpdateUserRoleDto();
+        UpdateUserRoleDto updateuserRoleDto = new UpdateUserRoleDto();
         updateuserRoleDto.setRole("CTO");
         updateuserRoleDto.setUserId(200L);
         Assertions.assertThrows(DataNotFoundException.class, () -> {

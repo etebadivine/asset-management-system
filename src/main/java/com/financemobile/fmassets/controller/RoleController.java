@@ -24,7 +24,7 @@ public class RoleController {
     }
 
 
-    @PostMapping(value = "role")
+    @PostMapping(value = "")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse createRole (@RequestBody CreateRoleDto createRoleDto){
 
