@@ -1,5 +1,8 @@
 package com.financemobile.fmassets.service;
 
+import com.financemobile.fmassets.dto.UpdateAssetStatusDto;
+import com.financemobile.fmassets.enums.AssetStatus;
+import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.querySpec.AssetSpec;
 import com.financemobile.fmassets.repository.*;
@@ -91,6 +94,36 @@ public class AssetServiceTest {
 
         List<Asset> assetList = assetService.searchAssets(assetSpec, pageable);
         Assertions.assertEquals(assetList.size(), 0);
+    }
+
+    @Test
+    public void test_updateAssetStatus() throws Exception {
+        Department department = new Department();
+        department.setName("Engineering");
+        department = departmentRepository.save(department);
+
+        Asset asset = new Asset();
+        asset.setName("Laptop");
+        asset.setStatus(AssetStatus.DAMAGED);
+        asset.setDepartment(department);
+        asset = assetRepository.save(asset);
+
+        UpdateAssetStatusDto updateAssetStatusDto =
+                new UpdateAssetStatusDto();
+        updateAssetStatusDto.setAssetName(asset.getName());
+        updateAssetStatusDto.setAssetStatus(asset.getStatus());
+        Asset asset1 = assetService.updateAssetStatus(updateAssetStatusDto);
+    }
+
+    @Test
+    public void test_updateAssetStatus_notFound() throws Exception {
+        UpdateAssetStatusDto updateAssetStatusDto =
+                new UpdateAssetStatusDto();
+        updateAssetStatusDto.setAssetName("Laptop");
+        updateAssetStatusDto.setAssetStatus(AssetStatus.DAMAGED);
+        Assertions.assertThrows(DataNotFoundException.class, () -> {
+            assetService.updateAssetStatus(updateAssetStatusDto);
+        });
     }
 }
 

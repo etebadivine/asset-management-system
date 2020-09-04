@@ -2,11 +2,15 @@ package com.financemobile.fmassets.controller;
 
 import com.financemobile.fmassets.dto.ApiResponse;
 import com.financemobile.fmassets.dto.CreateAssetDto;
+import com.financemobile.fmassets.dto.UpdateAssetStatusDto;
+import com.financemobile.fmassets.dto.UpdateUserStatusDto;
 import com.financemobile.fmassets.model.Asset;
+import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.AssetSpec;
 import com.financemobile.fmassets.service.AssetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,6 +50,19 @@ public class AssetController {
     @PostMapping("/image")
     public ApiResponse uploadImage(@RequestParam("file") MultipartFile file){
         return null;
+    }
+
+    @PostMapping(value = "/status")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse updateAssetStatus(@RequestBody UpdateAssetStatusDto updateAssetStatusDto) {
+
+        Asset asset = assetService.updateAssetStatus(updateAssetStatusDto);
+
+        ApiResponse response = new ApiResponse();
+        response.setStatus(true);
+        response.setMessage("Success");
+        response.setData(asset);
+        return response;
     }
 
 }

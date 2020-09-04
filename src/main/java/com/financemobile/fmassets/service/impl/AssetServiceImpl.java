@@ -1,7 +1,7 @@
 package com.financemobile.fmassets.service.impl;
 
 import com.financemobile.fmassets.dto.CreateAssetDto;
-import com.financemobile.fmassets.dto.CreateLocationDto;
+import com.financemobile.fmassets.dto.UpdateAssetStatusDto;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.Asset;
 import com.financemobile.fmassets.querySpec.AssetSpec;
@@ -42,6 +42,20 @@ public class AssetServiceImpl implements AssetService {
         //check if the category exist
         // check if the image is base64 encoded
         return null;
+    }
+
+    @Override
+    public Asset updateAssetStatus(UpdateAssetStatusDto updateAssetStatusDto) {
+        Optional<Asset> assetOptional =
+                assetRepository.findByName(updateAssetStatusDto.getAssetName());
+
+        if (assetOptional.isPresent()) {
+            Asset asset = assetOptional.get();
+            asset.setStatus(updateAssetStatusDto.getAssetStatus());
+            return assetRepository.save(asset);
+        }
+
+        throw new DataNotFoundException("record not found");
     }
 }
 
