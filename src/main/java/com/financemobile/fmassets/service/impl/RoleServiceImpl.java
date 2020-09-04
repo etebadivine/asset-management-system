@@ -5,10 +5,10 @@ import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.Role;
 import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.service.RoleService;
+import org.apache.tomcat.jni.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,5 +44,4 @@ public class RoleServiceImpl implements RoleService {
     public List<Role> getAllRoles() {
       return roleRepository.findAll();
     }
-
 }

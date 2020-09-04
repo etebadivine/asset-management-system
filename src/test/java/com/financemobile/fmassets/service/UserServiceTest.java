@@ -1,8 +1,6 @@
 package com.financemobile.fmassets.service;
 
-import com.financemobile.fmassets.dto.CreateUserDto;
-import com.financemobile.fmassets.dto.ResetPasswordDto;
-import com.financemobile.fmassets.dto.UpdateUserStatusDto;
+import com.financemobile.fmassets.dto.*;
 import com.financemobile.fmassets.enums.UserStatus;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
@@ -49,21 +47,21 @@ public class UserServiceTest {
         roleRepository.deleteAll();
     }
 
-//    @AfterEach
-//    public void tearDown() {
-//        userRepository.deleteAll();
-//        departmentRepository.deleteAll();
-//        roleRepository.deleteAll();
-//    }
+    @AfterEach
+    public void tearDown() {
+        userRepository.deleteAll();
+        departmentRepository.deleteAll();
+        roleRepository.deleteAll();
+    }
 
     @Test
-    public void test_addUser(){
+    public void test_addUser() {
         String firstName = "Reynolds";
         String lastName = "Adanu";
         String email = "you@gmail.com";
         String phone = "+233240456008";
         String password = "password";
-        CreateUserDto createUserDto = new CreateUserDto(firstName,lastName,email,phone,password);
+        CreateUserDto createUserDto = new CreateUserDto(firstName, lastName, email, phone, password);
         User user = userService.addUser(createUserDto);
 
 
@@ -76,16 +74,16 @@ public class UserServiceTest {
     }
 
     @Test
-    public void test_addUser_duplicate(){
+    public void test_addUser_duplicate() {
         String firstName = "Reynolds";
         String lastName = "Adanu";
         String email = "you@gmail.com";
         String phone = "+233240456008";
         String password = "password";
-        CreateUserDto createUserDto = new CreateUserDto(firstName,lastName,email,phone,password);
+        CreateUserDto createUserDto = new CreateUserDto(firstName, lastName, email, phone, password);
         userService.addUser(createUserDto);
 
-        Assertions.assertThrows(AlreadyExistException.class, ()->{
+        Assertions.assertThrows(AlreadyExistException.class, () -> {
             userService.addUser(createUserDto);
         });
     }
@@ -174,7 +172,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void test_getUserByEnail_notFound() {
+    public void test_getUserByEmail_notFound() {
         Assertions.assertThrows(DataNotFoundException.class, () -> {
             userService.getUserByEmail("unknow@fm.com");
         });
@@ -199,18 +197,19 @@ public class UserServiceTest {
         user.setDepartment(department);
         user.setRole(role);
         user = userRepository.save(user);
-        UpdateUserStatusDto updateUserStatusDto = new UpdateUserStatusDto(user.getId(),user.getStatus());
-        User user3 =  userService.updateStatus(updateUserStatusDto);
+        UpdateUserStatusDto updateUserStatusDto = new UpdateUserStatusDto(user.getId(), user.getStatus());
+        User user3 = userService.updateStatus(updateUserStatusDto);
     }
 
     @Test
     public void test_updateStatus_notFound() throws Exception {
         UpdateUserStatusDto updateUserStatusDto =
-                new UpdateUserStatusDto(4L,UserStatus.BLOCKED);
+                new UpdateUserStatusDto(4L, UserStatus.BLOCKED);
         Assertions.assertThrows(DataNotFoundException.class, () -> {
             userService.updateStatus(updateUserStatusDto);
         });
     }
+
     @Test
     public void test_resetPassword() {
         Department department = new Department();
@@ -241,7 +240,7 @@ public class UserServiceTest {
     public void test_resetPassword_notFound() {
         ResetPasswordDto resetPasswordDto = new ResetPasswordDto();
         resetPasswordDto.setUserId(30L);
-        Assertions.assertThrows(DataNotFoundException.class, ()->{
+        Assertions.assertThrows(DataNotFoundException.class, () -> {
             userService.resetPassword(resetPasswordDto);
         });
     }
@@ -271,8 +270,82 @@ public class UserServiceTest {
         ResetPasswordDto resetPasswordDto = new ResetPasswordDto();
         resetPasswordDto.setOldPassword("wrong_password");
         resetPasswordDto.setUserId(user.getId());
-        Assertions.assertThrows(PasswordMismatchException.class, ()->{
+        Assertions.assertThrows(PasswordMismatchException.class, () -> {
             userService.resetPassword(resetPasswordDto);
         });
     }
+
+    @Test
+    public void test_resetPasswordByEmail() {
+        Department department = new Department();
+        department.setName("Engineering");
+        department = departmentRepository.save(department);
+
+        Role role = new Role();
+        role.setName("USER");
+        role = roleRepository.save(role);
+
+        User user = new User();
+        user.setFirstName("Atta");
+        user.setLastName("Dwoa");
+        user.setEmail("me@gmail.com");
+        user.setPhone("+233241428114");
+        user.setPassword("password");
+        user.setStatus(UserStatus.ACTIVE);
+        user.setDepartment(department);
+        user.setRole(role);
+        userRepository.save(user);
+
+        ForgotPasswordDto forgotPasswordDto = new ForgotPasswordDto();
+        forgotPasswordDto.setEmail("email");
+        Assertions.assertTrue(true);
+    }
+
+    @Test
+    public void test_resetPasswordByEmail_notFound() {
+        Assertions.assertThrows(DataNotFoundException.class, () -> {
+            userService.getUserByEmail("notfound@gmail.com");
+        });
+    }
+
+    @Test
+    public void test_updateUserRole() {
+        Department department = new Department();
+        department.setName("Engineering");
+        department = departmentRepository.save(department);
+
+        Role role = new Role();
+        role.setId(200L);
+        role.setName("USER");
+        role = roleRepository.save(role);
+
+        User user = new User();
+        user.setFirstName("Divine");
+        user.setLastName("Eteba");
+        user.setEmail("me@gmail.com");
+        user.setPhone("+233241428114");
+        user.setPassword("password");
+        user.setStatus(UserStatus.ACTIVE);
+        user.setDepartment(department);
+        user.setRole(role);
+        userRepository.save(user);
+
+        Role role1 = new Role();
+        role1.setName("CTO");
+
+        UpdateUserRoleDto updateuserRoleDto = new UpdateUserRoleDto();
+        updateuserRoleDto.setRole(role1.getName());
+    }
+
+    @Test
+    public void test_updateUserRole_notFound() throws Exception {
+        UpdateUserRoleDto updateuserRoleDto = new UpdateUserRoleDto();
+        updateuserRoleDto.setRole("CTO");
+        updateuserRoleDto.setUserId(200L);
+        Assertions.assertThrows(DataNotFoundException.class, () -> {
+            userService.updateUserRole(updateuserRoleDto);
+        });
+    }
 }
+
+
