@@ -4,6 +4,7 @@ import com.financemobile.fmassets.dto.CreateAssetDto;
 import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.querySpec.AssetSpec;
 import com.financemobile.fmassets.repository.*;
+import com.financemobile.fmassets.service.*;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -38,20 +39,20 @@ public class AssetControllerTest {
     @MockBean
     private AssetRepository assetRepository;
 
-    @Autowired
-    private DepartmentRepository departmentRepository;
+    @MockBean
+    private DepartmentService departmentService;
 
-    @Autowired
-    private LocationRepository locationRepository;
+    @MockBean
+    private LocationService locationService;
 
-    @Autowired
-    private SupplierRepository supplierRepository;
+    @MockBean
+    private SupplierService supplierService;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+    @MockBean
+    private CategoryService categoryService;
 
-    @Autowired
-
+    @MockBean
+    private UserService userService;
 
     private final Gson gson = new Gson();
 
@@ -61,58 +62,74 @@ public class AssetControllerTest {
         Location location = new Location();
         location.setName("Tema");
         location.setCreatedBy("divine");
-        location = locationRepository.save(location);
 
         Supplier supplier = new Supplier();
         supplier.setName("AshForm");
         supplier.setAddress("Accra");
         supplier.setTelephone("+211 24 333 9999");
         supplier.setMobile("+233 54 214 878");
-        supplier = supplierRepository.save(supplier);
 
         Department department = new Department();
         department.setName("Kitchen");
-        department = departmentRepository.save(department);
 
         Category category = new Category();
         category.setName("Biscuits");
         category.setDescription("Fried,Baked");
-        category = categoryRepository.save(category);
+
+        User user = new User();
+        user.setId(20L);
+        user.setFirstName("Reynolds");
+        user.setLastName("Adanu");
 
         Asset asset = new Asset();
+        asset.setId(300L);
         asset.setName("Digestive");
         asset.setLocation(location);
         asset.setSupplier(supplier);
         asset.setDepartment(department);
         asset.setCategory(category);
+        asset.setUser(user);
         asset.setCreatedBy("Reynolds");
         asset.setDateCreated(new Date());
         asset.setDateModified(new Date());
+
+        Mockito.when(locationService.getLocationByName(Mockito.anyString()))
+                .thenReturn(location);
+        Mockito.when(supplierService.getSupplierByName(Mockito.anyString()))
+                .thenReturn(supplier);
+        Mockito.when(departmentService.getDepartmentByName(Mockito.anyString()))
+                .thenReturn(department);
+        Mockito.when(categoryService.getCategoryByName(Mockito.anyString()))
+                .thenReturn(category);
+        Mockito.when(userService.getUserById(Mockito.anyLong()))
+                .thenReturn(user);
 
         Mockito.when(assetRepository.save(Mockito.any(Asset.class)))
                 .thenReturn(asset);
 
         //payload for the endpoint
         CreateAssetDto createAssetDto = new CreateAssetDto();
-        createAssetDto.setName(asset.getName());
-        createAssetDto.setLocation(asset.getLocation().getName());
-        createAssetDto.setSupplier(asset.getSupplier().getName());
-        createAssetDto.setDepartment(asset.getDepartment().getName());
-        createAssetDto.setCategory(asset.getCategory().getName());
+        createAssetDto.setName("Laptop");
+        createAssetDto.setLocation("Tema");
+        createAssetDto.setSupplier("Kantanka");
+        createAssetDto.setDepartment("Engineering");
+        createAssetDto.setCategory("Computers");
+        createAssetDto.setUserId(200L);
 
         //fire request
         mockMvc.perform(post("/asset")
                 .content(gson.toJson(createAssetDto))
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("status", is(true)))
                 .andExpect(jsonPath("message", is("Success")))
-//                .andExpect(jsonPath("data.id", is(asset.getId().intValue())))
+                .andExpect(jsonPath("data.id", is(asset.getId().intValue())))
                 .andExpect(jsonPath("data.name", is(asset.getName())))
-                .andExpect(jsonPath("data.location", is(asset.getLocation())))
-                .andExpect(jsonPath("data.supplier", is(asset.getSupplier())))
-                .andExpect(jsonPath("data.department", is(asset.getDepartment())))
-                .andExpect(jsonPath("data.Category", is(asset.getCategory())));
+                .andExpect(jsonPath("data.location.name", is(asset.getLocation().getName())))
+                .andExpect(jsonPath("data.supplier.name", is(asset.getSupplier().getName())))
+                .andExpect(jsonPath("data.department.name", is(asset.getDepartment().getName())))
+                .andExpect(jsonPath("data.category.name", is(asset.getCategory().getName())))
+                .andExpect(jsonPath("data.user.id",is(asset.getUser().getId().intValue())));
     }
 
     @Test

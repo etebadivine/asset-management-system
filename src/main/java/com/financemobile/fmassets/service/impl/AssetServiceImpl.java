@@ -1,17 +1,14 @@
 package com.financemobile.fmassets.service.impl;
 
 import com.financemobile.fmassets.dto.CreateAssetDto;
-import com.financemobile.fmassets.dto.CreateLocationDto;
 import com.financemobile.fmassets.enums.AssetStatus;
 import com.financemobile.fmassets.exception.AlreadyExistException;
-import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.exception.ImageFormatException;
 import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.querySpec.AssetSpec;
 import com.financemobile.fmassets.repository.AssetRepository;
 import com.financemobile.fmassets.service.*;
 import io.micrometer.core.instrument.util.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -90,12 +86,8 @@ public class AssetServiceImpl implements AssetService {
         assetDetails.setSerialNumber(createAssetDto.getSerialNumber());
 
         //check if the image is base64 encoded
-        if(Base64.isBase64(createAssetDto.getImageBytes())){
-            assetDetails.setImageBytes(createAssetDto.getImageBytes());
-        }
-        else {
-            throw new ImageFormatException("Image is not base64 encoded");
-        }
+        assetDetails.setImageBytes(createAssetDto.getImageBytes());
+
 
         assetDetails.setWarranty(createAssetDto.getWarranty());
         assetDetails.setLicenses(createAssetDto.getLicenses());
@@ -106,7 +98,7 @@ public class AssetServiceImpl implements AssetService {
         asset.setCategory(category);
 
         //check if user is passed to asset
-        if(StringUtils.isEmpty(String.valueOf(createAssetDto.getUserId()))){
+        if(createAssetDto.getUserId() != null){
             User user = userService.getUserById(createAssetDto.getUserId());
             asset.setUser(user);
             asset.setStatus(AssetStatus.ASSIGNED);

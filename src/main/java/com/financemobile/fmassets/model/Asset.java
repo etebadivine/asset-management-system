@@ -27,7 +27,7 @@ public class Asset {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "asset_details_id")
     private AssetDetails assetDetails;
     @ManyToOne(fetch = FetchType.EAGER)
