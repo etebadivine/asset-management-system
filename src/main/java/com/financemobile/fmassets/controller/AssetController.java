@@ -28,7 +28,8 @@ public class AssetController {
     @PostMapping(value = "")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse createAsset(@RequestBody CreateAssetDto createAssetDto){
-        Asset asset = assetService.addAsset(createAssetDto);
+
+        Asset asset = assetService.addAsset(createAssetDto.getName(),createAssetDto.getLocation(),createAssetDto.getSupplier(),);
         ApiResponse response = new ApiResponse();
         response.setStatus(true);
         response.setMessage("Success");

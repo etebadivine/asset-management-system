@@ -82,24 +82,24 @@ public class AssetServiceImpl implements AssetService {
             asset.setDepartment(department);
         }
 
-//        AssetDetails assetDetails = new AssetDetails();
-//        assetDetails.setMake(createAssetDto.getMake());
-//        assetDetails.setColor(createAssetDto.getColor());
-//        assetDetails.setModel(createAssetDto.getModel());
-//        assetDetails.setManufacturer(createAssetDto.getManufacturer());
-//        assetDetails.setSerialNumber(createAssetDto.getSerialNumber());
+        AssetDetails assetDetails = new AssetDetails();
+        assetDetails.setMake(createAssetDto.getMake());
+        assetDetails.setColor(createAssetDto.getColor());
+        assetDetails.setModel(createAssetDto.getModel());
+        assetDetails.setManufacturer(createAssetDto.getManufacturer());
+        assetDetails.setSerialNumber(createAssetDto.getSerialNumber());
 
-        // check if the image is base64 encoded
-//        if(Base64.isBase64(createAssetDto.getImageBytes())){
-//            assetDetails.setImageBytes(createAssetDto.getImageBytes());
-//        }
-//        else {
-//            throw new ImageFormatException("Image is not base64 encoded");
-//        }
-//
-//        assetDetails.setWarranty(createAssetDto.getWarranty());
-//        assetDetails.setLicenses(createAssetDto.getLicenses());
-//        asset.setAssetDetails(assetDetails);
+        //check if the image is base64 encoded
+        if(Base64.isBase64(createAssetDto.getImageBytes())){
+            assetDetails.setImageBytes(createAssetDto.getImageBytes());
+        }
+        else {
+            throw new ImageFormatException("Image is not base64 encoded");
+        }
+
+        assetDetails.setWarranty(createAssetDto.getWarranty());
+        assetDetails.setLicenses(createAssetDto.getLicenses());
+        asset.setAssetDetails(assetDetails);
 
         //check if the category exist
         Category category = categoryService.getCategoryByName(createAssetDto.getCategory());
