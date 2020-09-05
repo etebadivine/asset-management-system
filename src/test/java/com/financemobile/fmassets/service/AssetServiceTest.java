@@ -128,14 +128,32 @@ public class AssetServiceTest {
 
     @Test
     public void test_addAsset_duplicate(){
-        String name = "Executive Desk";
-        String location = "Comm 8";
-        String supplier = "Orca Home";
-        String department = "Human Resource";
-        String category = "Furniture";
-        CreateAssetDto createAssetDto = new CreateAssetDto(name,location,supplier,department,category);
 
-        Asset asset = assetService.addAsset(createAssetDto);
+        Category category = new Category();
+        category.setId(4L);
+        category.setName("Furniture");
+        category = categoryRepository.save(category);
+
+        Supplier supplier = new Supplier();
+        supplier.setId(2L);
+        supplier.setName("Orca Home");
+        supplier = supplierRepository.save(supplier);
+
+
+        CreateAssetDto createAssetDto = new CreateAssetDto();
+        createAssetDto.setName("Executive Desk");
+        createAssetDto.setSupplier(supplier.getName());
+        createAssetDto.setMake("");
+        createAssetDto.setColor("white");
+        createAssetDto.setModel("2C7");
+        createAssetDto.setCategory(category.getName());
+        createAssetDto.setManufacturer("Orca Home");
+        createAssetDto.setSerialNumber("65465465465456564");
+        createAssetDto.setImageBytes("dHJ5dGZ5dGZ5dGZ5dA==");
+        createAssetDto.setWarranty("One Year");
+
+
+        assetService.addAsset(createAssetDto);
         Assertions.assertThrows(AlreadyExistException.class, ()->{
             assetService.addAsset(createAssetDto);
         });
