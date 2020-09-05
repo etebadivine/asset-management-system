@@ -1,15 +1,16 @@
 package com.financemobile.fmassets.service.impl;
 
 
-import com.financemobile.fmassets.dto.CreateUserDto;
-import com.financemobile.fmassets.dto.ResetPasswordDto;
+import com.financemobile.fmassets.dto.*;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.exception.PasswordMismatchException;
-import com.financemobile.fmassets.dto.UpdateUserStatusDto;
+import com.financemobile.fmassets.model.Role;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
+import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.repository.UserRepository;
+import com.financemobile.fmassets.service.RoleService;
 import com.financemobile.fmassets.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,15 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private RoleService roleService;
+
+    @Autowired
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -35,7 +45,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User addUser(CreateUserDto createUserDto) {
 
-        if(userRepository.existsByEmail(createUserDto.getEmail())){
+        if (userRepository.existsByEmail(createUserDto.getEmail())) {
             throw new AlreadyExistException("User already exist");
         }
 
@@ -53,7 +63,7 @@ public class UserServiceImpl implements UserService {
     public List<User> searchUsers(UserSpec userSpec, Pageable pageable) {
         List<User> userList = new ArrayList<>();
         Page<User> usersPage = userRepository.findAll(userSpec, pageable);
-        if(usersPage.hasContent())
+        if (usersPage.hasContent())
             return usersPage.getContent();
         return userList;
     }
@@ -62,18 +72,19 @@ public class UserServiceImpl implements UserService {
     public User getUserById(Long id) {
         Optional<User> userOptional = userRepository.findById(id);
 
-        if(userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             return userOptional.get();
         }
 
         throw new DataNotFoundException("user not found");
     }
 
+
     @Override
     public User getUserByEmail(String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
 
-        if(userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             return userOptional.get();
         }
 
@@ -86,7 +97,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> userOptional =
                 userRepository.findById(updateUserStatusDto.getUserId());
 
-        if (userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             User user = userOptional.get();
             user.setStatus(updateUserStatusDto.getStatus());
             return userRepository.save(user);
@@ -102,11 +113,43 @@ public class UserServiceImpl implements UserService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             if (user.getPassword().equals(resetPasswordDto.getOldPassword())) {
-                    user.setPassword(resetPasswordDto.getNewPassword());
-                    return userRepository.save(user);
+                user.setPassword(resetPasswordDto.getNewPassword());
+                return userRepository.save(user);
             }
-        throw new PasswordMismatchException("password mismatch");
+            throw new PasswordMismatchException("password mismatch");
         }
         throw new DataNotFoundException("user not found");
     }
+
+    @Override
+    public Boolean forgotPassword(ForgotPasswordDto forgotPasswordDto) {
+
+        if (!userRepository.existsByEmail(forgotPasswordDto.getEmail())) {
+            User user = new User();
+            user.setEmail(forgotPasswordDto.getEmail());
+            return true;
+        }
+
+        throw new DataNotFoundException("email user does not exist");
+    }
+
+    @Override
+    public User updateUserRole(UpdateUserRoleDto updateuserRoleDto) {
+        User user = getUserById(updateuserRoleDto.getUserId());
+        Optional<Role> roleOptional = roleRepository.findByName(updateuserRoleDto.getRole());
+
+        if (roleOptional.isPresent()) {
+            user.setRole(roleOptional.get());
+        } else throw new DataNotFoundException("role not found");
+
+        return userRepository.save(user);
+    }
 }
+
+
+
+
+
+
+
+
