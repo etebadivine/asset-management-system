@@ -8,5 +8,6 @@ import java.util.Optional;
 
 public interface AssetRepository extends PagingAndSortingRepository<Asset,Long>, JpaSpecificationExecutor<Asset> {
 
+    Boolean existsByName(String name);
     Optional<Asset> findByName(String name);
 }

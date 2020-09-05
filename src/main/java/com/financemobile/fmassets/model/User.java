@@ -45,4 +45,7 @@ public class User {
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<AssignmentHistory> assignmentHistories = new HashSet<>();
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Asset> assets = new HashSet<>();
 }

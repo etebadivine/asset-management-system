@@ -13,13 +13,11 @@ public interface UserService {
 
     List<User> searchUsers(UserSpec userSpec, Pageable pageable);
     User addUser(CreateUserDto createUserDto);
-
     User getUserById(Long id);
-
     User getUserByEmail(String email);
     User resetPassword(ResetPasswordDto resetPasswordDto);
     User updateStatus(UpdateUserStatusDto updateUserStatusDto);
-    Boolean resetPasswordByEmail(ForgotPasswordDto forgotPasswordDto);
+    Boolean forgotPassword(ForgotPasswordDto forgotPasswordDto);
     User updateUserRole(UpdateUserRoleDto updateuserRoleDto);
 }
 
