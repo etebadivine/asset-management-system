@@ -2,6 +2,7 @@ package com.financemobile.fmassets.controller;
 
 import com.financemobile.fmassets.dto.ApiResponse;
 import com.financemobile.fmassets.dto.CreateAssetDto;
+import com.financemobile.fmassets.dto.EditAssetDto;
 import com.financemobile.fmassets.model.Asset;
 import com.financemobile.fmassets.querySpec.AssetSpec;
 import com.financemobile.fmassets.service.AssetService;
@@ -44,8 +45,22 @@ public class AssetController {
 
         ApiResponse response = new ApiResponse();
         response.setStatus(true);
-        response.setData(assetList);
         response.setMessage("Success");
+        response.setData(assetList);
+
+        return response;
+    }
+
+    @PostMapping(value = "/edit-asset")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse editAsset(@RequestBody EditAssetDto editAssetDto){
+
+        Asset asset = assetService.editAsset(editAssetDto);
+
+        ApiResponse response = new ApiResponse();
+        response.setStatus(true);
+        response.setMessage("Success");
+        response.setData(asset);
 
         return response;
     }

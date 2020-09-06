@@ -1,6 +1,7 @@
 package com.financemobile.fmassets.service;
 
 import com.financemobile.fmassets.dto.CreateAssetDto;
+import com.financemobile.fmassets.dto.EditAssetDto;
 import com.financemobile.fmassets.model.Asset;
 import com.financemobile.fmassets.querySpec.AssetSpec;
 import org.springframework.data.domain.Pageable;
@@ -12,5 +13,5 @@ public interface AssetService {
 
     List<Asset> searchAssets(AssetSpec assetSpec, Pageable pageable);
     Asset addAsset(CreateAssetDto createAssetDto);
-
+    Asset editAsset(EditAssetDto editAssetDto);
 }

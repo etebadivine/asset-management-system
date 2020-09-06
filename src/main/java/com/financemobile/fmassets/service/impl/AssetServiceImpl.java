@@ -1,8 +1,10 @@
 package com.financemobile.fmassets.service.impl;
 
 import com.financemobile.fmassets.dto.CreateAssetDto;
+import com.financemobile.fmassets.dto.EditAssetDto;
 import com.financemobile.fmassets.enums.AssetStatus;
 import com.financemobile.fmassets.exception.AlreadyExistException;
+import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.exception.ImageFormatException;
 import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.querySpec.AssetSpec;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -107,6 +110,39 @@ public class AssetServiceImpl implements AssetService {
             asset.setStatus(AssetStatus.AVAILABLE);
         }
         return assetRepository.save(asset);
+    }
+
+    @Override
+    public Asset editAsset(EditAssetDto editAssetDto) {
+
+        Optional<Asset> assetOptional = assetRepository.findByName(editAssetDto.getName());
+        if (assetOptional.isPresent()){
+           Asset asset = assetOptional.get();
+
+           Location location = locationService.getLocationByName(editAssetDto.getLocation());
+           asset.setLocation(location);
+
+           Supplier supplier = supplierService.getSupplierByName(editAssetDto.getSupplier());
+           asset.setSupplier(supplier);
+
+           Department department = departmentService.getDepartmentByName(editAssetDto.getDepartment());
+           asset.setDepartment(department);
+
+           Category category = categoryService.getCategoryByName(editAssetDto.getCategory());
+           asset.setCategory(category);
+
+           if (editAssetDto.getUserId() != null){
+               User user = userService.getUserById(editAssetDto.getUserId());
+               asset.setUser(user);
+               asset.setStatus(AssetStatus.ASSIGNED);
+           }
+           else{
+               asset.setStatus(AssetStatus.AVAILABLE);
+           }
+           return assetRepository.save(asset);
+        }
+
+        throw new DataNotFoundException("Asset not found");
     }
 }
 
