@@ -47,7 +47,7 @@ public class AssetServiceImpl implements AssetService {
     @Override
     public Asset updateAssetStatus(UpdateAssetStatusDto updateAssetStatusDto) {
         Optional<Asset> assetOptional =
-                assetRepository.findByName(updateAssetStatusDto.getAssetName());
+                assetRepository.findById(updateAssetStatusDto.getAssetId());
 
         if (assetOptional.isPresent()) {
             Asset asset = assetOptional.get();

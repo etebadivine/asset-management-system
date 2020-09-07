@@ -64,7 +64,6 @@ public class AssetController {
         response.setData(asset);
         return response;
     }
-
 }
 
 

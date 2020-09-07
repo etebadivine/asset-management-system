@@ -103,6 +103,7 @@ public class AssetServiceTest {
         department = departmentRepository.save(department);
 
         Asset asset = new Asset();
+        asset.setId(30L);
         asset.setName("Laptop");
         asset.setStatus(AssetStatus.DAMAGED);
         asset.setDepartment(department);
@@ -110,7 +111,7 @@ public class AssetServiceTest {
 
         UpdateAssetStatusDto updateAssetStatusDto =
                 new UpdateAssetStatusDto();
-        updateAssetStatusDto.setAssetName(asset.getName());
+        updateAssetStatusDto.setAssetId(asset.getId());
         updateAssetStatusDto.setAssetStatus(asset.getStatus());
         Asset asset1 = assetService.updateAssetStatus(updateAssetStatusDto);
     }
@@ -119,7 +120,7 @@ public class AssetServiceTest {
     public void test_updateAssetStatus_notFound() throws Exception {
         UpdateAssetStatusDto updateAssetStatusDto =
                 new UpdateAssetStatusDto();
-        updateAssetStatusDto.setAssetName("Laptop");
+        updateAssetStatusDto.setAssetId(30L);
         updateAssetStatusDto.setAssetStatus(AssetStatus.DAMAGED);
         Assertions.assertThrows(DataNotFoundException.class, () -> {
             assetService.updateAssetStatus(updateAssetStatusDto);

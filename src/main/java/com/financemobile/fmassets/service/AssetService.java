@@ -15,5 +15,4 @@ public interface AssetService {
     List<Asset> searchAssets(AssetSpec assetSpec, Pageable pageable);
     Asset addAsset(CreateAssetDto createAssetDto);
     Asset updateAssetStatus(UpdateAssetStatusDto updateAssetStatusDto);
-
 }

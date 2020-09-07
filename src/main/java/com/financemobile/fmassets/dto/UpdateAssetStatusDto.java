@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 public class UpdateAssetStatusDto {
 
     @NotBlank
-    private String assetName;
+    private Long assetId;
 
     @NotBlank
     private AssetStatus assetStatus;

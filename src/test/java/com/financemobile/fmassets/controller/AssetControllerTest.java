@@ -76,7 +76,6 @@ public class AssetControllerTest {
                 .andExpect(jsonPath("$.data[0].location", is(asset.getLocation())));
     }
 
-
     @Test
     public void test_updateAssetStatus() throws Exception {
 
@@ -88,20 +87,20 @@ public class AssetControllerTest {
         department.setDateCreated(new Date());
         department.setDateModified(new Date());
 
-
         Asset asset = new Asset();
+        asset.setId(30L);
         asset.setName("Laptop");
         asset.setStatus(AssetStatus.DAMAGED);
         asset.setDepartment(department);
 
-        Mockito.when(assetRepository.findByName(Mockito.any(String.class)))
+        Mockito.when(assetRepository.findById(Mockito.any(Long.class)))
                 .thenReturn(Optional.of(asset));
 
         Mockito.when(assetRepository.save(Mockito.any(Asset.class)))
                 .thenReturn(asset);
 
         UpdateAssetStatusDto updateAssetStatusDto = new UpdateAssetStatusDto();
-        updateAssetStatusDto.setAssetName(asset.getName());
+        updateAssetStatusDto.setAssetId(asset.getId());
         updateAssetStatusDto.setAssetStatus(asset.getStatus());
 
         mockMvc.perform(post("/asset/status")
@@ -110,7 +109,8 @@ public class AssetControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", is(true)))
                 .andExpect(jsonPath("message", is("Success")))
-                .andExpect(jsonPath("data.name", is(asset.getName())))
-                .andExpect(jsonPath("data.status", is(asset.getStatus().toString())));
+                .andExpect(jsonPath("data.id", is(asset.getId().intValue())))
+                .andExpect(jsonPath("data.status", is(asset.getStatus().toString())))
+                .andExpect(jsonPath("data.name", is(asset.getName())));
     }
 }
