@@ -142,6 +142,44 @@ public class UserServiceTest {
     }
 
     @Test
+    public void test_getUserById() {
+        Department department = new Department();
+        department.setName("Engineering");
+        department = departmentRepository.save(department);
+
+        Role role = new Role();
+        role.setName("USER");
+        role = roleRepository.save(role);
+
+        User user = new User();
+        user.setFirstName("Atta");
+        user.setLastName("Dwoa");
+        user.setEmail("me@gmail.com");
+        user.setPhone("+233241428114");
+        user.setPassword("password");
+        user.setStatus(UserStatus.ACTIVE);
+        user.setDepartment(department);
+        user.setRole(role);
+        userRepository.save(user);
+
+        User createdUser = userService.getUserById(user.getId());
+        Assertions.assertEquals(user.getFirstName(), createdUser.getFirstName());
+        Assertions.assertEquals(user.getLastName(), createdUser.getLastName());
+        Assertions.assertEquals(user.getPhone(), createdUser.getPhone());
+        Assertions.assertEquals(user.getStatus(), createdUser.getStatus());
+        Assertions.assertEquals(user.getRole().getName(), createdUser.getRole().getName());
+        Assertions.assertEquals(user.getDepartment().getName(), createdUser.getDepartment().getName());
+    }
+
+    @Test
+    public void test_getUserById_notFound() {
+        Assertions.assertThrows(DataNotFoundException.class, () -> {
+            userService.getUserById(4L);
+        });
+    }
+
+
+    @Test
     public void test_getUserByEmail() {
         Department department = new Department();
         department.setName("Engineering");

@@ -121,7 +121,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean resetPasswordByEmail(ForgotPasswordDto forgotPasswordDto) {
+    public Boolean forgotPassword(ForgotPasswordDto forgotPasswordDto) {
 
         if (!userRepository.existsByEmail(forgotPasswordDto.getEmail())) {
             User user = new User();

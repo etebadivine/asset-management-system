@@ -18,11 +18,12 @@ public class AssetDetails {
     private Long id;
     private String warranty;
     private String licenses;
+    private String make;
     private String model;
     private String manufacturer;
     private String color;
     @Column(name = "serial_number")
-    private Long serialNumber;
+    private String serialNumber;
     @Column(name = "image_bytes")
     private String imageBytes;
     @Column(name = "purchased_date")

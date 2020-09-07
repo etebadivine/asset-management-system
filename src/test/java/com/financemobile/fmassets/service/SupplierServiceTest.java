@@ -35,7 +35,7 @@ public class SupplierServiceTest {
 
     @Test
     public void test_addSupplier(){
-        String name = "Franko Trading Enterprise";
+        String name = "Orca Home";
         String address = "Accra";
         String telephone = "+211 24 333 9999";
         String mobile = "+233 54 214 878";
@@ -51,7 +51,7 @@ public class SupplierServiceTest {
 
     @Test
     public void test_addSupplier_duplicate(){
-        String name = "Franko Trading Enterprise";
+        String name = "Orca Home";
         String address = "Accra";
         String telephone = "+211 24 333 9999";
         String mobile = "+233 54 214 878";
@@ -65,7 +65,7 @@ public class SupplierServiceTest {
 
     @Test
     public void test_getSupplierById(){
-        String name = "Franko Trading Enterprise";
+        String name = "Orca Home";
         String address = " Accra";
         String telephone = "+211 24 333 9999";
         String mobile = "+233 54 214 878";
@@ -89,7 +89,7 @@ public class SupplierServiceTest {
 
     @Test
     public void test_getSupplierByName(){
-        String name = "Franko Trading Enterprise";
+        String name = "Orca Home";
         String address = " Accra";
         String telephone = "+211 24 333 9999";
         String mobile = "+233 54 214 878";
@@ -113,7 +113,7 @@ public class SupplierServiceTest {
 
     @Test
     public void test_getAllSuppliers(){
-        String name = "Franko Trading Enterprise";
+        String name = "Orca Home";
         String address = " Accra";
         String telephone = "+211 24 333 9999";
         String mobile = "+233 54 214 878";
@@ -130,7 +130,7 @@ public class SupplierServiceTest {
 
     @Test
     public void test_removeSupplier() {
-        String name = "Franko Trading Enterprise";
+        String name = "Orca Home";
         String address = " Accra";
         String telephone = "+211 24 333 9999";
         String mobile = "+233 54 214 878";

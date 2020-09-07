@@ -3,11 +3,14 @@ package com.financemobile.fmassets.service;
 import com.financemobile.fmassets.dto.UpdateAssetStatusDto;
 import com.financemobile.fmassets.enums.AssetStatus;
 import com.financemobile.fmassets.exception.DataNotFoundException;
+import com.financemobile.fmassets.dto.CreateAssetDto;
+import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.querySpec.AssetSpec;
 import com.financemobile.fmassets.repository.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,11 +43,149 @@ public class AssetServiceTest {
     @Autowired
     private LocationRepository locationRepository;
 
-    @AfterEach
-    public void tearDown() {
-        assetRepository.deleteAll();
-        departmentRepository.deleteAll();
-        locationRepository.deleteAll();
+    @Autowired
+    private SupplierRepository supplierRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @BeforeEach
+    public void setup() {
+           assetRepository.deleteAll();
+           locationRepository.deleteAll();
+           supplierRepository.deleteAll();
+           departmentRepository.deleteAll();
+           categoryRepository.deleteAll();
+    }
+
+      @AfterEach
+       public void tearDown() {
+           assetRepository.deleteAll();
+           locationRepository.deleteAll();
+           supplierRepository.deleteAll();
+           departmentRepository.deleteAll();
+           categoryRepository.deleteAll();
+    }
+
+    @Test
+    public void test_addAsset(){
+        Location location = new Location();
+        location.setId(1l);
+        location.setName("Tema");
+        location = locationRepository.save(location);
+
+        Supplier supplier = new Supplier();
+        supplier.setId(2L);
+        supplier.setName("Orca Home");
+        supplier = supplierRepository.save(supplier);
+
+        Department department = new Department();
+        department.setId(3L);
+        department.setName("Human Resource");
+        department = departmentRepository.save(department);
+
+        Category category = new Category();
+        category.setId(4L);
+        category.setName("Furniture");
+        category = categoryRepository.save(category);
+
+        User user = new User();
+        user.setFirstName("Reynolds");
+        user.setLastName("Adanu");
+        user = userRepository.save(user);
+
+        CreateAssetDto createAssetDto = new CreateAssetDto();
+        createAssetDto.setName("Executive Desk");
+        createAssetDto.setLocation(location.getName());
+        createAssetDto.setSupplier(supplier.getName());
+        createAssetDto.setDepartment(department.getName());
+        createAssetDto.setMake("");
+        createAssetDto.setColor("white");
+        createAssetDto.setModel("2C7");
+        createAssetDto.setCategory(category.getName());
+        createAssetDto.setManufacturer("Orca Home");
+        createAssetDto.setSerialNumber("65465465465456564");
+        createAssetDto.setImageBytes("dHJ5dGZ5dGZ5dGZ5dA==");
+        createAssetDto.setWarranty("One Year");
+        createAssetDto.setUserId(user.getId());
+
+
+        Asset asset = assetService.addAsset(createAssetDto);
+        Assertions.assertNotNull(asset.getId());
+        Assertions.assertEquals(asset.getName(), createAssetDto.getName());
+        Assertions.assertEquals(asset.getLocation().getName(), createAssetDto.getLocation());
+        Assertions.assertEquals(asset.getSupplier().getName(), createAssetDto.getSupplier());
+        Assertions.assertEquals(asset.getDepartment().getName(), createAssetDto.getDepartment());
+        Assertions.assertEquals(asset.getCategory().getName(), createAssetDto.getCategory());
+        Assertions.assertEquals(asset.getUser().getId(), createAssetDto.getUserId().intValue());
+        Assertions.assertEquals(asset.getStatus(), AssetStatus.ASSIGNED);
+    }
+
+    @Test
+    public void test_addAsset_duplicate(){
+
+        Category category = new Category();
+        category.setId(4L);
+        category.setName("Furniture");
+        category = categoryRepository.save(category);
+
+        Supplier supplier = new Supplier();
+        supplier.setId(2L);
+        supplier.setName("Orca Home");
+        supplier = supplierRepository.save(supplier);
+
+        CreateAssetDto createAssetDto = new CreateAssetDto();
+        createAssetDto.setName("Executive Desk");
+        createAssetDto.setSupplier(supplier.getName());
+        createAssetDto.setMake("");
+        createAssetDto.setColor("white");
+        createAssetDto.setModel("2C7");
+        createAssetDto.setCategory(category.getName());
+        createAssetDto.setManufacturer("Orca Home");
+        createAssetDto.setSerialNumber("65465465465456564");
+        createAssetDto.setImageBytes("dHJ5dGZ5dGZ5dGZ5dA==");
+        createAssetDto.setWarranty("One Year");
+
+        assetService.addAsset(createAssetDto);
+        Assertions.assertThrows(AlreadyExistException.class, ()->{
+            assetService.addAsset(createAssetDto);
+        });
+    }
+
+    @Test
+    public void test_assetNotAssigned(){
+
+        Supplier supplier = new Supplier();
+        supplier.setId(2L);
+        supplier.setName("Orca Home");
+        supplier = supplierRepository.save(supplier);
+
+        Category category = new Category();
+        category.setId(4L);
+        category.setName("Furniture");
+        category = categoryRepository.save(category);
+
+        CreateAssetDto createAssetDto = new CreateAssetDto();
+        createAssetDto.setName("Executive Desk");
+        createAssetDto.setSupplier(supplier.getName());
+        createAssetDto.setMake("");
+        createAssetDto.setColor("white");
+        createAssetDto.setModel("2C7");
+        createAssetDto.setCategory(category.getName());
+        createAssetDto.setManufacturer("Orca Home");
+        createAssetDto.setSerialNumber("65465465465456564");
+        createAssetDto.setImageBytes("dHJ5dGZ5dGZ5dGZ5dA==");
+        createAssetDto.setWarranty("One Year");
+
+        Asset asset = assetService.addAsset(createAssetDto);
+        Assertions.assertNotNull(asset.getId());
+        Assertions.assertEquals(asset.getName(), createAssetDto.getName());
+        Assertions.assertEquals(asset.getSupplier().getName(), createAssetDto.getSupplier());
+        Assertions.assertEquals(asset.getCategory().getName(), createAssetDto.getCategory());
+        Assertions.assertEquals(asset.getStatus(), AssetStatus.AVAILABLE);
     }
 
     @Test
@@ -112,8 +253,10 @@ public class AssetServiceTest {
         UpdateAssetStatusDto updateAssetStatusDto =
                 new UpdateAssetStatusDto();
         updateAssetStatusDto.setAssetId(asset.getId());
-        updateAssetStatusDto.setAssetStatus(asset.getStatus());
+        updateAssetStatusDto.setAssetStatus(AssetStatus.STOLEN);
+
         Asset asset1 = assetService.updateAssetStatus(updateAssetStatusDto);
+        Assertions.assertEquals(asset1.getStatus(),asset1.getStatus());
     }
 
     @Test

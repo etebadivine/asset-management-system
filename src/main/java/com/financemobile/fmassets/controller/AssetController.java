@@ -28,6 +28,18 @@ public class AssetController {
         this.assetService = assetService;
     }
 
+    @PostMapping(value = "")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse createAsset(@RequestBody CreateAssetDto createAssetDto){
+
+        Asset asset = assetService.addAsset(createAssetDto);
+        ApiResponse response = new ApiResponse();
+        response.setStatus(true);
+        response.setMessage("Success");
+        response.setData(asset);
+        return response;
+    }
+
     @GetMapping
     public ApiResponse searchAssets(AssetSpec assetSpec, Pageable pageable) {
 
@@ -40,12 +52,6 @@ public class AssetController {
 
         return response;
     }
-
-    @PostMapping
-    public ApiResponse createAsset(@RequestBody CreateAssetDto createAssetDto){
-        return null;
-    }
-
 
     @PostMapping("/image")
     public ApiResponse uploadImage(@RequestParam("file") MultipartFile file){

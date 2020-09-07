@@ -28,5 +28,17 @@ public class CreateAssetDto {
     private String imageBytes;
     private String warranty;
     private String licenses;
+    private Long userId;
     private Map<String, String> metaData;
+
+    public CreateAssetDto(@NotBlank String name, @NotBlank String location, @NotBlank String supplier, @NotBlank String department, @NotBlank String category) {
+        this.name = name;
+        this.location = location;
+        this.supplier = supplier;
+        this.department = department;
+        this.category = category;
+    }
+
+    public CreateAssetDto() {
+    }
 }

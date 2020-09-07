@@ -10,6 +10,7 @@ import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.service.UserService;
 import com.financemobile.fmassets.service.impl.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,8 @@ public class UserController {
 
     private UserService userService;
 
-    public UserController(UserServiceImpl userService) {
+    @Autowired
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
@@ -93,7 +95,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse forgotPassword(@RequestBody ForgotPasswordDto forgotPasswordDto){
 
-        Boolean user = userService.resetPasswordByEmail(forgotPasswordDto);
+        Boolean user = userService.forgotPassword(forgotPasswordDto);
 
         // To Do:reset by email
         ApiResponse response = new ApiResponse();

@@ -27,7 +27,7 @@ public class Asset {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "asset_details_id")
     private AssetDetails assetDetails;
     @ManyToOne(fetch = FetchType.EAGER)
@@ -39,6 +39,9 @@ public class Asset {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = true)
+    private User user;
     @Column(name = "created_by")
     private String createdBy;
     @CreationTimestamp
