@@ -256,7 +256,7 @@ public class AssetServiceTest {
         updateAssetStatusDto.setAssetStatus(AssetStatus.STOLEN);
 
         Asset asset1 = assetService.updateAssetStatus(updateAssetStatusDto);
-        Assertions.assertEquals(asset1.getStatus(),asset1.getStatus());
+        Assertions.assertEquals(asset1.getStatus(),updateAssetStatusDto.getAssetStatus());
     }
 
     @Test
