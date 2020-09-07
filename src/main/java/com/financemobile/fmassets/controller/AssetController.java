@@ -3,8 +3,10 @@ package com.financemobile.fmassets.controller;
 import com.financemobile.fmassets.dto.ApiResponse;
 import com.financemobile.fmassets.dto.CreateAssetDto;
 import com.financemobile.fmassets.dto.EditAssetDto;
+import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.Asset;
 import com.financemobile.fmassets.querySpec.AssetSpec;
+import com.financemobile.fmassets.repository.AssetRepository;
 import com.financemobile.fmassets.service.AssetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -51,9 +54,10 @@ public class AssetController {
         return response;
     }
 
-    @PostMapping(value = "/edit-asset")
+    @PutMapping(value = "/edit-asset")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse editAsset(@RequestBody EditAssetDto editAssetDto){
+    public ApiResponse editAsset(@Valid @RequestBody EditAssetDto editAssetDto){
+
 
         Asset asset = assetService.editAsset(editAssetDto);
 

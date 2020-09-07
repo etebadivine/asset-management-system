@@ -229,7 +229,7 @@ public class AssetControllerTest {
         editAssetDto.setCategory("Food");
         editAssetDto.setUserId(user.getId());
 
-        mockMvc.perform(post("/asset/edit-asset")
+        mockMvc.perform(put("/asset/edit-asset")
                 .content(gson.toJson(editAssetDto))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
