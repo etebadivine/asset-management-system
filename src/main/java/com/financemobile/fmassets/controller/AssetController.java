@@ -58,7 +58,6 @@ public class AssetController {
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse editAsset(@Valid @RequestBody EditAssetDto editAssetDto){
 
-
         Asset asset = assetService.editAsset(editAssetDto);
 
         ApiResponse response = new ApiResponse();
@@ -73,7 +72,6 @@ public class AssetController {
     public ApiResponse uploadImage(@RequestParam("file") MultipartFile file){
         return null;
     }
-
 }
 
 
