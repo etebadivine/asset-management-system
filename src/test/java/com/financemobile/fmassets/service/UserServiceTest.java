@@ -235,8 +235,14 @@ public class UserServiceTest {
         user.setDepartment(department);
         user.setRole(role);
         user = userRepository.save(user);
-        UpdateUserStatusDto updateUserStatusDto = new UpdateUserStatusDto(user.getId(), user.getStatus());
+
+        UpdateUserStatusDto updateUserStatusDto = new UpdateUserStatusDto();
+        updateUserStatusDto.setUserId(user.getId());
+        updateUserStatusDto.setStatus(UserStatus.BLOCKED);
+
         User user3 = userService.updateStatus(updateUserStatusDto);
+        Assertions.assertEquals(user3.getId(),updateUserStatusDto.getUserId());
+        Assertions.assertEquals(user3.getStatus(),updateUserStatusDto.getStatus());
     }
 
     @Test
@@ -314,7 +320,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void test_resetPasswordByEmail() {
+    public void test_forgotPassword() {
         Department department = new Department();
         department.setName("Engineering");
         department = departmentRepository.save(department);
@@ -332,15 +338,17 @@ public class UserServiceTest {
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);
-        userRepository.save(user);
+        user = userRepository.save(user);
 
         ForgotPasswordDto forgotPasswordDto = new ForgotPasswordDto();
-        forgotPasswordDto.setEmail("email");
-        Assertions.assertTrue(true);
+        forgotPasswordDto.setEmail(user.getEmail());
+
+        boolean emailExist = userService.forgotPassword(forgotPasswordDto);
+        Assertions.assertTrue(emailExist);
     }
 
     @Test
-    public void test_resetPasswordByEmail_notFound() {
+    public void test_forgotPassword_notFound() {
         Assertions.assertThrows(DataNotFoundException.class, () -> {
             userService.getUserByEmail("notfound@gmail.com");
         });
@@ -366,13 +374,21 @@ public class UserServiceTest {
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);
-        userRepository.save(user);
+        user = userRepository.save(user);
 
         Role role1 = new Role();
+        role1.setId(200L);
         role1.setName("CTO");
+        role1 = roleRepository.save(role1);
+
 
         UpdateUserRoleDto updateuserRoleDto = new UpdateUserRoleDto();
+        updateuserRoleDto.setUserId(user.getId());
         updateuserRoleDto.setRole(role1.getName());
+
+        User user1 = userService.updateUserRole(updateuserRoleDto);
+        Assertions.assertNotNull(updateuserRoleDto.getUserId());
+        Assertions.assertEquals(user1.getRole().getName(),updateuserRoleDto.getRole());
     }
 
     @Test

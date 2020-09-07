@@ -308,7 +308,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void test_resetPasswordByEmail() throws Exception {
+    public void test_forgotPassword() throws Exception {
 
         Department department = new Department();
         department.setId(43L);
@@ -330,11 +330,11 @@ public class UserControllerTest {
         user.setPassword("password");
         user.setStatus(UserStatus.ACTIVE);
 
-        Mockito.when(userRepository.findByEmail(Mockito.anyString()))
-                .thenReturn(Optional.of(user));
+        Mockito.when(userRepository.existsByEmail(Mockito.anyString()))
+                .thenReturn(true);
 
         ForgotPasswordDto forgotPasswordDto = new ForgotPasswordDto();
-        forgotPasswordDto.setEmail("email");
+        forgotPasswordDto.setEmail(user.getEmail());
 
         mockMvc.perform(post("/user/forgot-password")
                 .content(gson.toJson(forgotPasswordDto))

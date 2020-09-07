@@ -123,13 +123,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean forgotPassword(ForgotPasswordDto forgotPasswordDto) {
 
-        if (!userRepository.existsByEmail(forgotPasswordDto.getEmail())) {
-            User user = new User();
-            user.setEmail(forgotPasswordDto.getEmail());
-            return true;
-        }
+        return  userRepository.existsByEmail(forgotPasswordDto.getEmail());
 
-        throw new DataNotFoundException("email user does not exist");
     }
 
     @Override
