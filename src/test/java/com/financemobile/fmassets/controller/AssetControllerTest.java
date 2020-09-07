@@ -1,5 +1,8 @@
 package com.financemobile.fmassets.controller;
 
+import com.financemobile.fmassets.dto.UpdateAssetStatusDto;
+import com.financemobile.fmassets.enums.AssetStatus;
+import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.dto.CreateAssetDto;
 import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.querySpec.AssetSpec;
@@ -20,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -164,5 +168,43 @@ public class AssetControllerTest {
                 .andExpect(jsonPath("$.data[0].name", is(asset.getName())))
                 .andExpect(jsonPath("$.data[0].department", is(asset.getDepartment())))
                 .andExpect(jsonPath("$.data[0].location", is(asset.getLocation())));
+    }
+
+    @Test
+    public void test_updateAssetStatus() throws Exception {
+
+        //create dummy user
+        Department department = new Department();
+        department.setId(43L);
+        department.setName("Engineering");
+        department.setCreatedBy("Admin");
+        department.setDateCreated(new Date());
+        department.setDateModified(new Date());
+
+        Asset asset = new Asset();
+        asset.setId(30L);
+        asset.setName("Laptop");
+        asset.setStatus(AssetStatus.DAMAGED);
+        asset.setDepartment(department);
+
+        Mockito.when(assetRepository.findById(Mockito.any(Long.class)))
+                .thenReturn(Optional.of(asset));
+
+        Mockito.when(assetRepository.save(Mockito.any(Asset.class)))
+                .thenReturn(asset);
+
+        UpdateAssetStatusDto updateAssetStatusDto = new UpdateAssetStatusDto();
+        updateAssetStatusDto.setAssetId(asset.getId());
+        updateAssetStatusDto.setAssetStatus(asset.getStatus());
+
+        mockMvc.perform(post("/asset/status")
+                .content(gson.toJson(updateAssetStatusDto))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data.id", is(asset.getId().intValue())))
+                .andExpect(jsonPath("data.status", is(asset.getStatus().toString())))
+                .andExpect(jsonPath("data.name", is(asset.getName())));
     }
 }

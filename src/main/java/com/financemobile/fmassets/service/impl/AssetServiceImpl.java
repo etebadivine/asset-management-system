@@ -1,15 +1,16 @@
 package com.financemobile.fmassets.service.impl;
 
 import com.financemobile.fmassets.dto.CreateAssetDto;
+import com.financemobile.fmassets.dto.UpdateAssetStatusDto;
+import com.financemobile.fmassets.exception.DataNotFoundException;
+import com.financemobile.fmassets.model.Asset;
 import com.financemobile.fmassets.enums.AssetStatus;
 import com.financemobile.fmassets.exception.AlreadyExistException;
-import com.financemobile.fmassets.exception.ImageFormatException;
 import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.querySpec.AssetSpec;
 import com.financemobile.fmassets.repository.AssetRepository;
 import com.financemobile.fmassets.service.*;
 import io.micrometer.core.instrument.util.StringUtils;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -107,6 +109,20 @@ public class AssetServiceImpl implements AssetService {
             asset.setStatus(AssetStatus.AVAILABLE);
         }
         return assetRepository.save(asset);
+    }
+
+    @Override
+    public Asset updateAssetStatus(UpdateAssetStatusDto updateAssetStatusDto) {
+        Optional<Asset> assetOptional =
+                assetRepository.findById(updateAssetStatusDto.getAssetId());
+
+        if (assetOptional.isPresent()) {
+            Asset asset = assetOptional.get();
+            asset.setStatus(updateAssetStatusDto.getAssetStatus());
+            return assetRepository.save(asset);
+        }
+
+        throw new DataNotFoundException("record not found");
     }
 }
 
