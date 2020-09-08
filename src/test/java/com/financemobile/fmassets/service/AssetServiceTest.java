@@ -1,11 +1,12 @@
 package com.financemobile.fmassets.service;
 
+import com.financemobile.fmassets.dto.UpdateAssetStatusDto;
+import com.financemobile.fmassets.enums.AssetStatus;
+import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.dto.CreateAssetDto;
 import com.financemobile.fmassets.dto.EditAssetDto;
 import com.financemobile.fmassets.enums.AssetStatus;
 import com.financemobile.fmassets.exception.AlreadyExistException;
-import com.financemobile.fmassets.exception.DataNotFoundException;
-import com.financemobile.fmassets.exception.ImageFormatException;
 import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.querySpec.AssetSpec;
 import com.financemobile.fmassets.repository.*;
@@ -99,7 +100,6 @@ public class AssetServiceTest {
         user.setLastName("Adanu");
         user = userRepository.save(user);
 
-
         CreateAssetDto createAssetDto = new CreateAssetDto();
         createAssetDto.setName("Executive Desk");
         createAssetDto.setLocation(location.getName());
@@ -140,7 +140,6 @@ public class AssetServiceTest {
         supplier.setName("Orca Home");
         supplier = supplierRepository.save(supplier);
 
-
         CreateAssetDto createAssetDto = new CreateAssetDto();
         createAssetDto.setName("Executive Desk");
         createAssetDto.setSupplier(supplier.getName());
@@ -153,13 +152,11 @@ public class AssetServiceTest {
         createAssetDto.setImageBytes("dHJ5dGZ5dGZ5dGZ5dA==");
         createAssetDto.setWarranty("One Year");
 
-
         assetService.addAsset(createAssetDto);
         Assertions.assertThrows(AlreadyExistException.class, ()->{
             assetService.addAsset(createAssetDto);
         });
     }
-
 
     @Test
     public void test_assetNotAssigned(){
@@ -193,7 +190,6 @@ public class AssetServiceTest {
         Assertions.assertEquals(asset.getCategory().getName(), createAssetDto.getCategory());
         Assertions.assertEquals(asset.getStatus(), AssetStatus.AVAILABLE);
     }
-
 
     @Test
     public void test_searchAssets () {
@@ -320,6 +316,39 @@ public class AssetServiceTest {
         Assertions.assertEquals(asset1.getDepartment().getName(), editAssetDto.getDepartment());
         Assertions.assertEquals(asset1.getCategory().getName(), editAssetDto.getCategory());
         Assertions.assertEquals(asset1.getUser().getId(), editAssetDto.getUserId().intValue());
+    }
+
+    @Test
+    public void test_updateAssetStatus() throws Exception {
+        Department department = new Department();
+        department.setName("Engineering");
+        department = departmentRepository.save(department);
+
+        Asset asset = new Asset();
+        asset.setId(30L);
+        asset.setName("Laptop");
+        asset.setStatus(AssetStatus.DAMAGED);
+        asset.setDepartment(department);
+        asset = assetRepository.save(asset);
+
+        UpdateAssetStatusDto updateAssetStatusDto =
+                new UpdateAssetStatusDto();
+        updateAssetStatusDto.setAssetId(asset.getId());
+        updateAssetStatusDto.setAssetStatus(AssetStatus.STOLEN);
+
+        Asset asset1 = assetService.updateAssetStatus(updateAssetStatusDto);
+        Assertions.assertEquals(asset1.getStatus(),updateAssetStatusDto.getAssetStatus());
+    }
+
+    @Test
+    public void test_updateAssetStatus_notFound() throws Exception {
+        UpdateAssetStatusDto updateAssetStatusDto =
+                new UpdateAssetStatusDto();
+        updateAssetStatusDto.setAssetId(30L);
+        updateAssetStatusDto.setAssetStatus(AssetStatus.DAMAGED);
+        Assertions.assertThrows(DataNotFoundException.class, () -> {
+            assetService.updateAssetStatus(updateAssetStatusDto);
+        });
     }
 }
 

@@ -2,6 +2,9 @@ package com.financemobile.fmassets.service.impl;
 
 import com.financemobile.fmassets.dto.CreateAssetDto;
 import com.financemobile.fmassets.dto.EditAssetDto;
+import com.financemobile.fmassets.dto.UpdateAssetStatusDto;
+import com.financemobile.fmassets.exception.DataNotFoundException;
+import com.financemobile.fmassets.model.Asset;
 import com.financemobile.fmassets.enums.AssetStatus;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
@@ -136,6 +139,20 @@ public class AssetServiceImpl implements AssetService {
         }
 
         throw new DataNotFoundException("Asset not found");
+    }
+
+    @Override
+    public Asset updateAssetStatus(UpdateAssetStatusDto updateAssetStatusDto) {
+        Optional<Asset> assetOptional =
+                assetRepository.findById(updateAssetStatusDto.getAssetId());
+
+        if (assetOptional.isPresent()) {
+            Asset asset = assetOptional.get();
+            asset.setStatus(updateAssetStatusDto.getAssetStatus());
+            return assetRepository.save(asset);
+        }
+
+        throw new DataNotFoundException("record not found");
     }
 }
 
