@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService {
         params.put("firstName", user.getFirstName());
 
         String content = emailComposer.composeMessageContent(
-                params,"forgot_password.vm"
+                params, "forgot_password.vm"
         );
 
         EmailMessageDto emailMessageDto =
@@ -143,7 +143,7 @@ public class UserServiceImpl implements UserService {
 
         try {
             sent = sendEmailService.send(emailMessageDto);
-        } catch (MessagingException mex){
+        } catch (MessagingException mex) {
 
         }
         return sent;
@@ -159,6 +159,39 @@ public class UserServiceImpl implements UserService {
         } else throw new DataNotFoundException("role not found");
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public Boolean sendUserInvite(UserInviteDto userInviteDto) {
+
+        if (!userRepository.existsByEmail(userInviteDto.getEmail())) {
+            throw new AlreadyExistException("email user already exist");
+        }
+        User user = getUserByEmail(userInviteDto.getEmail());
+        user.setFirstName(userInviteDto.getName());
+        user.setLastName(userInviteDto.getName());
+
+        Boolean sent = true;
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("email",user.getEmail());
+        params.put("first_name",user.getFirstName());
+        params.put("last_name",user.getLastName());
+
+        String content = emailComposer.composeMessageContent(
+                params, "user_invite.vm");
+        EmailMessageDto emailMessageDto =
+                new EmailMessageDto(
+                        userInviteDto.getEmail(), null,
+                        "User Invite", content
+                );
+
+        try {
+            sent = sendEmailService.send(emailMessageDto);
+        } catch (MessagingException mex) {
+
+        }
+        return sent;
     }
 }
 

@@ -241,8 +241,8 @@ public class UserServiceTest {
         updateUserStatusDto.setStatus(UserStatus.BLOCKED);
 
         User user3 = userService.updateStatus(updateUserStatusDto);
-        Assertions.assertEquals(user3.getId(),updateUserStatusDto.getUserId());
-        Assertions.assertEquals(user3.getStatus(),updateUserStatusDto.getStatus());
+        Assertions.assertEquals(user3.getId(), updateUserStatusDto.getUserId());
+        Assertions.assertEquals(user3.getStatus(), updateUserStatusDto.getStatus());
     }
 
     @Test
@@ -389,7 +389,7 @@ public class UserServiceTest {
 
         User user1 = userService.updateUserRole(updateuserRoleDto);
         Assertions.assertNotNull(updateuserRoleDto.getUserId());
-        Assertions.assertEquals(user1.getRole().getName(),updateuserRoleDto.getRole());
+        Assertions.assertEquals(user1.getRole().getName(), updateuserRoleDto.getRole());
     }
 
     @Test
@@ -399,6 +399,43 @@ public class UserServiceTest {
         updateuserRoleDto.setUserId(200L);
         Assertions.assertThrows(DataNotFoundException.class, () -> {
             userService.updateUserRole(updateuserRoleDto);
+        });
+    }
+
+    @Test
+    public void test_userInvite() {
+        Department department = new Department();
+        department.setName("Engineering");
+        department = departmentRepository.save(department);
+
+        Role role = new Role();
+        role.setName("USER");
+        role = roleRepository.save(role);
+
+        User user = new User();
+        user.setFirstName("oppong");
+        user.setLastName("Nkrumah");
+        user.setEmail("me@gmail.com");
+        user.setPhone("+233241428114");
+        user.setPassword("password");
+        user.setStatus(UserStatus.ACTIVE);
+        user.setDepartment(department);
+        user.setRole(role);
+        user = userRepository.save(user);
+
+        UserInviteDto userInviteDto = new UserInviteDto();
+        userInviteDto.setEmail(user.getEmail());
+
+        boolean emailDoesNotExist = userService.sendUserInvite(userInviteDto);
+        Assertions.assertTrue(emailDoesNotExist);
+    }
+
+    @Test
+    public void test_userInvite_notFound() {
+        UserInviteDto userInviteDto = new UserInviteDto();
+        userInviteDto.setEmail("alreadyexist@gmail.com");
+        Assertions.assertThrows(AlreadyExistException.class, () -> {
+            userService.sendUserInvite(userInviteDto);
         });
     }
 }

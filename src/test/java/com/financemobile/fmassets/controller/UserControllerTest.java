@@ -7,14 +7,11 @@ import com.financemobile.fmassets.model.Department;
 import com.financemobile.fmassets.model.Role;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
-import com.financemobile.fmassets.repository.DepartmentRepository;
 import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.repository.UserRepository;
 import com.financemobile.fmassets.service.messaging.EmailComposer;
 import com.financemobile.fmassets.service.messaging.SendEmailService;
 import com.google.gson.Gson;
-import jdk.nashorn.internal.ir.annotations.Ignore;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -407,5 +404,53 @@ public class UserControllerTest {
                 .andExpect(jsonPath("message", is("Success")))
                 .andExpect(jsonPath("data.id", is(user.getId().intValue())))
                 .andExpect(jsonPath("data.role.name", is(user.getRole().getName())));
+    }
+
+    @Test
+    public void test_sendUserInvite() throws Exception {
+
+        Department department = new Department();
+        department.setId(43L);
+        department.setName("Engineering");
+        department.setCreatedBy("Admin");
+        department.setDateCreated(new Date());
+        department.setDateModified(new Date());
+
+        Role role = new Role();
+        role.setName("USER");
+        role.setDateCreated(new Date());
+
+        User user = new User();
+        user.setId(200L);
+        user.setFirstName("Divine");
+        user.setLastName("Eteba");
+        user.setEmail("kofidvyn@gmail.com");
+        user.setPhone("+233543308642");
+        user.setPassword("password");
+        user.setStatus(UserStatus.ACTIVE);
+
+        Mockito.when(userRepository.existsByEmail(Mockito.anyString()))
+                .thenReturn(true);
+
+        Mockito.when(userRepository.findByEmail(Mockito.anyString()))
+                .thenReturn(Optional.of(user));
+
+        Mockito.when(sendEmailService.send(Mockito.any(EmailMessageDto.class)))
+                .thenReturn(true);
+
+        Mockito.when(emailComposer.composeMessageContent(Mockito.any(Map.class), Mockito.anyString()))
+                .thenReturn("content");
+
+        UserInviteDto userInviteDto = new UserInviteDto();
+        userInviteDto.setEmail(user.getEmail());
+        userInviteDto.setName(user.getFirstName());
+
+        mockMvc.perform(post("/user/invite")
+                .content(gson.toJson(userInviteDto))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data", is((true))));
     }
 }

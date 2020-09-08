@@ -19,6 +19,7 @@ public interface UserService {
     User updateStatus(UpdateUserStatusDto updateUserStatusDto);
     Boolean forgotPassword(ForgotPasswordDto forgotPasswordDto);
     User updateUserRole(UpdateUserRoleDto updateuserRoleDto);
+    Boolean sendUserInvite(UserInviteDto userInviteDto);
 }
 
 
