@@ -1,5 +1,6 @@
 package com.financemobile.fmassets.service;
 
+import com.financemobile.fmassets.dto.AssignAssetDto;
 import com.financemobile.fmassets.dto.UpdateAssetStatusDto;
 import com.financemobile.fmassets.enums.AssetStatus;
 import com.financemobile.fmassets.exception.DataNotFoundException;
@@ -319,6 +320,15 @@ public class AssetServiceTest {
     }
 
     @Test
+    public void test_editAsset_notFound(){
+        EditAssetDto editAssetDto = new EditAssetDto();
+        editAssetDto.setAssetId(40L);
+        Assertions.assertThrows(DataNotFoundException.class, ()->{
+            assetService.editAsset(editAssetDto);
+        });
+    }
+
+    @Test
     public void test_updateAssetStatus() throws Exception {
         Department department = new Department();
         department.setName("Engineering");
@@ -348,6 +358,65 @@ public class AssetServiceTest {
         updateAssetStatusDto.setAssetStatus(AssetStatus.DAMAGED);
         Assertions.assertThrows(DataNotFoundException.class, () -> {
             assetService.updateAssetStatus(updateAssetStatusDto);
+        });
+    }
+
+    @Test
+    public void test_assignAsset(){
+
+        Location location = new Location();
+        location.setId(1l);
+        location.setName("Tema");
+        location = locationRepository.save(location);
+
+        Supplier supplier = new Supplier();
+        supplier.setId(2L);
+        supplier.setName("Orca Home");
+        supplier = supplierRepository.save(supplier);
+
+        Department department = new Department();
+        department.setId(3L);
+        department.setName("Human Resource");
+        department = departmentRepository.save(department);
+
+        Category category = new Category();
+        category.setId(4L);
+        category.setName("Furniture");
+        category = categoryRepository.save(category);
+
+        User user = new User();
+        user.setFirstName("Reynolds");
+        user.setLastName("Adanu");
+        user = userRepository.save(user);
+
+        Asset asset = new Asset();
+        asset.setName("HP Laptop");
+        asset.setLocation(location);
+        asset.setSupplier(supplier);
+        asset.setDepartment(department);
+        asset.setCategory(category);
+        asset.setUser(user);
+        asset = assetRepository.save(asset);
+
+        AssignAssetDto assignAssetDto = new AssignAssetDto();
+        assignAssetDto.setAssetId(asset.getId());
+        assignAssetDto.setUserId(user.getId());
+
+        Asset asset1 = assetService.assignAsset(assignAssetDto);
+        Assertions.assertNotNull(asset1.getId());
+        Assertions.assertNotNull(asset1.getUser().getId());
+        Assertions.assertEquals(asset1.getId(), assignAssetDto.getAssetId());
+        Assertions.assertEquals(asset1.getUser().getId(), assignAssetDto.getUserId());
+        Assertions.assertEquals(asset1.getStatus(), AssetStatus.ASSIGNED);
+    }
+
+    @Test
+    public void test_assignAsset_notFound(){
+        AssignAssetDto assignAssetDto = new AssignAssetDto();
+        assignAssetDto.setAssetId(50L);
+        assignAssetDto.setUserId(60L);
+        Assertions.assertThrows(DataNotFoundException.class, ()->{
+            assetService.assignAsset(assignAssetDto);
         });
     }
 }
