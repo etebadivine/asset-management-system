@@ -278,7 +278,7 @@ public class AssetControllerTest extends OAuth2Helper {
         assignAssetDto.setAssetId(asset.getId());
         assignAssetDto.setUserId(user.getId());
 
-        mockMvc.perform(post("/asset/assign-asset")
+        mockMvc.perform(post("/asset/assign")
                 .content(gson.toJson(assignAssetDto))
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))

@@ -26,6 +26,7 @@ public class User {
     private String lastName;
     @Enumerated(value = EnumType.STRING)
     private UserStatus status;
+    @Column(name = "email", unique = true)
     private String email;
     private String phone;
     @ManyToOne(fetch = FetchType.EAGER)

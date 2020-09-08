@@ -85,7 +85,7 @@ public class AssetController {
         return response;
     }
 
-    @PostMapping(value = "/assign-asset")
+    @PostMapping(value = "/assign")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse assignAsset(@RequestBody @Valid AssignAssetDto assignAssetDto) {
 
