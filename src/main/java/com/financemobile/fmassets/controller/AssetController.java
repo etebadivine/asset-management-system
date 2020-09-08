@@ -1,10 +1,6 @@
 package com.financemobile.fmassets.controller;
 
-import com.financemobile.fmassets.dto.ApiResponse;
-import com.financemobile.fmassets.dto.CreateAssetDto;
-import com.financemobile.fmassets.dto.UpdateAssetStatusDto;
-import com.financemobile.fmassets.dto.UpdateUserStatusDto;
-import com.financemobile.fmassets.dto.EditAssetDto;
+import com.financemobile.fmassets.dto.*;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.Asset;
 import com.financemobile.fmassets.model.User;
@@ -87,6 +83,19 @@ public class AssetController {
         response.setMessage("Success");
         response.setData(asset);
         return response;
+    }
+
+    @PostMapping(value = "/assign-asset")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse assignAsset(@RequestBody AssignAssetDto assignAssetDto) {
+
+        Asset asset = assetService.assignAsset(assignAssetDto);
+
+        ApiResponse response = new ApiResponse();
+        response.setStatus(true);
+        response.setMessage("Success");
+        response.setData(asset);
+        return  response;
     }
 }
 

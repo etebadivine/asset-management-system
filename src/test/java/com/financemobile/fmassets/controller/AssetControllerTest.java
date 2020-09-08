@@ -1,5 +1,6 @@
 package com.financemobile.fmassets.controller;
 
+import com.financemobile.fmassets.dto.AssignAssetDto;
 import com.financemobile.fmassets.dto.UpdateAssetStatusDto;
 import com.financemobile.fmassets.enums.AssetStatus;
 import com.financemobile.fmassets.model.*;
@@ -284,5 +285,69 @@ public class AssetControllerTest {
                 .andExpect(jsonPath("data.id", is(asset.getId().intValue())))
                 .andExpect(jsonPath("data.status", is(asset.getStatus().toString())))
                 .andExpect(jsonPath("data.name", is(asset.getName())));
+    }
+
+    @Test
+    public void test_assignAsset() throws Exception{
+
+        //mock repo and response
+        Location location = new Location();
+        location.setName("Tema");
+        location.setCreatedBy("divine");
+
+        Supplier supplier = new Supplier();
+        supplier.setName("Mockito's Bakery");
+        supplier.setAddress("Accra");
+        supplier.setTelephone("+211 24 333 9999");
+        supplier.setMobile("+233 54 214 878");
+
+        Department department = new Department();
+        department.setName("Kitchen");
+
+        Category category = new Category();
+        category.setName("Biscuits");
+        category.setDescription("Fried,Baked");
+
+        User user = new User();
+        user.setId(20L);
+        user.setFirstName("Reynolds");
+        user.setLastName("Adanu");
+
+        Asset asset = new Asset();
+        asset.setId(300L);
+        asset.setName("Digestive");
+        asset.setLocation(location);
+        asset.setSupplier(supplier);
+        asset.setDepartment(department);
+        asset.setCategory(category);
+        asset.setUser(user);
+        asset.setCreatedBy("Reynolds");
+        asset.setDateCreated(new Date());
+        asset.setDateModified(new Date());
+
+        Mockito.when(assetRepository.findById(Mockito.anyLong()))
+                .thenReturn(Optional.of(asset));
+        Mockito.when(userService.getUserById(Mockito.anyLong()))
+                .thenReturn(user);
+        Mockito.when(assetRepository.save(Mockito.any(Asset.class)))
+                .thenReturn(asset);
+
+        AssignAssetDto assignAssetDto = new AssignAssetDto();
+        assignAssetDto.setAssetId(asset.getId());
+        assignAssetDto.setUserId(user.getId());
+
+        mockMvc.perform(post("/asset/assign-asset")
+                .content(gson.toJson(assignAssetDto))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data.id", is(asset.getId().intValue())))
+                .andExpect(jsonPath("data.name", is(asset.getName())))
+                .andExpect(jsonPath("data.location.name", is(asset.getLocation().getName())))
+                .andExpect(jsonPath("data.supplier.name", is(asset.getSupplier().getName())))
+                .andExpect(jsonPath("data.department.name", is(asset.getDepartment().getName())))
+                .andExpect(jsonPath("data.category.name", is(asset.getCategory().getName())))
+                .andExpect(jsonPath("data.user.id", is(asset.getUser().getId().intValue())));
     }
 }
