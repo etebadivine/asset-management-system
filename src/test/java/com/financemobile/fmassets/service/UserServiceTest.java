@@ -351,8 +351,9 @@ public class UserServiceTest {
     public void test_forgotPassword_notFound() {
         ForgotPasswordDto forgotPasswordDto = new ForgotPasswordDto();
         forgotPasswordDto.setEmail("notfound@gmail.com");
-        boolean emailNotFound = userService.forgotPassword(forgotPasswordDto);
-        Assertions.assertFalse(emailNotFound);
+        Assertions.assertThrows(DataNotFoundException.class, () -> {
+            userService.forgotPassword(forgotPasswordDto);
+        });
     }
 
     @Test

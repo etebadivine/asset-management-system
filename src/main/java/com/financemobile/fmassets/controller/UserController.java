@@ -9,11 +9,12 @@ import com.financemobile.fmassets.dto.*;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.service.UserService;
-import com.financemobile.fmassets.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -115,5 +116,11 @@ public class UserController {
         response.setMessage("Success");
         response.setData(user);
         return response;
+    }
+
+    @PostMapping(value = "/user-invite")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse sendUserInvite(@RequestBody @Valid  UserInviteDto userInviteDto){
+        return null;
     }
 }
