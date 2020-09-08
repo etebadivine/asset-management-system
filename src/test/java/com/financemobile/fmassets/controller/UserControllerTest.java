@@ -409,31 +409,8 @@ public class UserControllerTest {
     @Test
     public void test_sendUserInvite() throws Exception {
 
-        Department department = new Department();
-        department.setId(43L);
-        department.setName("Engineering");
-        department.setCreatedBy("Admin");
-        department.setDateCreated(new Date());
-        department.setDateModified(new Date());
-
-        Role role = new Role();
-        role.setName("USER");
-        role.setDateCreated(new Date());
-
-        User user = new User();
-        user.setId(200L);
-        user.setFirstName("Divine");
-        user.setLastName("Eteba");
-        user.setEmail("kofidvyn@gmail.com");
-        user.setPhone("+233543308642");
-        user.setPassword("password");
-        user.setStatus(UserStatus.ACTIVE);
-
         Mockito.when(userRepository.existsByEmail(Mockito.anyString()))
-                .thenReturn(true);
-
-        Mockito.when(userRepository.findByEmail(Mockito.anyString()))
-                .thenReturn(Optional.of(user));
+                .thenReturn(false);
 
         Mockito.when(sendEmailService.send(Mockito.any(EmailMessageDto.class)))
                 .thenReturn(true);
@@ -442,8 +419,8 @@ public class UserControllerTest {
                 .thenReturn("content");
 
         UserInviteDto userInviteDto = new UserInviteDto();
-        userInviteDto.setEmail(user.getEmail());
-        userInviteDto.setName(user.getFirstName());
+        userInviteDto.setEmail("divine@gmail.com");
+        userInviteDto.setName("Joe");
 
         mockMvc.perform(post("/user/invite")
                 .content(gson.toJson(userInviteDto))

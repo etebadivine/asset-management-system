@@ -10,7 +10,6 @@ import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.repository.UserRepository;
-import com.financemobile.fmassets.service.RoleService;
 import com.financemobile.fmassets.service.UserService;
 import com.financemobile.fmassets.service.messaging.EmailComposer;
 import com.financemobile.fmassets.service.messaging.SendEmailService;
@@ -164,19 +163,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean sendUserInvite(UserInviteDto userInviteDto) {
 
-        if (!userRepository.existsByEmail(userInviteDto.getEmail())) {
+        if (userRepository.existsByEmail(userInviteDto.getEmail())) {
             throw new AlreadyExistException("email user already exist");
         }
-        User user = getUserByEmail(userInviteDto.getEmail());
-        user.setFirstName(userInviteDto.getName());
-        user.setLastName(userInviteDto.getName());
 
-        Boolean sent = true;
+        Boolean sent = false;
 
         Map<String, Object> params = new HashMap<>();
-        params.put("email",user.getEmail());
-        params.put("first_name",user.getFirstName());
-        params.put("last_name",user.getLastName());
+        params.put("email",userInviteDto.getEmail());
+        params.put("first_name",userInviteDto.getName());
 
         String content = emailComposer.composeMessageContent(
                 params, "user_invite.vm");
@@ -185,7 +180,6 @@ public class UserServiceImpl implements UserService {
                         userInviteDto.getEmail(), null,
                         "User Invite", content
                 );
-
         try {
             sent = sendEmailService.send(emailMessageDto);
         } catch (MessagingException mex) {

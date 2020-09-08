@@ -64,7 +64,6 @@ public class UserServiceTest {
         CreateUserDto createUserDto = new CreateUserDto(firstName, lastName, email, phone, password);
         User user = userService.addUser(createUserDto);
 
-
         Assertions.assertNotNull(user.getId());
         Assertions.assertEquals(user.getFirstName(), firstName);
         Assertions.assertEquals(user.getLastName(), lastName);
@@ -178,7 +177,6 @@ public class UserServiceTest {
         });
     }
 
-
     @Test
     public void test_getUserByEmail() {
         Department department = new Department();
@@ -240,9 +238,9 @@ public class UserServiceTest {
         updateUserStatusDto.setUserId(user.getId());
         updateUserStatusDto.setStatus(UserStatus.BLOCKED);
 
-        User user3 = userService.updateStatus(updateUserStatusDto);
-        Assertions.assertEquals(user3.getId(), updateUserStatusDto.getUserId());
-        Assertions.assertEquals(user3.getStatus(), updateUserStatusDto.getStatus());
+        User updatedUser = userService.updateStatus(updateUserStatusDto);
+        Assertions.assertEquals(updatedUser.getId(), updateUserStatusDto.getUserId());
+        Assertions.assertEquals(updatedUser.getStatus(), updateUserStatusDto.getStatus());
     }
 
     @Test
@@ -378,18 +376,18 @@ public class UserServiceTest {
         user.setRole(role);
         user = userRepository.save(user);
 
-        Role role1 = new Role();
-        role1.setId(200L);
-        role1.setName("CTO");
-        role1 = roleRepository.save(role1);
+        Role updatedRole = new Role();
+        updatedRole.setId(200L);
+        updatedRole.setName("CTO");
+        updatedRole = roleRepository.save(updatedRole);
 
         UpdateUserRoleDto updateuserRoleDto = new UpdateUserRoleDto();
         updateuserRoleDto.setUserId(user.getId());
-        updateuserRoleDto.setRole(role1.getName());
+        updateuserRoleDto.setRole(updatedRole.getName());
 
-        User user1 = userService.updateUserRole(updateuserRoleDto);
+        User updatedUser = userService.updateUserRole(updateuserRoleDto);
         Assertions.assertNotNull(updateuserRoleDto.getUserId());
-        Assertions.assertEquals(user1.getRole().getName(), updateuserRoleDto.getRole());
+        Assertions.assertEquals(updatedUser.getRole().getName(), updateuserRoleDto.getRole());
     }
 
     @Test
@@ -404,36 +402,23 @@ public class UserServiceTest {
 
     @Test
     public void test_userInvite() {
-        Department department = new Department();
-        department.setName("Engineering");
-        department = departmentRepository.save(department);
-
-        Role role = new Role();
-        role.setName("USER");
-        role = roleRepository.save(role);
-
-        User user = new User();
-        user.setFirstName("oppong");
-        user.setLastName("Nkrumah");
-        user.setEmail("me@gmail.com");
-        user.setPhone("+233241428114");
-        user.setPassword("password");
-        user.setStatus(UserStatus.ACTIVE);
-        user.setDepartment(department);
-        user.setRole(role);
-        user = userRepository.save(user);
 
         UserInviteDto userInviteDto = new UserInviteDto();
-        userInviteDto.setEmail(user.getEmail());
+        userInviteDto.setEmail("divine@gmail.com");
+        userInviteDto.setName("divine");
 
-        boolean emailDoesNotExist = userService.sendUserInvite(userInviteDto);
-        Assertions.assertTrue(emailDoesNotExist);
+        boolean sendEmail = userService.sendUserInvite(userInviteDto);
+        Assertions.assertTrue(sendEmail);
     }
 
     @Test
     public void test_userInvite_notFound() {
+        User userEmail = new User();
+        userEmail.setEmail("kofidvyn@gmail.com");
+        userRepository.save(userEmail);
+
         UserInviteDto userInviteDto = new UserInviteDto();
-        userInviteDto.setEmail("alreadyexist@gmail.com");
+        userInviteDto.setEmail(userEmail.getEmail());
         Assertions.assertThrows(AlreadyExistException.class, () -> {
             userService.sendUserInvite(userInviteDto);
         });

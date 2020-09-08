@@ -122,12 +122,12 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse sendUserInvite(@RequestBody @Valid  UserInviteDto userInviteDto){
 
-        Boolean user = userService.sendUserInvite(userInviteDto);
+        Boolean sent = userService.sendUserInvite(userInviteDto);
 
         ApiResponse response = new ApiResponse();
         response.setStatus(true);
         response.setMessage("Success");
-        response.setData(user);
+        response.setData(sent);
         return response;
     }
 }
