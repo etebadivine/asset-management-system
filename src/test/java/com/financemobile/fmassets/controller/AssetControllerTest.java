@@ -289,7 +289,6 @@ public class AssetControllerTest {
 
     @Test
     public void test_assignAsset() throws Exception{
-
         //mock repo and response
         Location location = new Location();
         location.setName("Tema");
