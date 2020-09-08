@@ -4,9 +4,12 @@ import com.financemobile.fmassets.dto.ApiResponse;
 import com.financemobile.fmassets.dto.CreateAssetDto;
 import com.financemobile.fmassets.dto.UpdateAssetStatusDto;
 import com.financemobile.fmassets.dto.UpdateUserStatusDto;
+import com.financemobile.fmassets.dto.EditAssetDto;
+import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.Asset;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.AssetSpec;
+import com.financemobile.fmassets.repository.AssetRepository;
 import com.financemobile.fmassets.service.AssetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -47,8 +51,22 @@ public class AssetController {
 
         ApiResponse response = new ApiResponse();
         response.setStatus(true);
-        response.setData(assetList);
         response.setMessage("Success");
+        response.setData(assetList);
+
+        return response;
+    }
+
+    @PutMapping(value = "/edit-asset")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse editAsset(@RequestBody EditAssetDto editAssetDto){
+
+        Asset asset = assetService.editAsset(editAssetDto);
+
+        ApiResponse response = new ApiResponse();
+        response.setStatus(true);
+        response.setMessage("Success");
+        response.setData(asset);
 
         return response;
     }

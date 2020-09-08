@@ -4,6 +4,8 @@ import com.financemobile.fmassets.dto.UpdateAssetStatusDto;
 import com.financemobile.fmassets.enums.AssetStatus;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.dto.CreateAssetDto;
+import com.financemobile.fmassets.dto.EditAssetDto;
+import com.financemobile.fmassets.enums.AssetStatus;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.querySpec.AssetSpec;
@@ -54,6 +56,7 @@ public class AssetServiceTest {
 
     @BeforeEach
     public void setup() {
+
            assetRepository.deleteAll();
            locationRepository.deleteAll();
            supplierRepository.deleteAll();
@@ -235,6 +238,84 @@ public class AssetServiceTest {
 
         List<Asset> assetList = assetService.searchAssets(assetSpec, pageable);
         Assertions.assertEquals(assetList.size(), 0);
+    }
+
+    @Test
+    public void test_editAsset(){
+
+        Location location = new Location();
+        location.setId(1l);
+        location.setName("Tema");
+        location = locationRepository.save(location);
+
+        Supplier supplier = new Supplier();
+        supplier.setId(2L);
+        supplier.setName("Orca Home");
+        supplier = supplierRepository.save(supplier);
+
+        Department department = new Department();
+        department.setId(3L);
+        department.setName("Human Resource");
+        department = departmentRepository.save(department);
+
+        Category category = new Category();
+        category.setId(4L);
+        category.setName("Furniture");
+        category = categoryRepository.save(category);
+
+        User user = new User();
+        user.setFirstName("Reynolds");
+        user.setLastName("Adanu");
+        user = userRepository.save(user);
+
+        Asset asset = new Asset();
+        asset.setName("HP Laptop");
+        asset.setLocation(location);
+        asset.setSupplier(supplier);
+        asset.setDepartment(department);
+        asset.setCategory(category);
+        asset.setUser(user);
+        asset = assetRepository.save(asset);
+
+
+        Location location1 = new Location();
+        location1.setName("Kumasi");
+        location1 = locationRepository.save(location1);
+
+        Supplier supplier1 = new Supplier();
+        supplier1.setName("Franko Trading Enterprise");
+        supplier1 = supplierRepository.save(supplier1);
+
+        Department department1 = new Department();
+        department1.setName("Finance");
+        department1 = departmentRepository.save(department1);
+
+        Category category1 = new Category();
+        category1.setName("Computers");
+        category1 = categoryRepository.save(category1);
+
+        User user1 = new User();
+        user1.setFirstName("Kwasi");
+        user1.setLastName("Adanu");
+        user1 = userRepository.save(user1);
+
+        EditAssetDto editAssetDto = new EditAssetDto();
+        editAssetDto.setAssetId(asset.getId());
+        editAssetDto.setName("HP Laptop");
+        editAssetDto.setLocation(location1.getName());
+        editAssetDto.setSupplier(supplier1.getName());
+        editAssetDto.setDepartment(department1.getName());
+        editAssetDto.setCategory(category1.getName());
+        editAssetDto.setUserId(user1.getId());
+
+        Asset asset1 = assetService.editAsset(editAssetDto);
+        Assertions.assertNotNull(asset1.getId());
+        Assertions.assertEquals(asset1.getName(), editAssetDto.getName());
+        Assertions.assertEquals(asset1.getLocation().getName(), editAssetDto.getLocation());
+        Assertions.assertEquals(asset1.getSupplier().getName(), editAssetDto.getSupplier());
+        Assertions.assertEquals(asset1.getDepartment().getName(), editAssetDto.getDepartment());
+        Assertions.assertEquals(asset1.getCategory().getName(), editAssetDto.getCategory());
+        Assertions.assertEquals(asset1.getUser().getId(), editAssetDto.getUserId().intValue());
     }
 
     @Test
