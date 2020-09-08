@@ -10,7 +10,6 @@ import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.repository.UserRepository;
-import com.financemobile.fmassets.service.RoleService;
 import com.financemobile.fmassets.service.UserService;
 import com.financemobile.fmassets.service.messaging.EmailComposer;
 import com.financemobile.fmassets.service.messaging.SendEmailService;
@@ -132,7 +131,7 @@ public class UserServiceImpl implements UserService {
         params.put("firstName", user.getFirstName());
 
         String content = emailComposer.composeMessageContent(
-                params,"forgot_password.vm"
+                params, "forgot_password.vm"
         );
 
         EmailMessageDto emailMessageDto =
@@ -143,7 +142,7 @@ public class UserServiceImpl implements UserService {
 
         try {
             sent = sendEmailService.send(emailMessageDto);
-        } catch (MessagingException mex){
+        } catch (MessagingException mex) {
 
         }
         return sent;
@@ -159,6 +158,34 @@ public class UserServiceImpl implements UserService {
         } else throw new DataNotFoundException("role not found");
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public Boolean sendUserInvite(UserInviteDto userInviteDto) {
+
+        if (userRepository.existsByEmail(userInviteDto.getEmail())) {
+            throw new AlreadyExistException("email user already exist");
+        }
+
+        Boolean sent = false;
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("email",userInviteDto.getEmail());
+        params.put("first_name",userInviteDto.getName());
+
+        String content = emailComposer.composeMessageContent(
+                params, "user_invite.vm");
+        EmailMessageDto emailMessageDto =
+                new EmailMessageDto(
+                        userInviteDto.getEmail(), null,
+                        "User Invite", content
+                );
+        try {
+            sent = sendEmailService.send(emailMessageDto);
+        } catch (MessagingException mex) {
+
+        }
+        return sent;
     }
 }
 

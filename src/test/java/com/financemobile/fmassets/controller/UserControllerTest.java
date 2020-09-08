@@ -7,14 +7,11 @@ import com.financemobile.fmassets.model.Department;
 import com.financemobile.fmassets.model.Role;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
-import com.financemobile.fmassets.repository.DepartmentRepository;
 import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.repository.UserRepository;
 import com.financemobile.fmassets.service.messaging.EmailComposer;
 import com.financemobile.fmassets.service.messaging.SendEmailService;
 import com.google.gson.Gson;
-import jdk.nashorn.internal.ir.annotations.Ignore;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -407,5 +404,30 @@ public class UserControllerTest {
                 .andExpect(jsonPath("message", is("Success")))
                 .andExpect(jsonPath("data.id", is(user.getId().intValue())))
                 .andExpect(jsonPath("data.role.name", is(user.getRole().getName())));
+    }
+
+    @Test
+    public void test_sendUserInvite() throws Exception {
+
+        Mockito.when(userRepository.existsByEmail(Mockito.anyString()))
+                .thenReturn(false);
+
+        Mockito.when(sendEmailService.send(Mockito.any(EmailMessageDto.class)))
+                .thenReturn(true);
+
+        Mockito.when(emailComposer.composeMessageContent(Mockito.any(Map.class), Mockito.anyString()))
+                .thenReturn("content");
+
+        UserInviteDto userInviteDto = new UserInviteDto();
+        userInviteDto.setEmail("divine@gmail.com");
+        userInviteDto.setName("Joe");
+
+        mockMvc.perform(post("/user/invite")
+                .content(gson.toJson(userInviteDto))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data", is((true))));
     }
 }
