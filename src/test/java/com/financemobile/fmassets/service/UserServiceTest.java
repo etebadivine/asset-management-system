@@ -349,9 +349,10 @@ public class UserServiceTest {
 
     @Test
     public void test_forgotPassword_notFound() {
-        Assertions.assertThrows(DataNotFoundException.class, () -> {
-            userService.getUserByEmail("notfound@gmail.com");
-        });
+        ForgotPasswordDto forgotPasswordDto = new ForgotPasswordDto();
+        forgotPasswordDto.setEmail("notfound@gmail.com");
+        boolean emailNotFound = userService.forgotPassword(forgotPasswordDto);
+        Assertions.assertFalse(emailNotFound);
     }
 
     @Test
@@ -380,7 +381,6 @@ public class UserServiceTest {
         role1.setId(200L);
         role1.setName("CTO");
         role1 = roleRepository.save(role1);
-
 
         UpdateUserRoleDto updateuserRoleDto = new UpdateUserRoleDto();
         updateuserRoleDto.setUserId(user.getId());
