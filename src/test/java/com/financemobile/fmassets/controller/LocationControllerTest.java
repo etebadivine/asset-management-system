@@ -2,18 +2,13 @@ package com.financemobile.fmassets.controller;
 
 import com.financemobile.fmassets.dto.CreateLocationDto;
 import com.financemobile.fmassets.model.Location;
-import com.financemobile.fmassets.repository.LocationRepository;
+import com.financemobile.fmassets.security.OAuth2Helper;
+import com.financemobile.fmassets.service.LocationService;
 import com.google.gson.Gson;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -26,25 +21,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-public class LocationControllerTest {
-
-    @Autowired
-    protected MockMvc mockMvc;
+public class LocationControllerTest extends OAuth2Helper {
 
     @MockBean
-    private LocationRepository locationRepository;
+    private LocationService locationService;
 
     private final Gson gson = new Gson();
-
-    @BeforeEach
-    public void setup() {
-    }
-
-    @AfterEach
-    public void tearDown() {
-    }
 
     @Test
     public void test_addLocation() throws Exception {
@@ -59,7 +41,8 @@ public class LocationControllerTest {
         location.setDateCreated(new Date());
         location.setDateModified(new Date());
 
-        Mockito.when(locationRepository.save(Mockito.any(Location.class)))
+        Mockito.when(locationService.addLocation(location.getName(),
+                location.getCity(), location.getCountry()))
                 .thenReturn(location);
 
         // payload for the endpoint
@@ -71,6 +54,7 @@ public class LocationControllerTest {
         // fire request
         mockMvc.perform(post("/location")
                 .content(gson.toJson(createLocationDto))
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("status", is(true)))
@@ -96,12 +80,13 @@ public class LocationControllerTest {
 
         List<Location> locationList = Arrays.asList(location);
 
-        Mockito.when(locationRepository.findAll())
+        Mockito.when(locationService.getAllLocations())
                 .thenReturn(locationList);
 
         // fire request
         mockMvc.perform(get("/location")
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", is(true)))
                 .andExpect(jsonPath("message", is("Success")))
@@ -111,7 +96,6 @@ public class LocationControllerTest {
                 .andExpect(jsonPath("$.data[0].city", is(location.getCity())))
                 .andExpect(jsonPath("$.data[0].country", is(location.getCountry())));
     }
-
 }
 
 

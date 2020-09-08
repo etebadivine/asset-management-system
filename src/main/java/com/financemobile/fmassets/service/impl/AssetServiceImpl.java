@@ -8,7 +8,6 @@ import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.Asset;
 import com.financemobile.fmassets.enums.AssetStatus;
 import com.financemobile.fmassets.exception.AlreadyExistException;
-import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.querySpec.AssetSpec;
 import com.financemobile.fmassets.repository.AssetRepository;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 
 @Service
@@ -108,8 +106,8 @@ public class AssetServiceImpl implements AssetService {
             User user = userService.getUserById(createAssetDto.getUserId());
             asset.setUser(user);
             asset.setStatus(AssetStatus.ASSIGNED);
-            AssignmentHistory assignmentHistory = assignmentHistoryService.trackAssetAssignment(asset, user);
             asset =  assetRepository.save(asset);
+            assignmentHistoryService.trackAssetAssignment(asset, user);
         }
         else{
             asset.setStatus(AssetStatus.AVAILABLE);
@@ -142,7 +140,7 @@ public class AssetServiceImpl implements AssetService {
                User user = userService.getUserById(editAssetDto.getUserId());
                asset.setUser(user);
                asset.setStatus(AssetStatus.ASSIGNED);
-//               AssignmentHistory assignmentHistory = assignmentHistoryService.trackAssetAssignment(asset, user);
+               assignmentHistoryService.trackAssetAssignment(asset, user);
            }
            return assetRepository.save(asset);
         }
@@ -175,7 +173,7 @@ public class AssetServiceImpl implements AssetService {
             asset.setUser(user);
             asset.setStatus(AssetStatus.ASSIGNED);
             asset = assetRepository.save(asset);
-            AssignmentHistory assignmentHistory = assignmentHistoryService.trackAssetAssignment(asset, user);
+            assignmentHistoryService.trackAssetAssignment(asset, user);
             return asset;
         }
         throw new DataNotFoundException("Asset not found");

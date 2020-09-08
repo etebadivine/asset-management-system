@@ -7,24 +7,17 @@ import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.dto.CreateAssetDto;
 import com.financemobile.fmassets.dto.EditAssetDto;
 import com.financemobile.fmassets.querySpec.AssetSpec;
-import com.financemobile.fmassets.repository.*;
+import com.financemobile.fmassets.security.OAuth2Helper;
 import com.financemobile.fmassets.service.*;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -33,33 +26,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@SpringBootTest
-@AutoConfigureMockMvc
-public class AssetControllerTest {
-
-    @Autowired
-    protected MockMvc mockMvc;
+public class AssetControllerTest extends OAuth2Helper {
 
     @MockBean
-    private AssetRepository assetRepository;
-
-    @MockBean
-    private DepartmentService departmentService;
-
-    @MockBean
-    private LocationService locationService;
-
-    @MockBean
-    private SupplierService supplierService;
-
-    @MockBean
-    private CategoryService categoryService;
-
-    @MockBean
-    private UserService userService;
-
-    @MockBean
-    private AssignmentHistoryService trackAsset;
+    private AssetService assetService;
 
     private final Gson gson = new Gson();
 
@@ -100,24 +70,7 @@ public class AssetControllerTest {
         asset.setDateCreated(new Date());
         asset.setDateModified(new Date());
 
-        AssignmentHistory assignmentHistory = new AssignmentHistory();
-        assignmentHistory.setAsset(asset);
-        assignmentHistory.setUser(user);
-
-        Mockito.when(locationService.getLocationByName(Mockito.anyString()))
-                .thenReturn(location);
-        Mockito.when(supplierService.getSupplierByName(Mockito.anyString()))
-                .thenReturn(supplier);
-        Mockito.when(departmentService.getDepartmentByName(Mockito.anyString()))
-                .thenReturn(department);
-        Mockito.when(categoryService.getCategoryByName(Mockito.anyString()))
-                .thenReturn(category);
-        Mockito.when(userService.getUserById(Mockito.anyLong()))
-                .thenReturn(user);
-        Mockito.when(trackAsset.trackAssetAssignment(Mockito.any(Asset.class),Mockito.any(User.class)))
-                .thenReturn(assignmentHistory);
-
-        Mockito.when(assetRepository.save(Mockito.any(Asset.class)))
+        Mockito.when(assetService.addAsset(Mockito.any(CreateAssetDto.class)))
                 .thenReturn(asset);
 
         //payload for the endpoint
@@ -132,6 +85,7 @@ public class AssetControllerTest {
         //fire request
         mockMvc.perform(post("/asset")
                 .content(gson.toJson(createAssetDto))
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("status", is(true)))
@@ -163,13 +117,12 @@ public class AssetControllerTest {
         asset.setDateCreated(new Date());
         asset.setDateModified(new Date());
 
-        Page<Asset> assetPage = new PageImpl(Arrays.asList(asset));
-
-        Mockito.when(assetRepository.findAll(Mockito.any(AssetSpec.class), Mockito.any(Pageable.class)))
-                .thenReturn(assetPage);
+        Mockito.when(assetService.searchAssets(Mockito.any(AssetSpec.class), Mockito.any(Pageable.class)))
+                .thenReturn(Arrays.asList(asset));
 
         mockMvc.perform(get("/asset?name=laptop")
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", is(true)))
                 .andExpect(jsonPath("message", is("Success")))
@@ -216,21 +169,7 @@ public class AssetControllerTest {
         asset.setDateCreated(new Date());
         asset.setDateModified(new Date());
 
-        Mockito.when(assetRepository.findById(asset.getId()))
-                .thenReturn(Optional.of(asset));
-
-        Mockito.when(locationService.getLocationByName(Mockito.anyString()))
-                .thenReturn(location);
-        Mockito.when(supplierService.getSupplierByName(Mockito.anyString()))
-                .thenReturn(supplier);
-        Mockito.when(departmentService.getDepartmentByName(Mockito.anyString()))
-                .thenReturn(department);
-        Mockito.when(categoryService.getCategoryByName(Mockito.anyString()))
-                .thenReturn(category);
-        Mockito.when(userService.getUserById(Mockito.anyLong()))
-                .thenReturn(user);
-
-        Mockito.when(assetRepository.save(Mockito.any(Asset.class)))
+        Mockito.when(assetService.editAsset(Mockito.any(EditAssetDto.class)))
                 .thenReturn(asset);
 
         EditAssetDto editAssetDto = new EditAssetDto();
@@ -244,6 +183,7 @@ public class AssetControllerTest {
 
         mockMvc.perform(put("/asset/edit-asset")
                 .content(gson.toJson(editAssetDto))
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", is(true)))
@@ -274,10 +214,7 @@ public class AssetControllerTest {
         asset.setStatus(AssetStatus.DAMAGED);
         asset.setDepartment(department);
 
-        Mockito.when(assetRepository.findById(Mockito.any(Long.class)))
-                .thenReturn(Optional.of(asset));
-
-        Mockito.when(assetRepository.save(Mockito.any(Asset.class)))
+        Mockito.when(assetService.updateAssetStatus(Mockito.any(UpdateAssetStatusDto.class)))
                 .thenReturn(asset);
 
         UpdateAssetStatusDto updateAssetStatusDto = new UpdateAssetStatusDto();
@@ -286,6 +223,7 @@ public class AssetControllerTest {
 
         mockMvc.perform(post("/asset/status")
                 .content(gson.toJson(updateAssetStatusDto))
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", is(true)))
@@ -333,17 +271,7 @@ public class AssetControllerTest {
         asset.setDateCreated(new Date());
         asset.setDateModified(new Date());
 
-        AssignmentHistory assignmentHistory = new AssignmentHistory();
-        assignmentHistory.setAsset(asset);
-        assignmentHistory.setUser(user);
-
-        Mockito.when(assetRepository.findById(Mockito.anyLong()))
-                .thenReturn(Optional.of(asset));
-        Mockito.when(userService.getUserById(Mockito.anyLong()))
-                .thenReturn(user);
-        Mockito.when(trackAsset.trackAssetAssignment(Mockito.any(Asset.class),Mockito.any(User.class)))
-                .thenReturn(assignmentHistory);
-        Mockito.when(assetRepository.save(Mockito.any(Asset.class)))
+        Mockito.when(assetService.assignAsset(Mockito.any(AssignAssetDto.class)))
                 .thenReturn(asset);
 
         AssignAssetDto assignAssetDto = new AssignAssetDto();
@@ -352,6 +280,7 @@ public class AssetControllerTest {
 
         mockMvc.perform(post("/asset/assign")
                 .content(gson.toJson(assignAssetDto))
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", is(true)))

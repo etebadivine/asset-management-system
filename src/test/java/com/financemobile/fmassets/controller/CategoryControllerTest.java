@@ -2,18 +2,13 @@ package com.financemobile.fmassets.controller;
 
 import com.financemobile.fmassets.dto.CreateCategoryDto;
 import com.financemobile.fmassets.model.Category;
-import com.financemobile.fmassets.repository.CategoryRepository;
+import com.financemobile.fmassets.security.OAuth2Helper;
+import com.financemobile.fmassets.service.CategoryService;
 import com.google.gson.Gson;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -27,30 +22,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@SpringBootTest
-@AutoConfigureMockMvc
-public class CategoryControllerTest {
+public class CategoryControllerTest extends OAuth2Helper {
 
-
-    @Autowired
-    protected MockMvc mockMvc;
 
     @MockBean
-    private CategoryRepository categoryRepository;
+    private CategoryService categoryService;
 
     private final Gson gson = new Gson();
-
-    @BeforeEach
-    public void setup(){
-
-    }
-
-
-    @AfterEach
-    public void tearDown(){
-
-    }
-
 
     @Test
     public void test_addCategory() throws Exception {
@@ -64,7 +42,7 @@ public class CategoryControllerTest {
         category.setDateCreated(new Date());
         category.setDateModified(new Date());
 
-        Mockito.when(categoryRepository.save(Mockito.any(Category.class)))
+        Mockito.when(categoryService.addCategory(Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(category);
 
         // payload for the endpoint
@@ -75,6 +53,7 @@ public class CategoryControllerTest {
         // fire request
         mockMvc.perform(post("/category")
                 .content(gson.toJson(createCategoryDto))
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("status", is(true)))
@@ -98,12 +77,13 @@ public class CategoryControllerTest {
 
         List<Category> categoryList = Arrays.asList(category);
 
-        Mockito.when(categoryRepository.findAll())
+        Mockito.when(categoryService.getAllCategories())
                 .thenReturn(categoryList);
 
         // fire request
         mockMvc.perform(get("/category")
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", is(true)))
                 .andExpect(jsonPath("message", is("Success")))

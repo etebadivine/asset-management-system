@@ -2,18 +2,13 @@ package com.financemobile.fmassets.controller;
 
 import com.financemobile.fmassets.dto.CreateRoleDto;
 import com.financemobile.fmassets.model.Role;
-import com.financemobile.fmassets.repository.RoleRepository;
+import com.financemobile.fmassets.security.OAuth2Helper;
+import com.financemobile.fmassets.service.RoleService;
 import com.google.gson.Gson;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -26,28 +21,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-public class RoleControllerTest {
-
-
-    @Autowired
-    protected MockMvc mockMvc;
+public class RoleControllerTest extends OAuth2Helper {
 
     @MockBean
-    private RoleRepository roleRepository;
+    private RoleService roleService;
 
     private final Gson gson = new Gson();
-
-    @BeforeEach
-    public void setup(){
-
-    }
-
-    @AfterEach
-    public void tearDown(){
-
-    }
 
     @Test
     public void test_addRole() throws Exception {
@@ -55,11 +34,11 @@ public class RoleControllerTest {
         // mock repo and response
         Role role = new Role();
         role.setId(2L);
-        role.setName("Electronic");
+        role.setName("ADMIN");
         role.setDateCreated(new Date());
 
 
-        Mockito.when(roleRepository.save(Mockito.any(Role.class)))
+        Mockito.when(roleService.addRole(role.getName()))
                 .thenReturn(role);
 
         // payload for the endpoint
@@ -67,9 +46,9 @@ public class RoleControllerTest {
         createRoleDto.setName(role.getName());
 
 
-        // fire request
         mockMvc.perform(post("/role")
                 .content(gson.toJson(createRoleDto))
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("status", is(true)))
@@ -85,25 +64,24 @@ public class RoleControllerTest {
         // mock repo and response
         Role role = new Role();
         role.setId(2L);
-        role.setName("Electronic");
+        role.setName("ADMIN");
         role.setDateCreated(new Date());
 
 
         List<Role> roleList = Arrays.asList(role);
 
-        Mockito.when(roleRepository.findAll())
+        Mockito.when(roleService.getAllRoles())
                 .thenReturn(roleList);
 
         // fire request
         mockMvc.perform(get("/role")
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", is(true)))
                 .andExpect(jsonPath("message", is("Success")))
                 .andExpect(jsonPath("$.data", hasSize(1)))
                 .andExpect(jsonPath("$.data[0].id", is(role.getId().intValue())))
                 .andExpect(jsonPath("$.data[0].name", is(role.getName())));
-
-
     }
 }

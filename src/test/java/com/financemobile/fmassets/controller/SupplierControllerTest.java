@@ -4,17 +4,12 @@ package com.financemobile.fmassets.controller;
 import com.financemobile.fmassets.dto.CreateSupplierDto;
 import com.financemobile.fmassets.model.Supplier;
 import com.financemobile.fmassets.repository.SupplierRepository;
+import com.financemobile.fmassets.security.OAuth2Helper;
 import com.google.gson.Gson;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -27,27 +22,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@SpringBootTest
-@AutoConfigureMockMvc
-public class SupplierControllerTest {
-
-    @Autowired
-    protected MockMvc mockMvc;
+public class SupplierControllerTest extends OAuth2Helper {
 
     @MockBean
     private SupplierRepository supplierRepository;
 
     private final Gson gson = new Gson();
-
-    @BeforeEach
-    public void setup(){
-
-    }
-
-    @AfterEach
-    public void tearDown(){
-
-    }
 
     @Test
     public void test_addSupplier() throws Exception{
@@ -76,6 +56,7 @@ public class SupplierControllerTest {
         // fire request
         mockMvc.perform(post("/supplier")
                 .content(gson.toJson(createSupplierDto))
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("status", is(true)))
@@ -108,7 +89,8 @@ public class SupplierControllerTest {
 
         // fire request
         mockMvc.perform(get("/supplier")
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", is(true)))
                 .andExpect(jsonPath("message", is("Success")))

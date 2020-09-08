@@ -33,15 +33,6 @@ public class AssetServiceTest {
     private AssetService assetService;
 
     @Autowired
-    private LocationService locationService;
-
-    @Autowired
-    private DepartmentService departmentService;
-
-    @Autowired
-    private AssignmentHistoryService trackAsset;
-
-    @Autowired
     private AssetRepository assetRepository;
 
     @Autowired
@@ -64,21 +55,20 @@ public class AssetServiceTest {
 
     @BeforeEach
     public void setup() {
-
-           assetRepository.deleteAll();
-           locationRepository.deleteAll();
-           supplierRepository.deleteAll();
-           departmentRepository.deleteAll();
-           categoryRepository.deleteAll();
+       assetRepository.deleteAll();
+       locationRepository.deleteAll();
+       supplierRepository.deleteAll();
+       departmentRepository.deleteAll();
+       categoryRepository.deleteAll();
     }
 
-      @AfterEach
-       public void tearDown() {
-           assetRepository.deleteAll();
-           locationRepository.deleteAll();
-           supplierRepository.deleteAll();
-           departmentRepository.deleteAll();
-           categoryRepository.deleteAll();
+    @AfterEach
+    public void tearDown() {
+       assetRepository.deleteAll();
+       locationRepository.deleteAll();
+       supplierRepository.deleteAll();
+       departmentRepository.deleteAll();
+       categoryRepository.deleteAll();
     }
 
     @Test
@@ -124,10 +114,6 @@ public class AssetServiceTest {
         createAssetDto.setUserId(user.getId());
 
         Asset asset = assetService.addAsset(createAssetDto);
-        AssignmentHistory assignmentHistory = new AssignmentHistory();
-        assignmentHistory.setAsset(asset);
-        assignmentHistory.setUser(user);
-        AssignmentHistory assignmentHistory1 = trackAsset.trackAssetAssignment(assignmentHistory.getAsset(),assignmentHistory.getUser());
 
         Assertions.assertNotNull(asset.getId());
         Assertions.assertEquals(asset.getName(), createAssetDto.getName());
@@ -417,7 +403,6 @@ public class AssetServiceTest {
         AssignmentHistory assignmentHistory = new AssignmentHistory();
         assignmentHistory.setAsset(asset);
         assignmentHistory.setUser(user);
-        AssignmentHistory assignmentHistory1 = trackAsset.trackAssetAssignment(assignmentHistory.getAsset(),assignmentHistory.getUser());
 
         Asset asset1 = assetService.assignAsset(assignAssetDto);
         Assertions.assertNotNull(asset1.getId());

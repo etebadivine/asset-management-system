@@ -4,6 +4,7 @@ package com.financemobile.fmassets.service;
 import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.repository.*;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,10 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class AssignmentHistoryServiceTest {
 
     @Autowired
-    private AssignmentHistoryService assignHistServ;
-
-    @Autowired
-    private AssignmentHistoryRepository assignHistRepo;
+    private AssignmentHistoryService assignmentHistoryService;
 
     @Autowired
     private AssetRepository assetRepository;
@@ -35,6 +33,14 @@ public class AssignmentHistoryServiceTest {
     @Autowired
     private UserRepository userRepository;
 
+    @BeforeEach
+    public void setup() {
+        assetRepository.deleteAll();
+        locationRepository.deleteAll();
+        supplierRepository.deleteAll();
+        departmentRepository.deleteAll();
+        categoryRepository.deleteAll();
+    }
 
     @Test
     public void test_trackAssetAssignment(){
@@ -73,15 +79,12 @@ public class AssignmentHistoryServiceTest {
         asset.setUser(user);
         asset = assetRepository.save(asset);
 
-        AssignmentHistory assignmentHistory = new AssignmentHistory();
-        assignmentHistory.setAsset(asset);
-        assignmentHistory.setUser(user);
-        assignmentHistory = assignHistRepo.save(assignmentHistory);
+        AssignmentHistory assignmentHistory =
+                assignmentHistoryService.trackAssetAssignment(asset, user);
 
-        AssignmentHistory assignmentHistory1 = assignHistServ.trackAssetAssignment(assignmentHistory.getAsset(), assignmentHistory.getUser());
-        Assertions.assertNotNull(assignmentHistory1.getAsset().getId());
-        Assertions.assertNotNull(assignmentHistory1.getUser().getId());
-        Assertions.assertEquals(assignmentHistory1.getAsset().getId(), assignmentHistory.getAsset().getId());
-        Assertions.assertEquals(assignmentHistory1.getUser().getId(), assignmentHistory.getUser().getId());
+        Assertions.assertEquals(assignmentHistory.getAsset().getId(), asset.getId());
+        Assertions.assertEquals(assignmentHistory.getAsset().getName(), asset.getName());
+        Assertions.assertEquals(assignmentHistory.getUser().getId(), user.getId());
+        Assertions.assertEquals(assignmentHistory.getUser().getFirstName(), user.getFirstName());
     }
 }
