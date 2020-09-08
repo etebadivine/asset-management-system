@@ -405,4 +405,29 @@ public class UserControllerTest {
                 .andExpect(jsonPath("data.id", is(user.getId().intValue())))
                 .andExpect(jsonPath("data.role.name", is(user.getRole().getName())));
     }
+
+    @Test
+    public void test_sendUserInvite() throws Exception {
+
+        Mockito.when(userRepository.existsByEmail(Mockito.anyString()))
+                .thenReturn(false);
+
+        Mockito.when(sendEmailService.send(Mockito.any(EmailMessageDto.class)))
+                .thenReturn(true);
+
+        Mockito.when(emailComposer.composeMessageContent(Mockito.any(Map.class), Mockito.anyString()))
+                .thenReturn("content");
+
+        UserInviteDto userInviteDto = new UserInviteDto();
+        userInviteDto.setEmail("divine@gmail.com");
+        userInviteDto.setName("Joe");
+
+        mockMvc.perform(post("/user/invite")
+                .content(gson.toJson(userInviteDto))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data", is((true))));
+    }
 }

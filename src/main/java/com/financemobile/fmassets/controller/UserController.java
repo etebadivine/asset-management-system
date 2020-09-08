@@ -118,9 +118,16 @@ public class UserController {
         return response;
     }
 
-    @PostMapping(value = "/user-invite")
+    @PostMapping(value = "/invite")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse sendUserInvite(@RequestBody @Valid  UserInviteDto userInviteDto){
-        return null;
+
+        Boolean sent = userService.sendUserInvite(userInviteDto);
+
+        ApiResponse response = new ApiResponse();
+        response.setStatus(true);
+        response.setMessage("Success");
+        response.setData(sent);
+        return response;
     }
 }
