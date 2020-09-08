@@ -1,5 +1,6 @@
 package com.financemobile.fmassets.service.impl;
 
+import com.financemobile.fmassets.dto.AssignAssetDto;
 import com.financemobile.fmassets.dto.CreateAssetDto;
 import com.financemobile.fmassets.dto.EditAssetDto;
 import com.financemobile.fmassets.dto.UpdateAssetStatusDto;
@@ -153,6 +154,21 @@ public class AssetServiceImpl implements AssetService {
         }
 
         throw new DataNotFoundException("record not found");
+    }
+
+    @Override
+    public Asset assignAsset(AssignAssetDto assignAssetDto) {
+
+        Optional<Asset> assetOptional = assetRepository.findById(assignAssetDto.getAssetId());
+        User user = userService.getUserById(assignAssetDto.getUserId());
+
+        if(assetOptional.isPresent()){
+            Asset asset = assetOptional.get();
+            asset.setUser(user);
+            asset.setStatus(AssetStatus.ASSIGNED);
+            return assetRepository.save(asset);
+        }
+        throw new DataNotFoundException("Asset not found");
     }
 }
 
