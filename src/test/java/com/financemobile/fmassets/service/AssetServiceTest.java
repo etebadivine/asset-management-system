@@ -6,7 +6,6 @@ import com.financemobile.fmassets.enums.AssetStatus;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.dto.CreateAssetDto;
 import com.financemobile.fmassets.dto.EditAssetDto;
-import com.financemobile.fmassets.enums.AssetStatus;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.querySpec.AssetSpec;
@@ -25,6 +24,8 @@ import javax.persistence.criteria.Predicate;
 import java.util.List;
 
 
+
+
 @SpringBootTest
 public class AssetServiceTest {
 
@@ -36,6 +37,9 @@ public class AssetServiceTest {
 
     @Autowired
     private DepartmentService departmentService;
+
+    @Autowired
+    private AssignmentHistoryService trackAsset;
 
     @Autowired
     private AssetRepository assetRepository;
@@ -54,6 +58,9 @@ public class AssetServiceTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private AssignmentHistoryRepository assignmentHistoryR;
 
     @BeforeEach
     public void setup() {
@@ -116,8 +123,12 @@ public class AssetServiceTest {
         createAssetDto.setWarranty("One Year");
         createAssetDto.setUserId(user.getId());
 
-
         Asset asset = assetService.addAsset(createAssetDto);
+        AssignmentHistory assignmentHistory = new AssignmentHistory();
+        assignmentHistory.setAsset(asset);
+        assignmentHistory.setUser(user);
+        AssignmentHistory assignmentHistory1 = trackAsset.trackAssetAssignment(assignmentHistory.getAsset(),assignmentHistory.getUser());
+
         Assertions.assertNotNull(asset.getId());
         Assertions.assertEquals(asset.getName(), createAssetDto.getName());
         Assertions.assertEquals(asset.getLocation().getName(), createAssetDto.getLocation());
@@ -310,6 +321,7 @@ public class AssetServiceTest {
         editAssetDto.setUserId(user1.getId());
 
         Asset asset1 = assetService.editAsset(editAssetDto);
+
         Assertions.assertNotNull(asset1.getId());
         Assertions.assertEquals(asset1.getName(), editAssetDto.getName());
         Assertions.assertEquals(asset1.getLocation().getName(), editAssetDto.getLocation());
@@ -401,6 +413,11 @@ public class AssetServiceTest {
         AssignAssetDto assignAssetDto = new AssignAssetDto();
         assignAssetDto.setAssetId(asset.getId());
         assignAssetDto.setUserId(user.getId());
+
+        AssignmentHistory assignmentHistory = new AssignmentHistory();
+        assignmentHistory.setAsset(asset);
+        assignmentHistory.setUser(user);
+        AssignmentHistory assignmentHistory1 = trackAsset.trackAssetAssignment(assignmentHistory.getAsset(),assignmentHistory.getUser());
 
         Asset asset1 = assetService.assignAsset(assignAssetDto);
         Assertions.assertNotNull(asset1.getId());

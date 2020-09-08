@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @Service
@@ -44,6 +45,9 @@ public class AssetServiceImpl implements AssetService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AssignmentHistoryService assignmentHistoryService;
 
     @Override
     public List<Asset> searchAssets(AssetSpec assetSpec, Pageable pageable) {
@@ -104,11 +108,14 @@ public class AssetServiceImpl implements AssetService {
             User user = userService.getUserById(createAssetDto.getUserId());
             asset.setUser(user);
             asset.setStatus(AssetStatus.ASSIGNED);
+            AssignmentHistory assignmentHistory = assignmentHistoryService.trackAssetAssignment(asset, user);
+            asset =  assetRepository.save(asset);
         }
         else{
             asset.setStatus(AssetStatus.AVAILABLE);
+            asset =  assetRepository.save(asset);
         }
-        return assetRepository.save(asset);
+        return asset;
     }
 
     @Override
@@ -135,6 +142,7 @@ public class AssetServiceImpl implements AssetService {
                User user = userService.getUserById(editAssetDto.getUserId());
                asset.setUser(user);
                asset.setStatus(AssetStatus.ASSIGNED);
+//               AssignmentHistory assignmentHistory = assignmentHistoryService.trackAssetAssignment(asset, user);
            }
            return assetRepository.save(asset);
         }
@@ -166,7 +174,9 @@ public class AssetServiceImpl implements AssetService {
             Asset asset = assetOptional.get();
             asset.setUser(user);
             asset.setStatus(AssetStatus.ASSIGNED);
-            return assetRepository.save(asset);
+            asset = assetRepository.save(asset);
+            AssignmentHistory assignmentHistory = assignmentHistoryService.trackAssetAssignment(asset, user);
+            return asset;
         }
         throw new DataNotFoundException("Asset not found");
     }

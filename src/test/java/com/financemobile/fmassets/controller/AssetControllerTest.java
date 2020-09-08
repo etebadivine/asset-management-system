@@ -6,7 +6,6 @@ import com.financemobile.fmassets.enums.AssetStatus;
 import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.dto.CreateAssetDto;
 import com.financemobile.fmassets.dto.EditAssetDto;
-import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.querySpec.AssetSpec;
 import com.financemobile.fmassets.repository.*;
 import com.financemobile.fmassets.service.*;
@@ -59,6 +58,9 @@ public class AssetControllerTest {
     @MockBean
     private UserService userService;
 
+    @MockBean
+    private AssignmentHistoryService trackAsset;
+
     private final Gson gson = new Gson();
 
     @Test
@@ -98,6 +100,10 @@ public class AssetControllerTest {
         asset.setDateCreated(new Date());
         asset.setDateModified(new Date());
 
+        AssignmentHistory assignmentHistory = new AssignmentHistory();
+        assignmentHistory.setAsset(asset);
+        assignmentHistory.setUser(user);
+
         Mockito.when(locationService.getLocationByName(Mockito.anyString()))
                 .thenReturn(location);
         Mockito.when(supplierService.getSupplierByName(Mockito.anyString()))
@@ -108,6 +114,8 @@ public class AssetControllerTest {
                 .thenReturn(category);
         Mockito.when(userService.getUserById(Mockito.anyLong()))
                 .thenReturn(user);
+        Mockito.when(trackAsset.trackAssetAssignment(Mockito.any(Asset.class),Mockito.any(User.class)))
+                .thenReturn(assignmentHistory);
 
         Mockito.when(assetRepository.save(Mockito.any(Asset.class)))
                 .thenReturn(asset);
@@ -325,10 +333,16 @@ public class AssetControllerTest {
         asset.setDateCreated(new Date());
         asset.setDateModified(new Date());
 
+        AssignmentHistory assignmentHistory = new AssignmentHistory();
+        assignmentHistory.setAsset(asset);
+        assignmentHistory.setUser(user);
+
         Mockito.when(assetRepository.findById(Mockito.anyLong()))
                 .thenReturn(Optional.of(asset));
         Mockito.when(userService.getUserById(Mockito.anyLong()))
                 .thenReturn(user);
+        Mockito.when(trackAsset.trackAssetAssignment(Mockito.any(Asset.class),Mockito.any(User.class)))
+                .thenReturn(assignmentHistory);
         Mockito.when(assetRepository.save(Mockito.any(Asset.class)))
                 .thenReturn(asset);
 
@@ -336,7 +350,7 @@ public class AssetControllerTest {
         assignAssetDto.setAssetId(asset.getId());
         assignAssetDto.setUserId(user.getId());
 
-        mockMvc.perform(post("/asset/assign-asset")
+        mockMvc.perform(post("/asset/assign")
                 .content(gson.toJson(assignAssetDto))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
