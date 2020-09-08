@@ -59,7 +59,7 @@ public class AssetController {
 
     @PutMapping(value = "/edit-asset")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse editAsset(@Valid @RequestBody EditAssetDto editAssetDto){
+    public ApiResponse editAsset(@RequestBody EditAssetDto editAssetDto){
 
         Asset asset = assetService.editAsset(editAssetDto);
 

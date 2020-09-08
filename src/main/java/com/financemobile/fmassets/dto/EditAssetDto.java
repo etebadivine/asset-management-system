@@ -19,7 +19,6 @@ public class EditAssetDto {
     private String supplier;
     @NotBlank
     private String department;
-
     @NotBlank
     private String category;
     private Long userId;
