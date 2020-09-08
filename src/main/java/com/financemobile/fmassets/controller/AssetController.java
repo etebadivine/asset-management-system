@@ -30,7 +30,7 @@ public class AssetController {
 
     @PostMapping(value = "")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse createAsset(@RequestBody CreateAssetDto createAssetDto){
+    public ApiResponse createAsset(@RequestBody @Valid CreateAssetDto createAssetDto){
 
         Asset asset = assetService.addAsset(createAssetDto);
         ApiResponse response = new ApiResponse();
@@ -55,7 +55,7 @@ public class AssetController {
 
     @PutMapping(value = "/edit-asset")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse editAsset(@RequestBody EditAssetDto editAssetDto){
+    public ApiResponse editAsset(@RequestBody @Valid EditAssetDto editAssetDto){
 
         Asset asset = assetService.editAsset(editAssetDto);
 
@@ -74,7 +74,7 @@ public class AssetController {
 
     @PostMapping(value = "/status")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse updateAssetStatus(@RequestBody UpdateAssetStatusDto updateAssetStatusDto) {
+    public ApiResponse updateAssetStatus(@RequestBody @Valid UpdateAssetStatusDto updateAssetStatusDto) {
 
         Asset asset = assetService.updateAssetStatus(updateAssetStatusDto);
 
@@ -87,7 +87,7 @@ public class AssetController {
 
     @PostMapping(value = "/assign-asset")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse assignAsset(@RequestBody AssignAssetDto assignAssetDto) {
+    public ApiResponse assignAsset(@RequestBody @Valid AssignAssetDto assignAssetDto) {
 
         Asset asset = assetService.assignAsset(assignAssetDto);
 

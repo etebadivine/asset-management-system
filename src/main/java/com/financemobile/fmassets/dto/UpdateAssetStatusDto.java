@@ -4,14 +4,15 @@ import com.financemobile.fmassets.enums.AssetStatus;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 public class UpdateAssetStatusDto {
 
-    @NotBlank
+    @NotNull
     private Long assetId;
 
-    @NotBlank
+    @NotNull
     private AssetStatus assetStatus;
 }
 

@@ -3,16 +3,16 @@ package com.financemobile.fmassets.dto;
 import com.financemobile.fmassets.enums.UserStatus;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 
 @Data
 public class UpdateUserStatusDto {
 
-    @NotBlank
+    @NotNull
     private Long userId;
 
-    @NotBlank
+    @NotNull
     private UserStatus status;
 
     public UpdateUserStatusDto(Long userId, UserStatus status) {

@@ -7,27 +7,17 @@ import com.financemobile.fmassets.model.Department;
 import com.financemobile.fmassets.model.Role;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
-import com.financemobile.fmassets.repository.RoleRepository;
-import com.financemobile.fmassets.repository.UserRepository;
-import com.financemobile.fmassets.service.messaging.EmailComposer;
-import com.financemobile.fmassets.service.messaging.SendEmailService;
+import com.financemobile.fmassets.security.OAuth2Helper;
+import com.financemobile.fmassets.service.UserService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Map;
-import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -37,24 +27,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@SpringBootTest
-@AutoConfigureMockMvc
-public class UserControllerTest {
-
-    @Autowired
-    protected MockMvc mockMvc;
+public class UserControllerTest extends OAuth2Helper {
 
     @MockBean
-    private UserRepository userRepository;
-
-    @MockBean
-    private RoleRepository roleRepository;
-
-    @MockBean
-    private SendEmailService sendEmailService;
-
-    @MockBean
-    private EmailComposer emailComposer;
+    private UserService userService;
 
     private final Gson gson = new Gson();
 
@@ -88,7 +64,7 @@ public class UserControllerTest {
         user.setDateCreated(new Date());
         user.setDateModified(new Date());
 
-        Mockito.when(userRepository.save(Mockito.any(User.class)))
+        Mockito.when(userService.addUser(Mockito.any(CreateUserDto.class)))
                 .thenReturn(user);
 
         // payload for the endpoint
@@ -101,7 +77,8 @@ public class UserControllerTest {
         // fire request
         mockMvc.perform(post("/user")
                 .content(gson.toJson(createUserDto))
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("status", is(true)))
                 .andExpect(jsonPath("message", is("Success")))
@@ -136,13 +113,13 @@ public class UserControllerTest {
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);
-        Page<User> userPage = new PageImpl(Arrays.asList(user));
 
-        Mockito.when(userRepository.findAll(Mockito.any(UserSpec.class), Mockito.any(Pageable.class)))
-                .thenReturn(userPage);
+        Mockito.when(userService.searchUsers(Mockito.any(UserSpec.class), Mockito.any(Pageable.class)))
+                .thenReturn(Arrays.asList(user));
 
         mockMvc.perform(get("/user?first_name=Sam")
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", is(true)))
                 .andExpect(jsonPath("message", is("Success")))
@@ -180,14 +157,15 @@ public class UserControllerTest {
         user.setDepartment(department);
         user.setRole(role);
 
-        Mockito.when(userRepository.findByEmail(Mockito.anyString()))
-                .thenReturn(Optional.of(user));
+        Mockito.when(userService.getUserByEmail(Mockito.anyString()))
+                .thenReturn(user);
 
         FindByEmailDto emailDto = new FindByEmailDto();
         emailDto.setEmail("email");
 
         mockMvc.perform(post("/user/one")
                 .content(gson.toJson(emailDto))
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", is(true)))
@@ -226,10 +204,7 @@ public class UserControllerTest {
         user.setDepartment(department);
         user.setRole(role);
 
-        Mockito.when(userRepository.findById(Mockito.any(Long.class)))
-                .thenReturn(Optional.of(user));
-
-        Mockito.when(userRepository.save(Mockito.any(User.class)))
+        Mockito.when(userService.updateStatus(Mockito.any(UpdateUserStatusDto.class)))
                 .thenReturn(user);
 
         UpdateUserStatusDto updateUserStatusDto = new UpdateUserStatusDto();
@@ -238,6 +213,7 @@ public class UserControllerTest {
 
         mockMvc.perform(post("/user/status")
                 .content(gson.toJson(updateUserStatusDto))
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", is(true)))
@@ -276,40 +252,28 @@ public class UserControllerTest {
         user.setDateCreated(new Date());
         user.setDateModified(new Date());
 
-        Mockito.when(userRepository.findById(user.getId()))
-                .thenReturn(Optional.of(user));
-
         ResetPasswordDto resetPasswordDto = new ResetPasswordDto();
         resetPasswordDto.setUserId(200L);
         resetPasswordDto.setOldPassword("password");
         resetPasswordDto.setNewPassword("newpassword");
 
-        User usr = new User();
-        usr.setId(200L);
-        usr.setFirstName("Atta");
-        usr.setLastName("Dwoa");
-        usr.setEmail("me@gmail.com");
-        usr.setPhone("+233241428119");
-        usr.setStatus(UserStatus.ACTIVE);
-        usr.setDepartment(department);
-        usr.setRole(role);
-        usr.setPassword(resetPasswordDto.getNewPassword());
-        Mockito.when(userRepository.save(Mockito.any(User.class)))
-                .thenReturn(usr);
+        Mockito.when(userService.resetPassword(resetPasswordDto))
+                .thenReturn(user);
 
         mockMvc.perform(post("/user/password-reset")
                 .content(gson.toJson(resetPasswordDto))
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", is(true)))
                 .andExpect(jsonPath("message", is("Success")))
-                .andExpect(jsonPath("$.data.id", is(usr.getId().intValue())))
-                .andExpect(jsonPath("$.data.firstName", is(usr.getFirstName())))
-                .andExpect(jsonPath("$.data.lastName", is(usr.getLastName())))
-                .andExpect(jsonPath("$.data.email", is(usr.getEmail())))
-                .andExpect(jsonPath("$.data.phone", is(usr.getPhone())))
-                .andExpect(jsonPath("$.data.status", is(usr.getStatus().toString())))
-                .andExpect(jsonPath("$.data.password", is(usr.getPassword())));
+                .andExpect(jsonPath("$.data.id", is(user.getId().intValue())))
+                .andExpect(jsonPath("$.data.firstName", is(user.getFirstName())))
+                .andExpect(jsonPath("$.data.lastName", is(user.getLastName())))
+                .andExpect(jsonPath("$.data.email", is(user.getEmail())))
+                .andExpect(jsonPath("$.data.phone", is(user.getPhone())))
+                .andExpect(jsonPath("$.data.status", is(user.getStatus().toString())))
+                .andExpect(jsonPath("$.data.password", is(user.getPassword())));
     }
 
     @Test
@@ -335,23 +299,16 @@ public class UserControllerTest {
         user.setPassword("password");
         user.setStatus(UserStatus.ACTIVE);
 
-        Mockito.when(userRepository.existsByEmail(Mockito.anyString()))
+
+        Mockito.when(userService.forgotPassword(Mockito.any(ForgotPasswordDto.class)))
                 .thenReturn(true);
-
-        Mockito.when(userRepository.findByEmail(Mockito.anyString()))
-                .thenReturn(Optional.of(user));
-
-        Mockito.when(sendEmailService.send(Mockito.any(EmailMessageDto.class)))
-                .thenReturn(true);
-
-        Mockito.when(emailComposer.composeMessageContent(Mockito.any(Map.class), Mockito.anyString()))
-                .thenReturn("Some content");
 
         ForgotPasswordDto forgotPasswordDto = new ForgotPasswordDto();
         forgotPasswordDto.setEmail(user.getEmail());
 
         mockMvc.perform(post("/user/forgot-password")
                 .content(gson.toJson(forgotPasswordDto))
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", is(true)))
@@ -383,13 +340,7 @@ public class UserControllerTest {
         user.setDepartment(department);
         user.setRole(role);
 
-        Mockito.when(userRepository.findById(Mockito.any(Long.class)))
-                .thenReturn(Optional.of(user));
-
-        Mockito.when(roleRepository.findByName(Mockito.any(String.class)))
-                .thenReturn(Optional.of(user.getRole()));
-
-        Mockito.when(userRepository.save(Mockito.any(User.class)))
+        Mockito.when(userService.updateUserRole(Mockito.any(UpdateUserRoleDto.class)))
                 .thenReturn(user);
 
         UpdateUserRoleDto updateuserRoleDto = new UpdateUserRoleDto();
@@ -398,6 +349,7 @@ public class UserControllerTest {
 
         mockMvc.perform(post("/user/role")
                 .content(gson.toJson(updateuserRoleDto))
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", is(true)))
@@ -409,14 +361,8 @@ public class UserControllerTest {
     @Test
     public void test_sendUserInvite() throws Exception {
 
-        Mockito.when(userRepository.existsByEmail(Mockito.anyString()))
-                .thenReturn(false);
-
-        Mockito.when(sendEmailService.send(Mockito.any(EmailMessageDto.class)))
+        Mockito.when(userService.sendUserInvite(Mockito.any(UserInviteDto.class)))
                 .thenReturn(true);
-
-        Mockito.when(emailComposer.composeMessageContent(Mockito.any(Map.class), Mockito.anyString()))
-                .thenReturn("content");
 
         UserInviteDto userInviteDto = new UserInviteDto();
         userInviteDto.setEmail("divine@gmail.com");
@@ -424,6 +370,7 @@ public class UserControllerTest {
 
         mockMvc.perform(post("/user/invite")
                 .content(gson.toJson(userInviteDto))
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", is(true)))

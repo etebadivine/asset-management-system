@@ -32,4 +32,5 @@ public class SendEmailServiceTest {
         Boolean actual = sendEmailService.send(emailMessageDto);
         Assertions.assertEquals(true, actual);
     }
+
 }
