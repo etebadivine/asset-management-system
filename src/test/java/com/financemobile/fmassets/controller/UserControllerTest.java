@@ -10,7 +10,11 @@ import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.repository.DepartmentRepository;
 import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.repository.UserRepository;
+import com.financemobile.fmassets.service.messaging.EmailComposer;
+import com.financemobile.fmassets.service.messaging.SendEmailService;
 import com.google.gson.Gson;
+import jdk.nashorn.internal.ir.annotations.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -45,11 +50,14 @@ public class UserControllerTest {
     @MockBean
     private UserRepository userRepository;
 
-    @Autowired
-    private DepartmentRepository departmentRepository;
-
     @MockBean
     private RoleRepository roleRepository;
+
+    @MockBean
+    private SendEmailService sendEmailService;
+
+    @MockBean
+    private EmailComposer emailComposer;
 
     private final Gson gson = new Gson();
 
@@ -332,6 +340,15 @@ public class UserControllerTest {
 
         Mockito.when(userRepository.existsByEmail(Mockito.anyString()))
                 .thenReturn(true);
+
+        Mockito.when(userRepository.findByEmail(Mockito.anyString()))
+                .thenReturn(Optional.of(user));
+
+        Mockito.when(sendEmailService.send(Mockito.any(EmailMessageDto.class)))
+                .thenReturn(true);
+
+        Mockito.when(emailComposer.composeMessageContent(Mockito.any(Map.class), Mockito.anyString()))
+                .thenReturn("Some content");
 
         ForgotPasswordDto forgotPasswordDto = new ForgotPasswordDto();
         forgotPasswordDto.setEmail(user.getEmail());

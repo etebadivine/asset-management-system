@@ -12,14 +12,15 @@ import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.repository.UserRepository;
 import com.financemobile.fmassets.service.RoleService;
 import com.financemobile.fmassets.service.UserService;
+import com.financemobile.fmassets.service.messaging.EmailComposer;
+import com.financemobile.fmassets.service.messaging.SendEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import javax.mail.MessagingException;
+import java.util.*;
 
 
 @Service
@@ -29,18 +30,14 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private UserService userService;
+    private SendEmailService sendEmailService;
 
     @Autowired
     private RoleRepository roleRepository;
 
     @Autowired
-    private RoleService roleService;
+    private EmailComposer emailComposer;
 
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public User addUser(CreateUserDto createUserDto) {
@@ -78,6 +75,7 @@ public class UserServiceImpl implements UserService {
 
         throw new DataNotFoundException("user not found");
     }
+
 
     @Override
     public User getUserByEmail(String email) {
@@ -123,8 +121,32 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean forgotPassword(ForgotPasswordDto forgotPasswordDto) {
 
-        return  userRepository.existsByEmail(forgotPasswordDto.getEmail());
+        if (!userRepository.existsByEmail(forgotPasswordDto.getEmail())) {
+            throw new DataNotFoundException("email user does not exist");
+        }
 
+        User user = getUserByEmail(forgotPasswordDto.getEmail());
+        Boolean sent = false;
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("firstName", user.getFirstName());
+
+        String content = emailComposer.composeMessageContent(
+                params,"forgot_password.vm"
+        );
+
+        EmailMessageDto emailMessageDto =
+                new EmailMessageDto(
+                        forgotPasswordDto.getEmail(), null,
+                        "Forgot Password", content
+                );
+
+        try {
+            sent = sendEmailService.send(emailMessageDto);
+        } catch (MessagingException mex){
+
+        }
+        return sent;
     }
 
     @Override
