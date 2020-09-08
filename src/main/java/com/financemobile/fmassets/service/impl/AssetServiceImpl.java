@@ -5,13 +5,11 @@ import com.financemobile.fmassets.dto.EditAssetDto;
 import com.financemobile.fmassets.enums.AssetStatus;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
-import com.financemobile.fmassets.exception.ImageFormatException;
 import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.querySpec.AssetSpec;
 import com.financemobile.fmassets.repository.AssetRepository;
 import com.financemobile.fmassets.service.*;
 import io.micrometer.core.instrument.util.StringUtils;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -87,11 +85,8 @@ public class AssetServiceImpl implements AssetService {
         assetDetails.setModel(createAssetDto.getModel());
         assetDetails.setManufacturer(createAssetDto.getManufacturer());
         assetDetails.setSerialNumber(createAssetDto.getSerialNumber());
-
         //check if the image is base64 encoded
         assetDetails.setImageBytes(createAssetDto.getImageBytes());
-
-
         assetDetails.setWarranty(createAssetDto.getWarranty());
         assetDetails.setLicenses(createAssetDto.getLicenses());
         asset.setAssetDetails(assetDetails);
@@ -115,9 +110,10 @@ public class AssetServiceImpl implements AssetService {
     @Override
     public Asset editAsset(EditAssetDto editAssetDto) {
 
-        Optional<Asset> assetOptional = assetRepository.findByName(editAssetDto.getName());
+        Optional<Asset> assetOptional = assetRepository.findById(editAssetDto.getAssetId());
         if (assetOptional.isPresent()){
            Asset asset = assetOptional.get();
+           asset.setName(editAssetDto.getName());
 
            Location location = locationService.getLocationByName(editAssetDto.getLocation());
            asset.setLocation(location);
@@ -135,9 +131,6 @@ public class AssetServiceImpl implements AssetService {
                User user = userService.getUserById(editAssetDto.getUserId());
                asset.setUser(user);
                asset.setStatus(AssetStatus.ASSIGNED);
-           }
-           else{
-               asset.setStatus(AssetStatus.AVAILABLE);
            }
            return assetRepository.save(asset);
         }

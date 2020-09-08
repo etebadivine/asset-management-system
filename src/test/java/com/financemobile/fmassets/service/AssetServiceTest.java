@@ -55,12 +55,12 @@ public class AssetServiceTest {
 
     @BeforeEach
     public void setup() {
+
            assetRepository.deleteAll();
            locationRepository.deleteAll();
            supplierRepository.deleteAll();
            departmentRepository.deleteAll();
            categoryRepository.deleteAll();
-
     }
 
       @AfterEach
@@ -304,14 +304,22 @@ public class AssetServiceTest {
         user1 = userRepository.save(user1);
 
         EditAssetDto editAssetDto = new EditAssetDto();
-        editAssetDto.setName(asset.getName());
+        editAssetDto.setAssetId(asset.getId());
+        editAssetDto.setName("HP Laptop");
         editAssetDto.setLocation(location1.getName());
         editAssetDto.setSupplier(supplier1.getName());
         editAssetDto.setDepartment(department1.getName());
         editAssetDto.setCategory(category1.getName());
         editAssetDto.setUserId(user1.getId());
 
-        assetService.editAsset(editAssetDto);
+        Asset asset1 = assetService.editAsset(editAssetDto);
+        Assertions.assertNotNull(asset1.getId());
+        Assertions.assertEquals(asset1.getName(), editAssetDto.getName());
+        Assertions.assertEquals(asset1.getLocation().getName(), editAssetDto.getLocation());
+        Assertions.assertEquals(asset1.getSupplier().getName(), editAssetDto.getSupplier());
+        Assertions.assertEquals(asset1.getDepartment().getName(), editAssetDto.getDepartment());
+        Assertions.assertEquals(asset1.getCategory().getName(), editAssetDto.getCategory());
+        Assertions.assertEquals(asset1.getUser().getId(), editAssetDto.getUserId().intValue());
     }
 }
 

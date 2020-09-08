@@ -204,7 +204,7 @@ public class AssetControllerTest {
         asset.setDateCreated(new Date());
         asset.setDateModified(new Date());
 
-        Mockito.when(assetRepository.findByName(asset.getName()))
+        Mockito.when(assetRepository.findById(asset.getId()))
                 .thenReturn(Optional.of(asset));
 
         Mockito.when(locationService.getLocationByName(Mockito.anyString()))
@@ -222,7 +222,8 @@ public class AssetControllerTest {
                 .thenReturn(asset);
 
         EditAssetDto editAssetDto = new EditAssetDto();
-        editAssetDto.setName(asset.getName());
+        editAssetDto.setAssetId(asset.getId());
+        editAssetDto.setName("Cake");
         editAssetDto.setLocation("Accra");
         editAssetDto.setSupplier("Spring's Bakery");
         editAssetDto.setDepartment("Kitchen");
@@ -236,6 +237,7 @@ public class AssetControllerTest {
                 .andExpect(jsonPath("status", is(true)))
                 .andExpect(jsonPath("message", is("Success")))
                 .andExpect(jsonPath("data.id", is(asset.getId().intValue())))
+                .andExpect(jsonPath("data.name", is(asset.getName())))
                 .andExpect(jsonPath("data.location.name", is(asset.getLocation().getName())))
                 .andExpect(jsonPath("data.supplier.name", is(asset.getSupplier().getName())))
                 .andExpect(jsonPath("data.department.name", is(asset.getDepartment().getName())))
