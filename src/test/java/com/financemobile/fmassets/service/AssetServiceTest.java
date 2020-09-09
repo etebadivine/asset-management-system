@@ -12,7 +12,6 @@ import com.financemobile.fmassets.querySpec.AssetSpec;
 import com.financemobile.fmassets.repository.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,25 +50,7 @@ public class AssetServiceTest {
     private UserRepository userRepository;
 
     @Autowired
-    private AssignmentHistoryRepository assignmentHistoryR;
-
-    @BeforeEach
-    public void setup() {
-       assetRepository.deleteAll();
-       locationRepository.deleteAll();
-       supplierRepository.deleteAll();
-       departmentRepository.deleteAll();
-       categoryRepository.deleteAll();
-    }
-
-    @AfterEach
-    public void tearDown() {
-       assetRepository.deleteAll();
-       locationRepository.deleteAll();
-       supplierRepository.deleteAll();
-       departmentRepository.deleteAll();
-       categoryRepository.deleteAll();
-    }
+    private AssignmentHistoryRepository assignmentHistoryRepository;
 
     @Test
     public void test_addAsset(){
@@ -420,6 +401,17 @@ public class AssetServiceTest {
         Assertions.assertThrows(DataNotFoundException.class, ()->{
             assetService.assignAsset(assignAssetDto);
         });
+    }
+
+    // this should always be the last method
+    @AfterEach
+    public void tearDown() {
+        assignmentHistoryRepository.deleteAll();
+        assetRepository.deleteAll();
+        locationRepository.deleteAll();
+        supplierRepository.deleteAll();
+        departmentRepository.deleteAll();
+        categoryRepository.deleteAll();
     }
 }
 

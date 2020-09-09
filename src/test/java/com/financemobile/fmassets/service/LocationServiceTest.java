@@ -6,7 +6,6 @@ import com.financemobile.fmassets.model.Location;
 import com.financemobile.fmassets.repository.LocationRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,14 +20,6 @@ public class LocationServiceTest {
 
     @Autowired
     private LocationRepository locationRepository;
-
-    @BeforeEach
-    public void setup() { locationRepository.deleteAll(); }
-
-//    @AfterEach
-//    public void tearDown() {
-//    }
-
 
     @Test
     public void test_addLocation() {
@@ -93,8 +84,6 @@ public class LocationServiceTest {
         Assertions.assertEquals(location.getName(),locat.getName());
         Assertions.assertEquals(location.getCity(), locat.getCity());
         Assertions.assertEquals(location.getCountry(), locat.getCountry());
-
-
     }
 
     @Test
@@ -119,4 +108,8 @@ public class LocationServiceTest {
         Assertions.assertEquals(locationList.get(0).getCity(), city);
         Assertions.assertEquals(locationList.get(0).getCountry(), country);
     }
+
+    @AfterEach
+    public void tearDown() { locationRepository.deleteAll(); }
+
 }

@@ -6,7 +6,6 @@ import com.financemobile.fmassets.model.Role;
 import com.financemobile.fmassets.repository.RoleRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,15 +21,6 @@ public class RoleServiceTest {
 
     @Autowired
     private RoleRepository roleRepository;
-
-    @BeforeEach
-    public void setup(){
-        roleRepository.deleteAll();
-    }
-
-    @AfterEach
-    public void tearDown(){
-    }
 
     @Test
     public void test_addRole(){
@@ -77,5 +67,10 @@ public class RoleServiceTest {
 
         Assertions.assertEquals(roleList.size(), 1);
         Assertions.assertEquals(roleList.get(0).getName(), name);
+    }
+
+    @AfterEach
+    public void tearDown(){
+        roleRepository.deleteAll();
     }
 }

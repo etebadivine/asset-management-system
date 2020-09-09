@@ -92,12 +92,6 @@ public class OAuth2Helper {
         return jsonParser.parseMap(resultString).get("access_token").toString();
     }
 
-
-//    @Test
-//    public void justRun(){
-//        Assertions.assertTrue(true);
-//    }
-
     @AfterEach
     public void tearDown(){
         userRepository.deleteAll();

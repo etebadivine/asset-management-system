@@ -6,13 +6,11 @@ import com.financemobile.fmassets.model.Department;
 import com.financemobile.fmassets.repository.DepartmentRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-import java.util.Set;
 
 @SpringBootTest
 public class DepartmentServiceTest {
@@ -22,16 +20,6 @@ public class DepartmentServiceTest {
 
     @Autowired
     private DepartmentRepository departmentRepository;
-
-    @BeforeEach
-    public void setup(){
-        departmentRepository.deleteAll();
-    }
-
-    @AfterEach
-    public void teardown(){
-
-    }
 
     @Test
     public void test_addDepartment(){
@@ -103,4 +91,8 @@ public class DepartmentServiceTest {
         Assertions.assertEquals(departmentList.get(0).getNumberOfAssets(), 0L);
     }
 
+    @AfterEach
+    public void tearDown(){
+        departmentRepository.deleteAll();
+    }
 }

@@ -7,7 +7,6 @@ import com.financemobile.fmassets.model.Supplier;
 import com.financemobile.fmassets.repository.SupplierRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,16 +21,6 @@ public class SupplierServiceTest {
 
     @Autowired
     private SupplierRepository supplierRepository;
-
-    @BeforeEach
-    public  void setup() {
-        supplierRepository.deleteAll();
-    }
-
-    @AfterEach
-    public  void tearDown() {
-
-    }
 
     @Test
     public void test_addSupplier(){
@@ -142,5 +131,10 @@ public class SupplierServiceTest {
         Assertions.assertThrows(DataNotFoundException.class, ()->{
             supplierService.getSupplierByName(name);
         });
+    }
+
+    @AfterEach
+    public  void tearDown() {
+        supplierRepository.deleteAll();
     }
 }

@@ -6,7 +6,6 @@ import com.financemobile.fmassets.model.Category;
 import com.financemobile.fmassets.repository.CategoryRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,15 +20,6 @@ public class CategoryServiceTest {
 
     @Autowired
     private CategoryRepository categoryRepository;
-
-    @BeforeEach
-    public void setup(){
-        categoryRepository.deleteAll();
-    }
-
-    @AfterEach
-    public void tearDown(){
-    }
 
     @Test
     public void test_addCategory(){
@@ -122,4 +112,10 @@ public class CategoryServiceTest {
         });
     }
 
+
+    //this should always be the last method
+    @AfterEach
+    public void tearDown(){
+        categoryRepository.deleteAll();
+    }
 }

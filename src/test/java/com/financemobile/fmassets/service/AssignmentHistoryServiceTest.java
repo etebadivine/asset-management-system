@@ -3,6 +3,7 @@ package com.financemobile.fmassets.service;
 
 import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.repository.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,9 @@ public class AssignmentHistoryServiceTest {
 
     @Autowired
     private AssignmentHistoryService assignmentHistoryService;
+
+    @Autowired
+    private AssignmentHistoryRepository assignmentHistoryRepository;
 
     @Autowired
     private AssetRepository assetRepository;
@@ -32,15 +36,6 @@ public class AssignmentHistoryServiceTest {
 
     @Autowired
     private UserRepository userRepository;
-
-    @BeforeEach
-    public void setup() {
-        assetRepository.deleteAll();
-        locationRepository.deleteAll();
-        supplierRepository.deleteAll();
-        departmentRepository.deleteAll();
-        categoryRepository.deleteAll();
-    }
 
     @Test
     public void test_trackAssetAssignment(){
@@ -86,5 +81,15 @@ public class AssignmentHistoryServiceTest {
         Assertions.assertEquals(assignmentHistory.getAsset().getName(), asset.getName());
         Assertions.assertEquals(assignmentHistory.getUser().getId(), user.getId());
         Assertions.assertEquals(assignmentHistory.getUser().getFirstName(), user.getFirstName());
+    }
+
+    @AfterEach
+    public void tearDown() {
+        assignmentHistoryRepository.deleteAll();
+        assetRepository.deleteAll();
+        locationRepository.deleteAll();
+        supplierRepository.deleteAll();
+        departmentRepository.deleteAll();
+        categoryRepository.deleteAll();
     }
 }
