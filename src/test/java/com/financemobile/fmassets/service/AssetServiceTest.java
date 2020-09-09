@@ -55,7 +55,7 @@ public class AssetServiceTest {
     @Test
     public void test_addAsset(){
         Location location = new Location();
-        location.setId(1l);
+        location.setId(1L);
         location.setName("Tema");
         location = locationRepository.save(location);
 

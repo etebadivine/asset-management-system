@@ -48,16 +48,6 @@ public class AssetServiceImpl implements AssetService {
     private AssignmentHistoryService assignmentHistoryService;
 
     @Override
-    public List<Asset> searchAssets(AssetSpec assetSpec, Pageable pageable) {
-
-        List<Asset> assetList = new ArrayList<>();
-        Page<Asset> assetsPage = assetRepository.findAll(assetSpec, pageable);
-        if(assetsPage.hasContent())
-            return assetsPage.getContent();
-        return assetList;
-    }
-
-    @Override
     public Asset addAsset(CreateAssetDto createAssetDto) {
         //check if the asset already exist existByName(...)
         if(assetRepository.existsByName(createAssetDto.getName())){
@@ -115,6 +105,17 @@ public class AssetServiceImpl implements AssetService {
         }
         return asset;
     }
+
+    @Override
+    public List<Asset> searchAssets(AssetSpec assetSpec, Pageable pageable) {
+
+        List<Asset> assetList = new ArrayList<>();
+        Page<Asset> assetsPage = assetRepository.findAll(assetSpec, pageable);
+        if(assetsPage.hasContent())
+            return assetsPage.getContent();
+        return assetList;
+    }
+
 
     @Override
     public Asset editAsset(EditAssetDto editAssetDto) {
