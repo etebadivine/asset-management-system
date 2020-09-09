@@ -377,4 +377,46 @@ public class UserControllerTest extends OAuth2Helper {
                 .andExpect(jsonPath("message", is("Success")))
                 .andExpect(jsonPath("data", is((true))));
     }
+
+    @Test
+    public void test_findUserById() throws Exception {
+        //create dummy user
+        Department department = new Department();
+        department.setId(43L);
+        department.setName("Engineering");
+        department.setCreatedBy("Admin");
+        department.setDateCreated(new Date());
+        department.setDateModified(new Date());
+
+        Role role = new Role();
+        role.setId(3L);
+        role.setName("USER");
+        role.setDateCreated(new Date());
+
+        User user = new User();
+        user.setId(200L);
+        user.setFirstName("Atta");
+        user.setLastName("Dwoa");
+        user.setEmail("me@gmail.com");
+        user.setPhone("+233241428119");
+        user.setStatus(UserStatus.ACTIVE);
+        user.setDepartment(department);
+        user.setRole(role);
+
+        Mockito.when(userService.getUserById(user.getId()))
+                .thenReturn(user);
+
+        mockMvc.perform(get("/user/" + user.getId())
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("$.data.id", is(user.getId().intValue())))
+                .andExpect(jsonPath("$.data.firstName", is(user.getFirstName())))
+                .andExpect(jsonPath("$.data.lastName", is(user.getLastName())))
+                .andExpect(jsonPath("$.data.email", is(user.getEmail())))
+                .andExpect(jsonPath("$.data.phone", is(user.getPhone())))
+                .andExpect(jsonPath("$.data.status", is(user.getStatus().toString())));
+    }
 }

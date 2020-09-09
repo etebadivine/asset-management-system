@@ -40,6 +40,16 @@ public class UserController {
         return response;
     }
 
+    @GetMapping("/{userId}")
+    public ApiResponse getUserById(@PathVariable Long userId){
+        User user = userService.getUserById(userId);
+        ApiResponse response = new ApiResponse();
+        response.setStatus(true);
+        response.setMessage("Success");
+        response.setData(user);
+        return response;
+    }
+
     @GetMapping
     public ApiResponse searchUsers(UserSpec userSpec, Pageable pageable) {
 
