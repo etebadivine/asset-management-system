@@ -1,5 +1,6 @@
 package com.financemobile.fmassets.service;
 
+import com.financemobile.fmassets.controller.AssignmentHistoryControllerTest;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.Location;
@@ -13,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 @SpringBootTest
-public class LocationServiceTest {
+public class LocationServiceTest extends AssignmentHistoryControllerTest {
 
     @Autowired
     private LocationService locationService;

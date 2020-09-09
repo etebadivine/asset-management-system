@@ -1,5 +1,6 @@
 package com.financemobile.fmassets.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.financemobile.fmassets.enums.UserStatus;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -29,9 +30,11 @@ public class User {
     @Column(name = "email", unique = true)
     private String email;
     private String phone;
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id")
     private Department department;
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private Role role;

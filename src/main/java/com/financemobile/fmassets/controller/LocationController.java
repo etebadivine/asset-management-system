@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 
 @RequestMapping("/location")
 @RestController
@@ -20,7 +22,7 @@ public class LocationController {
 
     @PostMapping(value = "")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse createLocation(@RequestBody CreateLocationDto createLocationDto){
+    public ApiResponse createLocation(@RequestBody @Valid CreateLocationDto createLocationDto){
         Location location = locationService.addLocation(
                 createLocationDto.getName(),
                 createLocationDto.getCity(),

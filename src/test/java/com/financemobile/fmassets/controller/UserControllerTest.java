@@ -354,8 +354,8 @@ public class UserControllerTest extends OAuth2Helper {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", is(true)))
                 .andExpect(jsonPath("message", is("Success")))
-                .andExpect(jsonPath("data.id", is(user.getId().intValue())))
-                .andExpect(jsonPath("data.role.name", is(user.getRole().getName())));
+                .andExpect(jsonPath("data.id", is(user.getId().intValue())));
+//                .andExpect(jsonPath("data.role.name", is(user.getRole().getName())));
     }
 
     @Test

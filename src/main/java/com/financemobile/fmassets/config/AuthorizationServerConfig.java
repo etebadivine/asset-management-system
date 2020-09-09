@@ -44,6 +44,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private DataSource dataSource;
 
+    @Value("${fmassetui.client.id}")
+    private String clientId;
+
     @Value("${fmassetui.client.secret}")
     private String clientSecret;
 
@@ -97,9 +100,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
-                .withClient("fmassetui")
+                .withClient(clientId)
                 .authorizedGrantTypes("password", "client_credentials")
-                .secret(clientSecret)
+                .secret(passwordEncoder.encode(clientSecret))
                 .scopes("trust,read,write");
     }
 }
