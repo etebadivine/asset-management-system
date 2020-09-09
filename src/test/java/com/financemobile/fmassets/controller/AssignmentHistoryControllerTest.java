@@ -66,7 +66,7 @@ public class AssignmentHistoryControllerTest extends OAuth2Helper {
         Mockito.when(assignmentHistoryService.searchAssignmentHistory(Mockito.any(AssignmentHistorySpec.class), Mockito.any(Pageable.class)))
                 .thenReturn(Arrays.asList(assignmentHistory));
 
-        mockMvc.perform(get("/assignment_history?asset=40")
+        mockMvc.perform(get("/assignment_history?asset_id=40")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())

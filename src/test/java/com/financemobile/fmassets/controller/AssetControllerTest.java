@@ -185,7 +185,7 @@ public class AssetControllerTest extends OAuth2Helper {
         editAssetDto.setCategory("Food");
         editAssetDto.setUserId(user.getId());
 
-        mockMvc.perform(put("/asset/")
+        mockMvc.perform(put("/asset")
                 .content(gson.toJson(editAssetDto))
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
