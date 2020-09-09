@@ -7,6 +7,7 @@ import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.dto.CreateAssetDto;
 import com.financemobile.fmassets.dto.EditAssetDto;
 import com.financemobile.fmassets.querySpec.AssetSpec;
+import com.financemobile.fmassets.querySpec.AssignmentHistorySpec;
 import com.financemobile.fmassets.security.OAuth2Helper;
 import com.financemobile.fmassets.service.*;
 import com.google.gson.Gson;
@@ -27,6 +28,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 public class AssetControllerTest extends OAuth2Helper {
+
+    @MockBean
+    private AssignmentHistoryService assignmentHistoryService;
 
     @MockBean
     private AssetService assetService;
@@ -181,7 +185,7 @@ public class AssetControllerTest extends OAuth2Helper {
         editAssetDto.setCategory("Food");
         editAssetDto.setUserId(user.getId());
 
-        mockMvc.perform(put("/asset/edit-asset")
+        mockMvc.perform(put("/asset")
                 .content(gson.toJson(editAssetDto))
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
