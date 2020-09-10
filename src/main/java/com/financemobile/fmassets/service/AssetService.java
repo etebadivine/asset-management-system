@@ -15,4 +15,5 @@ public interface AssetService {
     Asset editAsset(EditAssetDto editAssetDto);
     Asset updateAssetStatus(UpdateAssetStatusDto updateAssetStatusDto);
     Asset assignAsset(AssignAssetDto assignAssetDto);
+    Asset uploadAssetImage(Long assetId, byte[] imagebytes);
 }

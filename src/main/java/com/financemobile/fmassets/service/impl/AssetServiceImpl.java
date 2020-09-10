@@ -179,5 +179,15 @@ public class AssetServiceImpl implements AssetService {
         }
         throw new DataNotFoundException("Asset not found");
     }
+
+    @Override
+    public Asset uploadAssetImage(Long assetId, byte[] imageBytes) {
+        // check if asset exist(findById(..)) and throw approprait exception
+        // convert the imageBytes to Base64 string and set it asset details like below :
+        // String imageString = Base64.getEncoder().encodeToString(imageBytes)
+
+
+        return null;
+    }
 }
 
