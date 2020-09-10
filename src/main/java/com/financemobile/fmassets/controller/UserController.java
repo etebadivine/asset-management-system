@@ -31,7 +31,7 @@ public class UserController {
 
     @PostMapping(value = "")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse addUser(@RequestBody CreateUserDto createUserDto) {
+    public ApiResponse addUser(@RequestBody @Valid CreateUserDto createUserDto) {
         User user = userService.addUser(createUserDto);
         ApiResponse response = new ApiResponse();
         response.setStatus(true);

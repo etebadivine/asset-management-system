@@ -16,6 +16,7 @@ import com.financemobile.fmassets.service.messaging.SendEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -37,6 +38,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private EmailComposer emailComposer;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     @Override
     public User addUser(CreateUserDto createUserDto) {
@@ -50,8 +54,7 @@ public class UserServiceImpl implements UserService {
         user.setLastName(createUserDto.getLastName());
         user.setEmail(createUserDto.getEmail());
         user.setPhone(createUserDto.getPhone());
-        user.setPassword(createUserDto.getPassword());
-
+        user.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
         return userRepository.save(user);
     }
 
@@ -108,8 +111,8 @@ public class UserServiceImpl implements UserService {
                 userRepository.findById(resetPasswordDto.getUserId());
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            if (user.getPassword().equals(resetPasswordDto.getOldPassword())) {
-                user.setPassword(resetPasswordDto.getNewPassword());
+            if (passwordEncoder.matches(resetPasswordDto.getOldPassword(), user.getPassword())) {
+                user.setPassword(passwordEncoder.encode(resetPasswordDto.getNewPassword()));
                 return userRepository.save(user);
             }
             throw new PasswordMismatchException("password mismatch");

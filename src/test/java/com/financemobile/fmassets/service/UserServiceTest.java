@@ -20,6 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import javax.persistence.criteria.Predicate;
 import java.util.List;
 
@@ -39,6 +41,9 @@ public class UserServiceTest {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Test
     public void test_addUser() {
         String firstName = "Reynolds";
@@ -54,7 +59,7 @@ public class UserServiceTest {
         Assertions.assertEquals(user.getLastName(), lastName);
         Assertions.assertEquals(user.getEmail(), email);
         Assertions.assertEquals(user.getPhone(), phone);
-        Assertions.assertEquals(user.getPassword(), password);
+
     }
 
     @Test
@@ -253,14 +258,17 @@ public class UserServiceTest {
         user.setLastName("Adanu");
         user.setEmail("you@gmail.com");
         user.setPhone("+233241428114");
-        user.setPassword("password");
+        user.setPassword(passwordEncoder.encode("password"));
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);
         user = userRepository.save(user);
 
-        ResetPasswordDto resetPasswordDto = new ResetPasswordDto(user.getId(), user.getPassword(), "newpassword");
-        userService.resetPassword(resetPasswordDto);
+        ResetPasswordDto resetPasswordDto =
+                new ResetPasswordDto(user.getId(), "password", "newpassword");
+        user = userService.resetPassword(resetPasswordDto);
+        Assertions.assertTrue(passwordEncoder
+                .matches(resetPasswordDto.getNewPassword(), user.getPassword()));
     }
 
     @Test
