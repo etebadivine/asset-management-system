@@ -3,23 +3,26 @@ package com.financemobile.fmassets.model;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 
 @Data
 @Entity
-@Table(name = "category")
-public class Category {
+@Table(name = "assignment_history")
+public class AssignmentHistory {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(unique = true)
-    private String name;
-    private String description;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "asset_id", nullable = false)
+    private Asset asset;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
     @Column(name = "created_by")
     private String createdBy;
     @CreationTimestamp
@@ -29,6 +32,4 @@ public class Category {
     @Column(name = "date_modified")
     private Date dateModified;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-    private Set<Asset> assets = new HashSet<>();
 }
