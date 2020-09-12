@@ -16,6 +16,8 @@ import io.micrometer.core.instrument.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -49,6 +51,10 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public Asset addAsset(CreateAssetDto createAssetDto) {
+
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
         //check if the asset already exist existByName(...)
         if(assetRepository.existsByName(createAssetDto.getName())){
             throw new AlreadyExistException("Asset already exists");
@@ -56,6 +62,7 @@ public class AssetServiceImpl implements AssetService {
 
         Asset asset = new Asset();
         asset.setName(createAssetDto.getName());
+        asset.setCreatedBy(authentication.getName());
 
         //check if the location exists
         if(!StringUtils.isEmpty(createAssetDto.getLocation())){

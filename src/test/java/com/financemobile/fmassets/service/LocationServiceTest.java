@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 @SpringBootTest
-public class LocationServiceTest extends AssignmentHistoryControllerTest {
+public class LocationServiceTest {
 
     @Autowired
     private LocationService locationService;

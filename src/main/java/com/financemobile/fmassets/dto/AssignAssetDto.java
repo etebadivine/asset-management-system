@@ -13,6 +13,4 @@ public class AssignAssetDto {
     @NotNull
     private Long userId;
 
-    public AssignAssetDto() {
-    }
 }

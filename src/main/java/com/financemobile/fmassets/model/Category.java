@@ -29,6 +29,6 @@ public class Category {
     @Column(name = "date_modified")
     private Date dateModified;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-    private Set<Asset> assets = new HashSet<>();
+//    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+//    private Set<Asset> assets = new HashSet<>();
 }

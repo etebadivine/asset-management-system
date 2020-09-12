@@ -22,7 +22,7 @@ import java.util.List;
 
 @RequestMapping("/asset")
 @RestController
-public class AssetController {
+public class AssetController extends ExceptionHandlerController{
 
     private AssetService assetService;
 

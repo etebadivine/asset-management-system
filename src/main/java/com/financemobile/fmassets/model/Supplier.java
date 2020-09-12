@@ -30,6 +30,6 @@ public class Supplier {
     @Column(name = "date_modified")
     private Date dateModified;
 
-    @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
-    private Set<Asset> assets = new HashSet<>();
+//    @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
+//    private Set<Asset> assets = new HashSet<>();
 }

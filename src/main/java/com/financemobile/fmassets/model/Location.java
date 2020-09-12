@@ -34,6 +34,6 @@ public class Location {
     private Date dateModified;
 
 
-    @OneToMany(mappedBy = "location", fetch = FetchType.LAZY)
-    private Set<Asset> assets = new HashSet<>();
+//    @OneToMany(mappedBy = "location", fetch = FetchType.LAZY)
+//    private Set<Asset> assets = new HashSet<>();
 }

@@ -5,13 +5,16 @@ import com.financemobile.fmassets.security.OAuth2Helper;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class LoginControllerTest extends OAuth2Helper {
 
@@ -69,6 +72,23 @@ public class LoginControllerTest extends OAuth2Helper {
                 .andExpect(jsonPath("status", is(true)))
                 .andExpect(jsonPath("message", is("failed")))
                 .andExpect(jsonPath("data", is("session not found.")));
+    }
+
+    @Test
+    public void badCredentials() throws Exception {
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "password");
+        params.add("username", "unknownUser");
+        params.add("password", "password");
+
+        ResultActions result
+                = mockMvc.perform(post("/oauth/token")
+                .params(params)
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("fmassetui", "fmassetui"))
+                .accept("application/json;charset=UTF-8"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType("application/json;charset=UTF-8"));
     }
 
 }
