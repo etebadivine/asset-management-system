@@ -7,15 +7,19 @@ import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.dto.CreateAssetDto;
 import com.financemobile.fmassets.dto.EditAssetDto;
 import com.financemobile.fmassets.querySpec.AssetSpec;
-import com.financemobile.fmassets.querySpec.AssignmentHistorySpec;
 import com.financemobile.fmassets.security.OAuth2Helper;
 import com.financemobile.fmassets.service.*;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -28,6 +32,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 public class AssetControllerTest extends OAuth2Helper {
+
+    @Autowired
+    private WebApplicationContext webApplicationContext;
 
     @MockBean
     private AssignmentHistoryService assignmentHistoryService;
@@ -296,5 +303,18 @@ public class AssetControllerTest extends OAuth2Helper {
                 .andExpect(jsonPath("data.department.name", is(asset.getDepartment().getName())))
                 .andExpect(jsonPath("data.category.name", is(asset.getCategory().getName())))
                 .andExpect(jsonPath("data.user.id", is(asset.getUser().getId().intValue())));
+    }
+
+
+    @Test
+    public void test_uploadAssetImage() throws Exception {
+        Asset asset = new Asset();
+        asset.setId(300L);
+        MockMultipartFile file = new MockMultipartFile("file", "file".getBytes());
+
+        MockMvc mockMvc
+                = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        mockMvc.perform(multipart("/asset/" + asset.getId() +"/image").file(file))
+                .andExpect(status().isOk());
     }
 }
