@@ -1,5 +1,6 @@
 package com.financemobile.fmassets.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -37,6 +38,4 @@ public class AssetDetails {
     @Column(name = "date_modified")
     private Date dateModified;
 
-    @OneToOne(mappedBy = "assetDetails", fetch = FetchType.LAZY)
-    private Asset assets;
 }

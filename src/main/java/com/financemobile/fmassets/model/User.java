@@ -30,11 +30,9 @@ public class User {
     @Column(name = "email", unique = true)
     private String email;
     private String phone;
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id")
     private Department department;
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private Role role;
@@ -47,9 +45,4 @@ public class User {
     @Column(name = "date_modified")
     private Date dateModified;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<AssignmentHistory> assignmentHistories = new HashSet<>();
-
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Asset> assets = new HashSet<>();
 }

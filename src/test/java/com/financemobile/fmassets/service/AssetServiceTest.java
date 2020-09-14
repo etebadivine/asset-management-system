@@ -18,6 +18,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithSecurityContext;
+import org.springframework.security.test.context.support.WithUserDetails;
 
 import javax.persistence.criteria.Predicate;
 import java.util.List;
@@ -53,6 +56,7 @@ public class AssetServiceTest {
     private AssignmentHistoryRepository assignmentHistoryRepository;
 
     @Test
+    @WithAnonymousUser
     public void test_addAsset(){
         Location location = new Location();
         location.setId(1L);
@@ -107,6 +111,7 @@ public class AssetServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_addAsset_duplicate(){
 
         Category category = new Category();
@@ -138,6 +143,7 @@ public class AssetServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_assetNotAssigned(){
 
         Supplier supplier = new Supplier();

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/category")
 @RestController
-public class CategoryController {
+public class CategoryController extends ExceptionHandlerController{
 
     private CategoryService categoryService;
 

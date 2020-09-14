@@ -51,6 +51,6 @@ public class Asset {
     @Column(name = "date_modified")
     private Date dateModified;
 
-    @OneToMany(mappedBy = "asset", fetch = FetchType.LAZY)
-    private Set<AssignmentHistory> assignmentHistories = new HashSet<>();
+//    @OneToMany(mappedBy = "asset", fetch = FetchType.LAZY)
+//    private Set<AssignmentHistory> assignmentHistories = new HashSet<>();
 }

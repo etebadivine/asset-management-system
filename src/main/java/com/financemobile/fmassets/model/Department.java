@@ -31,8 +31,4 @@ public class Department {
     @Column(name = "date_modified")
     private Date dateModified;
 
-    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
-    private Set<User> users = new HashSet<>();
-    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
-    private Set<Asset> assets = new HashSet<>();
 }

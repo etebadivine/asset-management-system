@@ -92,23 +92,6 @@ public class OAuth2Helper {
         return jsonParser.parseMap(resultString).get("access_token").toString();
     }
 
-    @Test
-    public void badCredentials() throws Exception {
-
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "password");
-        params.add("username", "unknownUser");
-        params.add("password", "password");
-
-        ResultActions result
-                = mockMvc.perform(post("/oauth/token")
-                .params(params)
-                .with(SecurityMockMvcRequestPostProcessors.httpBasic("fmassetui", "fmassetui"))
-                .accept("application/json;charset=UTF-8"))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType("application/json;charset=UTF-8"));
-    }
-
     @AfterEach
     public void tearDown(){
         userRepository.deleteAll();

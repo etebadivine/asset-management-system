@@ -1,5 +1,6 @@
 package com.financemobile.fmassets.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -23,6 +24,4 @@ public class Role {
     @Column(name = "date_created")
     private Date dateCreated;
 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<User> users = new HashSet<>();
 }

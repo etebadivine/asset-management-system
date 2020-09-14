@@ -6,6 +6,7 @@ import com.financemobile.fmassets.model.Role;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -58,11 +59,13 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
     private Collection<? extends GrantedAuthority> translate(Role role) {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        String name = role.getName();
-        if (!name.startsWith("ROLE_")) {
+        if (role != null){
+            String name = role.getName();
+            if (!name.startsWith("ROLE_")) {
                 name = "ROLE_" + name;
+            }
+            authorities.add(new SimpleGrantedAuthority(name));
         }
-        authorities.add(new SimpleGrantedAuthority(name));
         return authorities;
     }
 

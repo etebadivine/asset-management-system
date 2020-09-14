@@ -13,6 +13,5 @@ import org.springframework.data.jpa.domain.Specification;
         @Spec(path = "user.id", params="user_id", spec = Equal.class),
         @Spec(path = "user.email", params="user_email", spec = Equal.class),
 })
-
 public interface AssignmentHistorySpec extends Specification<AssignmentHistory> {
 }
