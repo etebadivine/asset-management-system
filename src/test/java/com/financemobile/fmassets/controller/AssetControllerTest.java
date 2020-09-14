@@ -7,7 +7,6 @@ import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.dto.CreateAssetDto;
 import com.financemobile.fmassets.dto.EditAssetDto;
 import com.financemobile.fmassets.querySpec.AssetSpec;
-import com.financemobile.fmassets.querySpec.AssignmentHistorySpec;
 import com.financemobile.fmassets.security.OAuth2Helper;
 import com.financemobile.fmassets.service.*;
 import com.google.gson.Gson;
@@ -296,5 +295,64 @@ public class AssetControllerTest extends OAuth2Helper {
                 .andExpect(jsonPath("data.department.name", is(asset.getDepartment().getName())))
                 .andExpect(jsonPath("data.category.name", is(asset.getCategory().getName())))
                 .andExpect(jsonPath("data.user.id", is(asset.getUser().getId().intValue())));
+    }
+
+    @Test
+    public void test_uploadAssetImage() throws Exception{
+
+        //mock repo and response
+        Location location = new Location();
+        location.setName("Tema");
+        location.setCreatedBy("divine");
+
+        Supplier supplier = new Supplier();
+        supplier.setName("Mockito's Bakery");
+        supplier.setAddress("Accra");
+        supplier.setTelephone("+211 24 333 9999");
+        supplier.setMobile("+233 54 214 878");
+
+        Department department = new Department();
+        department.setName("Kitchen");
+
+        Category category = new Category();
+        category.setName("Biscuits");
+        category.setDescription("Fried,Baked");
+
+        User user = new User();
+        user.setId(20L);
+        user.setFirstName("Reynolds");
+        user.setLastName("Adanu");
+
+        AssetDetails assetDetails = new AssetDetails();
+        assetDetails.setMake("");
+        assetDetails.setModel("");
+        assetDetails.setColor("Black");
+        assetDetails.setManufacturer("Orca Deco");
+        assetDetails.setSerialNumber("3232121232132123");
+
+        Asset asset = new Asset();
+        asset.setId(300L);
+        asset.setName("Digestive");
+        asset.setLocation(location);
+        asset.setSupplier(supplier);
+        asset.setDepartment(department);
+        asset.setCategory(category);
+        asset.setUser(user);
+        asset.setCreatedBy("Reynolds");
+        asset.setDateCreated(new Date());
+        asset.setDateModified(new Date());
+
+        Mockito.when(assetService.uploadAssetImage(Mockito.anyLong(),Mockito.any(byte[].class)))
+                .thenReturn(asset);
+
+
+        mockMvc.perform(post("/asset/" +asset.getId() +"/image")
+                .content(gson.toJson(asset),gson.toJson())
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data.id", is(asset.getId().intValue()));
     }
 }

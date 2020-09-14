@@ -35,6 +35,9 @@ public class AssetServiceTest {
     private AssetService assetService;
 
     @Autowired
+    private AssetDetailsRepository assetDetailsRepository;
+
+    @Autowired
     private AssetRepository assetRepository;
 
     @Autowired
@@ -409,16 +412,72 @@ public class AssetServiceTest {
         });
     }
 
-    // this should always be the last method
-    @AfterEach
-    public void tearDown() {
-        assignmentHistoryRepository.deleteAll();
-        assetRepository.deleteAll();
-        locationRepository.deleteAll();
-        supplierRepository.deleteAll();
-        departmentRepository.deleteAll();
-        categoryRepository.deleteAll();
+    @Test
+    public void test_uploadAssetImage(){
+
+        Location location = new Location();
+        location.setId(1l);
+        location.setName("Tema");
+        location = locationRepository.save(location);
+
+        Supplier supplier = new Supplier();
+        supplier.setId(2L);
+        supplier.setName("Orca Home");
+        supplier = supplierRepository.save(supplier);
+
+        Department department = new Department();
+        department.setId(3L);
+        department.setName("Human Resource");
+        department = departmentRepository.save(department);
+
+        Category category = new Category();
+        category.setId(4L);
+        category.setName("Furniture");
+        category = categoryRepository.save(category);
+
+        User user = new User();
+        user.setFirstName("Reynolds");
+        user.setLastName("Adanu");
+        user = userRepository.save(user);
+
+        AssetDetails assetDetails = new AssetDetails();
+        assetDetails.setMake("");
+        assetDetails.setModel("");
+        assetDetails.setColor("Black");
+        assetDetails.setManufacturer("Orca Deco");
+//        assetDetails.setImageBytes("");
+        assetDetails.setSerialNumber("3232121232132123");
+//        assetDetails = assetDetailsRepository.save(assetDetails);
+
+
+        Asset asset = new Asset();
+        asset.setName("HP Laptop");
+        asset.setLocation(location);
+        asset.setSupplier(supplier);
+        asset.setDepartment(department);
+        asset.setCategory(category);
+        asset.setAssetDetails(assetDetails);
+        asset.setUser(user);
+        asset = assetRepository.save(asset);
+
+        String imageString = "sample.jpg";
+        byte[] imageBytes = imageString.getBytes();
+        Asset asset1 = assetService.uploadAssetImage(asset.getId(), imageBytes);
+        Assertions.assertNotNull(asset1.getId());
+        Assertions.assertEquals(asset1.getAssetDetails().getImageBytes(),"c2FtcGxlLmpwZw==" );
+
     }
+
+    // this should always be the last method
+//    @AfterEach
+//    public void tearDown() {
+//        assignmentHistoryRepository.deleteAll();
+//        assetRepository.deleteAll();
+//        locationRepository.deleteAll();
+//        supplierRepository.deleteAll();
+//        departmentRepository.deleteAll();
+//        categoryRepository.deleteAll();
+//    }
 }
 
 

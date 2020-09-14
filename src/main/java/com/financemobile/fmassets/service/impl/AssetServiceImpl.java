@@ -10,6 +10,7 @@ import com.financemobile.fmassets.enums.AssetStatus;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.querySpec.AssetSpec;
+import com.financemobile.fmassets.repository.AssetDetailsRepository;
 import com.financemobile.fmassets.repository.AssetRepository;
 import com.financemobile.fmassets.service.*;
 import io.micrometer.core.instrument.util.StringUtils;
@@ -21,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +32,9 @@ public class AssetServiceImpl implements AssetService {
 
     @Autowired
     private AssetRepository assetRepository;
+
+    @Autowired
+    private AssetDetailsRepository assetDetailsRepository;
 
     @Autowired
     private LocationService locationService;
@@ -189,12 +194,20 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public Asset uploadAssetImage(Long assetId, byte[] imageBytes) {
-        // check if asset exist(findById(..)) and throw approprait exception
-        // convert the imageBytes to Base64 string and set it asset details like below :
-        // String imageString = Base64.getEncoder().encodeToString(imageBytes)
-
-
-        return null;
+        // check if asset exist(findById(..)) and throw appropriate exception
+        Optional<Asset> assetOptional = assetRepository.findById(assetId);
+        if (assetOptional.isPresent()){
+            Asset asset = assetOptional.get();
+            // convert the imageBytes to Base64 string and set it asset details like below :
+            // String imageString = Base64.getEncoder().encodeToString(imageBytes)
+            AssetDetails assetDetails = asset.getAssetDetails();
+            String imageString = Base64.getEncoder().encodeToString(imageBytes);
+            assetDetails.setImageBytes(imageString);
+//            assetDetails = assetDetailsRepository.save(assetDetails);
+            asset.setAssetDetails(assetDetails);
+            return assetRepository.save(asset);
+        }
+        throw new DataNotFoundException("Asset not found");
     }
 }
 

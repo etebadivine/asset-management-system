@@ -153,7 +153,7 @@ public class UserServiceTest {
         user.setLastName("Dwoa");
         user.setEmail("me@gmail.com");
         user.setPhone("+233241428114");
-        user.setPassword("password");
+        user.setPassword(passwordEncoder.encode("password"));
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);
@@ -190,7 +190,7 @@ public class UserServiceTest {
         user.setLastName("Dwoa");
         user.setEmail("me@gmail.com");
         user.setPhone("+233241428114");
-        user.setPassword("password");
+        user.setPassword(passwordEncoder.encode("password"));
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);
@@ -227,6 +227,7 @@ public class UserServiceTest {
         user.setLastName("Anifrani");
         user.setEmail("me@gmail.com");
         user.setPhone("+233241428114");
+        user.setPassword(passwordEncoder.encode("password"));
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);
@@ -304,7 +305,7 @@ public class UserServiceTest {
         user.setLastName("Adanu");
         user.setEmail("you@gmail.com");
         user.setPhone("+233241428114");
-        user.setPassword("password");
+        user.setPassword(passwordEncoder.encode("password"));
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);
@@ -333,7 +334,7 @@ public class UserServiceTest {
         user.setLastName("Dwoa");
         user.setEmail("me@gmail.com");
         user.setPhone("+233241428114");
-        user.setPassword("password");
+        user.setPassword(passwordEncoder.encode("password"));
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);
@@ -371,7 +372,7 @@ public class UserServiceTest {
         user.setLastName("Eteba");
         user.setEmail("me@gmail.com");
         user.setPhone("+233241428114");
-        user.setPassword("password");
+        user.setPassword(passwordEncoder.encode("password"));
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 
@@ -70,11 +71,6 @@ public class AssetController extends ExceptionHandlerController{
         return response;
     }
 
-    @PostMapping("/image")
-    public ApiResponse uploadImage(@RequestParam("file") MultipartFile file){
-        return null;
-    }
-
     @PostMapping(value = "/status")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse updateAssetStatus(@RequestBody @Valid UpdateAssetStatusDto updateAssetStatusDto) {
@@ -99,6 +95,24 @@ public class AssetController extends ExceptionHandlerController{
         response.setMessage("Success");
         response.setData(asset);
         return  response;
+    }
+
+    @PostMapping("{assetId}/image")
+    public ApiResponse uploadImage(@PathVariable Long assetId, @RequestParam("file") MultipartFile file) throws IOException {
+
+        byte[] imageBytes = file.getBytes();
+        Asset asset = assetService.uploadAssetImage(assetId, imageBytes);
+
+        ApiResponse response = new ApiResponse();
+        response.setStatus(true);
+        response.setMessage("Success");
+        response.setData(asset);
+        return  response;
+    }
+
+    @PostMapping("/image")
+    public ApiResponse uploadImage(@RequestParam("file") MultipartFile file){
+        return null;
     }
 }
 
