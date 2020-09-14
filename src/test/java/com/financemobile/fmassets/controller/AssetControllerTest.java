@@ -12,9 +12,14 @@ import com.financemobile.fmassets.service.*;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -27,6 +32,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 public class AssetControllerTest extends OAuth2Helper {
+
+    @Autowired
+    private WebApplicationContext webApplicationContext;
 
     @MockBean
     private AssignmentHistoryService assignmentHistoryService;
@@ -297,64 +305,16 @@ public class AssetControllerTest extends OAuth2Helper {
                 .andExpect(jsonPath("data.user.id", is(asset.getUser().getId().intValue())));
     }
 
+
     @Test
-    public void test_uploadAssetImage() throws Exception{
-
-        //mock repo and response
-        Location location = new Location();
-        location.setName("Tema");
-        location.setCreatedBy("divine");
-
-        Supplier supplier = new Supplier();
-        supplier.setName("Mockito's Bakery");
-        supplier.setAddress("Accra");
-        supplier.setTelephone("+211 24 333 9999");
-        supplier.setMobile("+233 54 214 878");
-
-        Department department = new Department();
-        department.setName("Kitchen");
-
-        Category category = new Category();
-        category.setName("Biscuits");
-        category.setDescription("Fried,Baked");
-
-        User user = new User();
-        user.setId(20L);
-        user.setFirstName("Reynolds");
-        user.setLastName("Adanu");
-
-        AssetDetails assetDetails = new AssetDetails();
-        assetDetails.setMake("");
-        assetDetails.setModel("");
-        assetDetails.setColor("Black");
-        assetDetails.setManufacturer("Orca Deco");
-        assetDetails.setSerialNumber("3232121232132123");
-
+    public void test_uploadAssetImage() throws Exception {
         Asset asset = new Asset();
         asset.setId(300L);
-        asset.setName("Digestive");
-        asset.setLocation(location);
-        asset.setSupplier(supplier);
-        asset.setDepartment(department);
-        asset.setCategory(category);
-        asset.setUser(user);
-        asset.setCreatedBy("Reynolds");
-        asset.setDateCreated(new Date());
-        asset.setDateModified(new Date());
+        MockMultipartFile file = new MockMultipartFile("file", "file".getBytes());
 
-        Mockito.when(assetService.uploadAssetImage(Mockito.anyLong(),Mockito.any(byte[].class)))
-                .thenReturn(asset);
-
-//        String imageString = "";
-//        byte[] imageBytes = imageString.getBytes();
-
-        mockMvc.perform(post("/asset/" +asset.getId() +"/image")
-//                .content(gson.toJson(imageBytes))
-                .header("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("status", is(true)))
-                .andExpect(jsonPath("message", is("Success")))
-                .andExpect(jsonPath("data.id", is(asset.getId().intValue())));
+        MockMvc mockMvc
+                = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        mockMvc.perform(multipart("/asset/" + asset.getId() +"/image").file(file))
+                .andExpect(status().isOk());
     }
 }

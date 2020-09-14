@@ -24,7 +24,7 @@ import java.util.List;
 
 @RequestMapping("/asset")
 @RestController
-public class AssetController extends ExceptionHandlerController{
+public class AssetController extends ExceptionHandlerController {
 
     private AssetService assetService;
 
@@ -35,7 +35,7 @@ public class AssetController extends ExceptionHandlerController{
 
     @PostMapping(value = "")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse createAsset(@RequestBody @Valid CreateAssetDto createAssetDto){
+    public ApiResponse createAsset(@RequestBody @Valid CreateAssetDto createAssetDto) {
 
         Asset asset = assetService.addAsset(createAssetDto);
         ApiResponse response = new ApiResponse();
@@ -60,7 +60,7 @@ public class AssetController extends ExceptionHandlerController{
 
     @PutMapping(value = "")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse editAsset(@RequestBody @Valid EditAssetDto editAssetDto){
+    public ApiResponse editAsset(@RequestBody @Valid EditAssetDto editAssetDto) {
 
         Asset asset = assetService.editAsset(editAssetDto);
 
@@ -95,26 +95,20 @@ public class AssetController extends ExceptionHandlerController{
         response.setStatus(true);
         response.setMessage("Success");
         response.setData(asset);
-        return  response;
+        return response;
     }
 
     @PostMapping("{assetId}/image")
     public ApiResponse uploadImage(@PathVariable Long assetId, @RequestParam("file") MultipartFile file) throws IOException {
 
-//        byte[] imageBytes = file.getBytes();
-        byte[] imageBytes = Base64.decodeBase64(String.valueOf(file));
+        byte[] imageBytes = file.getBytes();
         Asset asset = assetService.uploadAssetImage(assetId, imageBytes);
 
         ApiResponse response = new ApiResponse();
         response.setStatus(true);
         response.setMessage("Success");
         response.setData(asset);
-        return  response;
-    }
-
-    @PostMapping("/image")
-    public ApiResponse uploadImage(@RequestParam("file") MultipartFile file){
-        return null;
+        return response;
     }
 }
 
