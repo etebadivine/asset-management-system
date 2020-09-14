@@ -10,6 +10,7 @@ import com.financemobile.fmassets.querySpec.AssignmentHistorySpec;
 import com.financemobile.fmassets.repository.AssetRepository;
 import com.financemobile.fmassets.service.AssetService;
 import com.financemobile.fmassets.service.AssignmentHistoryService;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -100,7 +101,8 @@ public class AssetController extends ExceptionHandlerController{
     @PostMapping("{assetId}/image")
     public ApiResponse uploadImage(@PathVariable Long assetId, @RequestParam("file") MultipartFile file) throws IOException {
 
-        byte[] imageBytes = file.getBytes();
+//        byte[] imageBytes = file.getBytes();
+        byte[] imageBytes = Base64.decodeBase64(String.valueOf(file));
         Asset asset = assetService.uploadAssetImage(assetId, imageBytes);
 
         ApiResponse response = new ApiResponse();

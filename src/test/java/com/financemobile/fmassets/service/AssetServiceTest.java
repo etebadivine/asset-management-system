@@ -445,10 +445,7 @@ public class AssetServiceTest {
         assetDetails.setModel("");
         assetDetails.setColor("Black");
         assetDetails.setManufacturer("Orca Deco");
-//        assetDetails.setImageBytes("");
         assetDetails.setSerialNumber("3232121232132123");
-//        assetDetails = assetDetailsRepository.save(assetDetails);
-
 
         Asset asset = new Asset();
         asset.setName("HP Laptop");
@@ -465,19 +462,29 @@ public class AssetServiceTest {
         Asset asset1 = assetService.uploadAssetImage(asset.getId(), imageBytes);
         Assertions.assertNotNull(asset1.getId());
         Assertions.assertEquals(asset1.getAssetDetails().getImageBytes(),"c2FtcGxlLmpwZw==" );
-
     }
 
-    // this should always be the last method
-//    @AfterEach
-//    public void tearDown() {
-//        assignmentHistoryRepository.deleteAll();
-//        assetRepository.deleteAll();
-//        locationRepository.deleteAll();
-//        supplierRepository.deleteAll();
-//        departmentRepository.deleteAll();
-//        categoryRepository.deleteAll();
-//    }
+    @Test
+    public void test_uploadAssetImage_notFound(){
+
+        String imageString = "sample.jpg";
+        byte[] imageByte = imageString.getBytes();
+
+        Assertions.assertThrows(DataNotFoundException.class,()->{
+            assetService.uploadAssetImage(40L, imageByte);
+        });
+    }
+
+//     this should always be the last method
+    @AfterEach
+    public void tearDown() {
+        assignmentHistoryRepository.deleteAll();
+        assetRepository.deleteAll();
+        locationRepository.deleteAll();
+        supplierRepository.deleteAll();
+        departmentRepository.deleteAll();
+        categoryRepository.deleteAll();
+    }
 }
 
 

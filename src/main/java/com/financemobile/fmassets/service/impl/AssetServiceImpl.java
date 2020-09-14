@@ -203,7 +203,6 @@ public class AssetServiceImpl implements AssetService {
             AssetDetails assetDetails = asset.getAssetDetails();
             String imageString = Base64.getEncoder().encodeToString(imageBytes);
             assetDetails.setImageBytes(imageString);
-//            assetDetails = assetDetailsRepository.save(assetDetails);
             asset.setAssetDetails(assetDetails);
             return assetRepository.save(asset);
         }

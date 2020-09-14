@@ -345,14 +345,16 @@ public class AssetControllerTest extends OAuth2Helper {
         Mockito.when(assetService.uploadAssetImage(Mockito.anyLong(),Mockito.any(byte[].class)))
                 .thenReturn(asset);
 
+//        String imageString = "";
+//        byte[] imageBytes = imageString.getBytes();
 
         mockMvc.perform(post("/asset/" +asset.getId() +"/image")
-                .content(gson.toJson(asset),gson.toJson())
+//                .content(gson.toJson(imageBytes))
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", is(true)))
                 .andExpect(jsonPath("message", is("Success")))
-                .andExpect(jsonPath("data.id", is(asset.getId().intValue()));
+                .andExpect(jsonPath("data.id", is(asset.getId().intValue())));
     }
 }
