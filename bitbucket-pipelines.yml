@@ -19,7 +19,7 @@ pipelines:
         services:
           - mysql
   branches:
-    '{master}':
+    master:
       - step:
           name: Build and Push Docker Image
           image: google/cloud-sdk:latest
