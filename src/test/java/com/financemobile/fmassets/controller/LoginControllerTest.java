@@ -4,6 +4,7 @@ import com.financemobile.fmassets.dto.LoginDto;
 import com.financemobile.fmassets.security.OAuth2Helper;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.ResultActions;
@@ -16,6 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class LoginControllerTest extends OAuth2Helper {
 
     @Test
@@ -90,5 +92,4 @@ public class LoginControllerTest extends OAuth2Helper {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json;charset=UTF-8"));
     }
-
 }
