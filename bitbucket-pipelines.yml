@@ -46,6 +46,7 @@ definitions:
   services:
     mysql:
       image: mysql:5.7
+      memory: 2048
       variables:
         MYSQL_DATABASE: 'fmassets'
         MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
