@@ -21,11 +21,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Date;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -305,16 +305,37 @@ public class AssetControllerTest extends OAuth2Helper {
                 .andExpect(jsonPath("data.user.id", is(asset.getUser().getId().intValue())));
     }
 
-
     @Test
     public void test_uploadAssetImage() throws Exception {
         Asset asset = new Asset();
         asset.setId(300L);
-        MockMultipartFile file = new MockMultipartFile("file", "file".getBytes());
+        asset.setCreatedBy("Samuel");
+        asset.setName("HP");
+        asset.setStatus(AssetStatus.AVAILABLE);
 
-        MockMvc mockMvc
-                = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        mockMvc.perform(multipart("/asset/" + asset.getId() +"/image").file(file))
-                .andExpect(status().isOk());
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "file",
+                "asset.png",
+                MediaType.TEXT_PLAIN_VALUE,
+                "the image data".getBytes()
+        );
+
+        AssetDetails assetDetails = new AssetDetails();
+        assetDetails.setModel("Compact");
+        assetDetails.setColor("Black");
+        assetDetails.setImageBytes("imagebytes");
+        asset.setAssetDetails(assetDetails);
+
+        Mockito.when(assetService.uploadAssetImage(300L, file.getBytes()))
+                .thenReturn(asset);
+
+        mockMvc.perform(multipart("/asset/" + asset.getId() +"/image")
+                .file(file)
+                .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data.assetDetails.imageBytes", is("imagebytes")));
     }
 }
