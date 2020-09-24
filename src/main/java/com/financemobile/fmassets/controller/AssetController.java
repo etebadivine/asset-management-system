@@ -111,8 +111,6 @@ public class AssetController extends ExceptionHandlerController {
         return response;
     }
 
-
-
     @DeleteMapping(value = "/{id}")
     public ApiResponse removeAsset(@PathVariable Long id) {
 
