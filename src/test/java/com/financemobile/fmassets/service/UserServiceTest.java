@@ -455,7 +455,7 @@ public class UserServiceTest {
         Assertions.assertEquals(user1.getLastName(), editUserDto.getLastName());
         Assertions.assertEquals(user1.getEmail(), editUserDto.getEmail());
         Assertions.assertEquals(user1.getPhone(), editUserDto.getPhone());
-        Assertions.assertEquals(user1.getRole(), editUserDto.getRole());
+        Assertions.assertEquals(user1.getRole().getName(), editUserDto.getRole());
         Assertions.assertEquals(user1.getPassword(), editUserDto.getPassword());
     }
 
