@@ -28,7 +28,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
        Department department = new Department();
        department.setName(name);
-//       department.setCreatedBy();
+       department.setCreatedBy("Divine");
        return departmentRepository.save(department);
     }
 

@@ -13,6 +13,10 @@ public class EditLocationDto {
     private Long locationId;
     @NotBlank
     private String name;
+    @NotBlank
+    private String city;
+    @NotBlank
+    private String country;
 
     public EditLocationDto() {
     }

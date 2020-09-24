@@ -1,6 +1,7 @@
 package com.financemobile.fmassets.service.impl;
 
 
+import com.financemobile.fmassets.dto.CreateLocationDto;
 import com.financemobile.fmassets.dto.EditLocationDto;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
@@ -21,15 +22,15 @@ public class LocationServiceImpl implements LocationService {
     private LocationRepository locationRepository;
 
     @Override
-    public Location addLocation(String name, String city, String country) {
+    public Location addLocation(CreateLocationDto createLocationDto) {
 
-        if(locationRepository.existsByName(name))
+        if(locationRepository.existsByName(createLocationDto.getName()))
             throw new AlreadyExistException("record already exists");
 
         Location location = new Location();
-        location.setName(name);
-        location.setCity(city);
-        location.setCountry(country);
+        location.setName(createLocationDto.getName());
+        location.setCity(createLocationDto.getCity());
+        location.setCountry(createLocationDto.getCountry());
         location.setCreatedBy("divine");
         return locationRepository.save(location);
     }

@@ -3,6 +3,7 @@ package com.financemobile.fmassets.service.impl;
 import com.financemobile.fmassets.dto.EditRoleDto;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
+import com.financemobile.fmassets.model.Location;
 import com.financemobile.fmassets.model.Role;
 import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.service.RoleService;
@@ -39,6 +40,17 @@ public class RoleServiceImpl implements RoleService {
         }
 
         throw new DataNotFoundException("role not found");
+    }
+
+    @Override
+    public Role getRoleByName(String name) {
+        Optional<Role> roleOptional =
+                roleRepository.findByName(name);
+
+        if(roleOptional.isPresent()){
+            return roleOptional.get();
+        }
+        throw new DataNotFoundException("Role not found");
     }
 
     @Override

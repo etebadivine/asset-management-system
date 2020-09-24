@@ -28,11 +28,7 @@ public class LocationController {
     @PostMapping(value = "")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse createLocation(@RequestBody @Valid CreateLocationDto createLocationDto) {
-        Location location = locationService.addLocation(
-                createLocationDto.getName(),
-                createLocationDto.getCity(),
-                createLocationDto.getCountry()
-        );
+        Location location = locationService.addLocation(createLocationDto);
 
         ApiResponse response = new ApiResponse();
         response.setStatus(true);

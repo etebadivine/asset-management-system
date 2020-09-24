@@ -1,8 +1,10 @@
 package com.financemobile.fmassets.service;
 
+import com.financemobile.fmassets.dto.*;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.Role;
+import com.financemobile.fmassets.model.Supplier;
 import com.financemobile.fmassets.repository.RoleRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -67,6 +69,42 @@ public class RoleServiceTest {
 
         Assertions.assertEquals(roleList.size(), 1);
         Assertions.assertEquals(roleList.get(0).getName(), name);
+    }
+
+    @Test
+    public void test_editRole() {
+        String name = "USER";
+        CreateRoleDto createRoleDto = new CreateRoleDto();
+        createRoleDto.setName(name);
+        Role role = roleService.addRole(createRoleDto.getName());
+
+        EditRoleDto editRoleDto = new EditRoleDto();
+        editRoleDto.setRoleId(role.getId());
+        editRoleDto.setName("ADMIN");
+
+        Role role1 = roleService.editRole(editRoleDto);
+        Assertions.assertNotNull(role1.getId());
+        Assertions.assertEquals(role1.getName(), editRoleDto.getName());
+    }
+
+    @Test
+    public void test_editRole_notFound(){
+        EditRoleDto editRoleDto = new EditRoleDto();
+        editRoleDto.setRoleId(40L);
+        Assertions.assertThrows(DataNotFoundException.class, ()->{
+            roleService.editRole(editRoleDto);
+        });
+    }
+
+    @Test
+    public void test_removeRole() {
+        String name = "Manager";
+        Role role = roleService.addRole(name);
+        roleService.removeRole(role.getId());
+
+        Assertions.assertThrows(DataNotFoundException.class, ()->{
+            roleService.getRoleByName(name);
+        });
     }
 
     @AfterEach

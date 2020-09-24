@@ -97,6 +97,7 @@ public class AssetServiceImpl implements AssetService {
         assetDetails.setImageBytes(createAssetDto.getImageBytes());
         assetDetails.setWarranty(createAssetDto.getWarranty());
         assetDetails.setLicenses(createAssetDto.getLicenses());
+        assetDetails.setPurchasedDate(createAssetDto.getPurchasedDate());
         asset.setAssetDetails(assetDetails);
 
         //check if the category exist
@@ -126,6 +127,18 @@ public class AssetServiceImpl implements AssetService {
         if(assetsPage.hasContent())
             return assetsPage.getContent();
         return assetList;
+    }
+
+    @Override
+    public Asset getAssetByName(String name) {
+        Optional<Asset> assetOptional =
+                assetRepository.findByName(name);
+
+        if(assetOptional.isPresent()){
+            return assetOptional.get();
+        }
+
+        throw new DataNotFoundException("Asset not found");
     }
 
 

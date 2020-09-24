@@ -91,6 +91,5 @@ public class CategoryControllerTest extends OAuth2Helper {
                 .andExpect(jsonPath("$.data[0].id", is(category.getId().intValue())))
                 .andExpect(jsonPath("$.data[0].name", is(category.getName())))
                 .andExpect(jsonPath("$.data[0].description", is(category.getDescription())));
-
     }
 }

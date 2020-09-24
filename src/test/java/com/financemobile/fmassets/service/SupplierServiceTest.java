@@ -1,9 +1,10 @@
 package com.financemobile.fmassets.service;
 
-import com.financemobile.fmassets.dto.CreateSupplierDto;
+import com.financemobile.fmassets.dto.*;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.Supplier;
+import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.repository.SupplierRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -115,6 +116,40 @@ public class SupplierServiceTest {
         Assertions.assertEquals(suplrList.get(0).getAddress(), address);
         Assertions.assertEquals(suplrList.get(0).getTelephone(), telephone);
         Assertions.assertEquals(suplrList.get(0).getMobile(), mobile);
+    }
+
+    @Test
+    public void test_editSupplier() {
+        String name = "Orca Home";
+        String address = "Accra";
+        String telephone = "+211 24 333 9999";
+        String mobile = "+233 54 214 878";
+        CreateSupplierDto createSupplierDto = new CreateSupplierDto(name, address, telephone, mobile);
+        Supplier supplier =  supplierService.addSupplier(createSupplierDto);
+
+        EditSupplierDto editSupplierDto = new EditSupplierDto();
+        editSupplierDto.setSupplierId(supplier.getId());
+        editSupplierDto.setName("Orca Deco");
+        editSupplierDto.setAddress("Tema");
+        editSupplierDto.setTelephone("+0302151515656");
+        editSupplierDto.setMobile("0201545484");
+
+        Supplier supplier1 = supplierService.editSupplier(editSupplierDto);
+
+        Assertions.assertNotNull(supplier1.getId());
+        Assertions.assertEquals(supplier1.getName(), editSupplierDto.getName());
+        Assertions.assertEquals(supplier1.getAddress(), editSupplierDto.getAddress());
+        Assertions.assertEquals(supplier1.getTelephone(), editSupplierDto.getTelephone());
+        Assertions.assertEquals(supplier1.getMobile(), editSupplierDto.getMobile());
+    }
+
+    @Test
+    public void test_editSupplier_notFound(){
+        EditSupplierDto editSupplierDto = new EditSupplierDto();
+        editSupplierDto.setSupplierId(40L);
+        Assertions.assertThrows(DataNotFoundException.class, ()->{
+            supplierService.editSupplier(editSupplierDto);
+        });
     }
 
     @Test

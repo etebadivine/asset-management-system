@@ -7,10 +7,12 @@ import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.exception.PasswordMismatchException;
 import com.financemobile.fmassets.model.Department;
 import com.financemobile.fmassets.model.Role;
+import com.financemobile.fmassets.model.Supplier;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.repository.UserRepository;
+import com.financemobile.fmassets.service.RoleService;
 import com.financemobile.fmassets.service.UserService;
 import com.financemobile.fmassets.service.messaging.EmailComposer;
 import com.financemobile.fmassets.service.messaging.SendEmailService;
@@ -36,6 +38,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private RoleService roleService;
     @Autowired
     private EmailComposer emailComposer;
 
@@ -203,6 +207,8 @@ public class UserServiceImpl implements UserService {
             user.setLastName(editUserDto.getLastName());
             user.setEmail(editUserDto.getEmail());
             user.setPhone(editUserDto.getPhone());
+            Role role = roleService.getRoleByName(editUserDto.getRole());
+            user.setRole(role);
             user.setPassword(editUserDto.getPassword());
 
             return userRepository.save(user);

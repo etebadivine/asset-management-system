@@ -20,6 +20,8 @@ public class EditUserDto {
         @NotBlank
         private String phone;
         @NotBlank
+        private String role;
+        @NotBlank
         private String password;
 
         public EditUserDto() {

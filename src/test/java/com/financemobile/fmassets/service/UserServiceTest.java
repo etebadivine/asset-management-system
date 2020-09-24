@@ -5,9 +5,7 @@ import com.financemobile.fmassets.enums.UserStatus;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.exception.PasswordMismatchException;
-import com.financemobile.fmassets.model.Department;
-import com.financemobile.fmassets.model.Role;
-import com.financemobile.fmassets.model.User;
+import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.repository.DepartmentRepository;
 import com.financemobile.fmassets.repository.RoleRepository;
@@ -426,12 +424,73 @@ public class UserServiceTest {
         });
     }
 
-//    @AfterEach
-//    public void tearDown() {
-//        userRepository.deleteAll();
-//        departmentRepository.deleteAll();
-//        roleRepository.deleteAll();
-//    }
+
+    @Test
+    public void test_editUser() {
+        String firstName = "Reynolds";
+        String lastName = "Adanu";
+        String email = "you@gmail.com";
+        String phone = "+233240456008";
+        String password = "password";
+        CreateUserDto createUserDto = new CreateUserDto(firstName, lastName, email, phone, password);
+        User user = userService.addUser(createUserDto);
+
+        Role role = new Role();
+        role.setName("USER");
+        role = roleRepository.save(role);
+
+        EditUserDto editUserDto = new EditUserDto();
+        editUserDto.setUserId(user.getId());
+        editUserDto.setFirstName("Kwasi");
+        editUserDto.setLastName("Adanu");
+        editUserDto.setEmail("kwasi@gmail.com");
+        editUserDto.setPhone("0269277920");
+        editUserDto.setRole(role.getName());
+        editUserDto.setPassword("password");
+
+        User user1 = userService.editUser(editUserDto);
+
+        Assertions.assertNotNull(user1.getId());
+        Assertions.assertEquals(user1.getFirstName(), editUserDto.getFirstName());
+        Assertions.assertEquals(user1.getLastName(), editUserDto.getLastName());
+        Assertions.assertEquals(user1.getEmail(), editUserDto.getEmail());
+        Assertions.assertEquals(user1.getPhone(), editUserDto.getPhone());
+        Assertions.assertEquals(user1.getRole(), editUserDto.getRole());
+        Assertions.assertEquals(user1.getPassword(), editUserDto.getPassword());
+    }
+
+    @Test
+    public void test_editUser_notFound(){
+        EditUserDto editUserDto = new EditUserDto();
+        editUserDto.setUserId(40L);
+        Assertions.assertThrows(DataNotFoundException.class, ()->{
+            userService.editUser(editUserDto);
+        });
+    }
+
+    @Test
+    public void test_removeUser() {
+        String firstName = "Reynolds";
+        String lastName = "Adanu";
+        String email = "you@gmail.com";
+        String phone = "+233240456008";
+        String password = "password";
+        CreateUserDto createUserDto = new CreateUserDto(firstName, lastName, email, phone, password);
+        User user = userService.addUser(createUserDto);
+
+        userService.removeUser(user.getId());
+
+        Assertions.assertThrows(DataNotFoundException.class, ()->{
+            userService.getUserByEmail(email);
+        });
+    }
+
+    @AfterEach
+    public void tearDown() {
+        userRepository.deleteAll();
+        departmentRepository.deleteAll();
+        roleRepository.deleteAll();
+    }
 }
 
 

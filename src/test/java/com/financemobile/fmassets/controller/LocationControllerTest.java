@@ -41,15 +41,14 @@ public class LocationControllerTest extends OAuth2Helper {
         location.setDateCreated(new Date());
         location.setDateModified(new Date());
 
-        Mockito.when(locationService.addLocation(location.getName(),
-                location.getCity(), location.getCountry()))
+        Mockito.when(locationService.addLocation(Mockito.any(CreateLocationDto.class)))
                 .thenReturn(location);
 
         // payload for the endpoint
         CreateLocationDto createLocationDto = new CreateLocationDto();
-        createLocationDto.setName(location.getName());
-        createLocationDto.setCity(location.getCity());
-        createLocationDto.setCountry(location.getCountry());
+        createLocationDto.setName("Amasaman");
+        createLocationDto.setCity("Accra");
+        createLocationDto.setCountry("Ghana");
 
         // fire request
         mockMvc.perform(post("/location")

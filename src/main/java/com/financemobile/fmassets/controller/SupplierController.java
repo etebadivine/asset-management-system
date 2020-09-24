@@ -61,18 +61,17 @@ public class SupplierController {
         return response;
     }
 
-        @DeleteMapping(value = "/{id}")
-        public ApiResponse removeSupplier(@PathVariable Long id) {
+    @DeleteMapping(value = "/{id}")
+    public ApiResponse removeSupplier(@PathVariable Long id) {
 
-            supplierService.removeSupplier(id);
+        supplierService.removeSupplier(id);
 
-            ApiResponse response = new ApiResponse();
-            response.setStatus(true);
-            response.setMessage("Success");
-            response.setData("Deleted");
+        ApiResponse response = new ApiResponse();
+        response.setStatus(true);
+        response.setMessage("Success");
+        response.setData("Deleted");
 
-            return response;
-
-        }
+        return response;
+    }
 }
 

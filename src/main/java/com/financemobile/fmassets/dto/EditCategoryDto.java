@@ -12,6 +12,7 @@ public class EditCategoryDto {
     private Long categoryId;
     @NotBlank
     private String name;
+    private String description;
 
     public EditCategoryDto() {
     }

@@ -9,6 +9,7 @@ public interface  RoleService {
 
     public Role addRole(String name);
     public Role getRoleById(Long id);
+    public Role getRoleByName(String name);
     public List<Role> getAllRoles();
     public Role editRole(EditRoleDto editRoleDto);
     public void removeRole(Long id);
