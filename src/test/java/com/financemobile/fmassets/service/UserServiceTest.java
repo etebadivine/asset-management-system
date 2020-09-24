@@ -426,12 +426,12 @@ public class UserServiceTest {
         });
     }
 
-    @AfterEach
-    public void tearDown() {
-        userRepository.deleteAll();
-        departmentRepository.deleteAll();
-        roleRepository.deleteAll();
-    }
+//    @AfterEach
+//    public void tearDown() {
+//        userRepository.deleteAll();
+//        departmentRepository.deleteAll();
+//        roleRepository.deleteAll();
+//    }
 }
 
 

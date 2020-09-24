@@ -90,5 +90,4 @@ public class LoginControllerTest extends OAuth2Helper {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json;charset=UTF-8"));
     }
-
 }

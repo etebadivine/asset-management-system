@@ -5,6 +5,7 @@ import com.financemobile.fmassets.dto.*;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.exception.PasswordMismatchException;
+import com.financemobile.fmassets.model.Department;
 import com.financemobile.fmassets.model.Role;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
@@ -60,6 +61,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> searchUsers(UserSpec userSpec, Pageable pageable) {
+
         List<User> userList = new ArrayList<>();
         Page<User> usersPage = userRepository.findAll(userSpec, pageable);
         if (usersPage.hasContent())
@@ -189,6 +191,28 @@ public class UserServiceImpl implements UserService {
 
         }
         return sent;
+    }
+
+    @Override
+    public User editUser(EditUserDto editUserDto) {
+
+        Optional<User> userOptional = userRepository.findById(editUserDto.getUserId());
+        if (userOptional.isPresent()){
+            User user = userOptional.get();
+            user.setFirstName(editUserDto.getFirstName());
+            user.setLastName(editUserDto.getLastName());
+            user.setEmail(editUserDto.getEmail());
+            user.setPhone(editUserDto.getPhone());
+            user.setPassword(editUserDto.getPassword());
+
+            return userRepository.save(user);
+        }
+        throw new DataNotFoundException("User not found");
+    }
+
+    @Override
+    public void removeUser(Long id) {
+        userRepository.deleteById(id);
     }
 }
 

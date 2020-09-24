@@ -208,5 +208,10 @@ public class AssetServiceImpl implements AssetService {
         }
         throw new DataNotFoundException("Asset not found");
     }
+
+    @Override
+    public void removeAsset(Long id) {
+        assetRepository.deleteById(id);
+    }
 }
 

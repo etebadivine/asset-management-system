@@ -110,6 +110,21 @@ public class AssetController extends ExceptionHandlerController {
         response.setData(asset);
         return response;
     }
+
+
+
+    @DeleteMapping(value = "/{id}")
+    public ApiResponse removeAsset(@PathVariable Long id) {
+
+        assetService.removeAsset(id);
+
+        ApiResponse response = new ApiResponse();
+        response.setStatus(true);
+        response.setMessage("Success");
+        response.setData("Deleted");
+
+        return response;
+    }
 }
 
 

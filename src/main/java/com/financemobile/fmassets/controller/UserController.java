@@ -6,6 +6,8 @@ import com.financemobile.fmassets.dto.FindByEmailDto;
 import com.financemobile.fmassets.dto.UpdateUserStatusDto;
 import com.financemobile.fmassets.dto.ResetPasswordDto;
 import com.financemobile.fmassets.dto.*;
+import com.financemobile.fmassets.model.Asset;
+import com.financemobile.fmassets.model.Location;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.service.UserService;
@@ -41,7 +43,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ApiResponse getUserById(@PathVariable Long userId){
+    public ApiResponse getUserById(@PathVariable Long userId) {
         User user = userService.getUserById(userId);
         ApiResponse response = new ApiResponse();
         response.setStatus(true);
@@ -104,7 +106,7 @@ public class UserController {
 
     @PostMapping(value = "/forgot-password")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse forgotPassword(@RequestBody ForgotPasswordDto forgotPasswordDto){
+    public ApiResponse forgotPassword(@RequestBody ForgotPasswordDto forgotPasswordDto) {
 
         Boolean user = userService.forgotPassword(forgotPasswordDto);
 
@@ -130,7 +132,7 @@ public class UserController {
 
     @PostMapping(value = "/invite")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse sendUserInvite(@RequestBody @Valid  UserInviteDto userInviteDto){
+    public ApiResponse sendUserInvite(@RequestBody @Valid UserInviteDto userInviteDto) {
 
         Boolean sent = userService.sendUserInvite(userInviteDto);
 
@@ -138,6 +140,34 @@ public class UserController {
         response.setStatus(true);
         response.setMessage("Success");
         response.setData(sent);
+        return response;
+    }
+
+
+    @PutMapping(value = "")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse editUser(@RequestBody @Valid EditUserDto editUserDto) {
+
+        User user = userService.editUser(editUserDto);
+
+        ApiResponse response = new ApiResponse();
+        response.setStatus(true);
+        response.setMessage("Success");
+        response.setData(user);
+
+        return response;
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ApiResponse removeUser(@PathVariable Long id) {
+
+        userService.removeUser(id);
+
+        ApiResponse response = new ApiResponse();
+        response.setStatus(true);
+        response.setMessage("Success");
+        response.setData("Deleted");
+
         return response;
     }
 }

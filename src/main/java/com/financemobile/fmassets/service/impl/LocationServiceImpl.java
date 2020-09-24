@@ -1,6 +1,7 @@
 package com.financemobile.fmassets.service.impl;
 
 
+import com.financemobile.fmassets.dto.EditLocationDto;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.Location;
@@ -58,4 +59,22 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public List<Location> getAllLocations() { return locationRepository.findAll(); }
+
+    @Override
+    public Location editLocation(EditLocationDto editLocationDto) {
+
+        Optional<Location> locationOptional = locationRepository.findById(editLocationDto.getLocationId());
+        if (locationOptional.isPresent()){
+            Location location = locationOptional.get();
+            location.setName(editLocationDto.getName());
+
+            return locationRepository.save(location);
+        }
+        throw new DataNotFoundException("Location not found");
+    }
+
+    @Override
+    public void removeLocation(Long id) {
+        locationRepository.deleteById(id);
+    }
 }
