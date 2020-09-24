@@ -293,15 +293,15 @@ public class AssetServiceTest {
         editAssetDto.setCategory(category1.getName());
         editAssetDto.setUserId(user1.getId());
 
-        Asset asset1 = assetService.editAsset(editAssetDto);
+        Asset editedAsset = assetService.editAsset(editAssetDto);
 
-        Assertions.assertNotNull(asset1.getId());
-        Assertions.assertEquals(asset1.getName(), editAssetDto.getName());
-        Assertions.assertEquals(asset1.getLocation().getName(), editAssetDto.getLocation());
-        Assertions.assertEquals(asset1.getSupplier().getName(), editAssetDto.getSupplier());
-        Assertions.assertEquals(asset1.getDepartment().getName(), editAssetDto.getDepartment());
-        Assertions.assertEquals(asset1.getCategory().getName(), editAssetDto.getCategory());
-        Assertions.assertEquals(asset1.getUser().getId(), editAssetDto.getUserId().intValue());
+        Assertions.assertNotNull(editedAsset.getId());
+        Assertions.assertEquals(editedAsset.getName(), editAssetDto.getName());
+        Assertions.assertEquals(editedAsset.getLocation().getName(), editAssetDto.getLocation());
+        Assertions.assertEquals(editedAsset.getSupplier().getName(), editAssetDto.getSupplier());
+        Assertions.assertEquals(editedAsset.getDepartment().getName(), editAssetDto.getDepartment());
+        Assertions.assertEquals(editedAsset.getCategory().getName(), editAssetDto.getCategory());
+        Assertions.assertEquals(editedAsset.getUser().getId(), editAssetDto.getUserId().intValue());
     }
 
     @Test
