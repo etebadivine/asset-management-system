@@ -82,9 +82,9 @@ public class RoleServiceTest {
         editRoleDto.setRoleId(role.getId());
         editRoleDto.setName("ADMIN");
 
-        Role role1 = roleService.editRole(editRoleDto);
-        Assertions.assertNotNull(role1.getId());
-        Assertions.assertEquals(role1.getName(), editRoleDto.getName());
+        Role editedRole = roleService.editRole(editRoleDto);
+        Assertions.assertNotNull(editedRole.getId());
+        Assertions.assertEquals(editedRole.getName(), editRoleDto.getName());
     }
 
     @Test

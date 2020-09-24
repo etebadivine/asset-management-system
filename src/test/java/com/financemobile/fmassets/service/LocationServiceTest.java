@@ -149,12 +149,12 @@ public class LocationServiceTest {
         editLocationDto.setCity("Tema");
         editLocationDto.setCountry("Ghana");
 
-        Location location1 = locationService.editLocation(editLocationDto);
+        Location editedLocation = locationService.editLocation(editLocationDto);
 
-        Assertions.assertNotNull(location1.getId());
-        Assertions.assertEquals(location1.getName(),editLocationDto.getName());
-        Assertions.assertEquals(location1.getCity(),editLocationDto.getCity());
-        Assertions.assertEquals(location1.getCountry(),editLocationDto.getCountry());
+        Assertions.assertNotNull(editedLocation.getId());
+        Assertions.assertEquals(editedLocation.getName(),editLocationDto.getName());
+        Assertions.assertEquals(editedLocation.getCity(),editLocationDto.getCity());
+        Assertions.assertEquals(editedLocation.getCountry(),editLocationDto.getCountry());
     }
 
     @Test

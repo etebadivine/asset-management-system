@@ -134,13 +134,13 @@ public class SupplierServiceTest {
         editSupplierDto.setTelephone("+0302151515656");
         editSupplierDto.setMobile("0201545484");
 
-        Supplier supplier1 = supplierService.editSupplier(editSupplierDto);
+        Supplier editedSupplier= supplierService.editSupplier(editSupplierDto);
 
-        Assertions.assertNotNull(supplier1.getId());
-        Assertions.assertEquals(supplier1.getName(), editSupplierDto.getName());
-        Assertions.assertEquals(supplier1.getAddress(), editSupplierDto.getAddress());
-        Assertions.assertEquals(supplier1.getTelephone(), editSupplierDto.getTelephone());
-        Assertions.assertEquals(supplier1.getMobile(), editSupplierDto.getMobile());
+        Assertions.assertNotNull(editedSupplier.getId());
+        Assertions.assertEquals(editedSupplier.getName(), editSupplierDto.getName());
+        Assertions.assertEquals(editedSupplier.getAddress(), editSupplierDto.getAddress());
+        Assertions.assertEquals(editedSupplier.getTelephone(), editSupplierDto.getTelephone());
+        Assertions.assertEquals(editedSupplier.getMobile(), editSupplierDto.getMobile());
     }
 
     @Test

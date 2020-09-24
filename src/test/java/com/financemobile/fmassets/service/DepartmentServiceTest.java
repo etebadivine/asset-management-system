@@ -105,10 +105,10 @@ public class DepartmentServiceTest {
         editDepartmentDto.setDepartmentId(department.getId());
         editDepartmentDto.setName("Communication");
 
-        Department department1 = departmentService.editDepartment(editDepartmentDto);
+        Department editedDepartment = departmentService.editDepartment(editDepartmentDto);
 
-        Assertions.assertNotNull(department1.getId());
-        Assertions.assertEquals(department1.getName(),editDepartmentDto.getName());
+        Assertions.assertNotNull(editedDepartment.getId());
+        Assertions.assertEquals(editedDepartment.getName(),editDepartmentDto.getName());
     }
 
     @Test

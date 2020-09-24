@@ -448,15 +448,15 @@ public class UserServiceTest {
         editUserDto.setRole(role.getName());
         editUserDto.setPassword("password");
 
-        User user1 = userService.editUser(editUserDto);
+        User editedUser= userService.editUser(editUserDto);
 
-        Assertions.assertNotNull(user1.getId());
-        Assertions.assertEquals(user1.getFirstName(), editUserDto.getFirstName());
-        Assertions.assertEquals(user1.getLastName(), editUserDto.getLastName());
-        Assertions.assertEquals(user1.getEmail(), editUserDto.getEmail());
-        Assertions.assertEquals(user1.getPhone(), editUserDto.getPhone());
-        Assertions.assertEquals(user1.getRole().getName(), editUserDto.getRole());
-        Assertions.assertEquals(user1.getPassword(), editUserDto.getPassword());
+        Assertions.assertNotNull(editedUser.getId());
+        Assertions.assertEquals(editedUser.getFirstName(), editUserDto.getFirstName());
+        Assertions.assertEquals(editedUser.getLastName(), editUserDto.getLastName());
+        Assertions.assertEquals(editedUser.getEmail(), editUserDto.getEmail());
+        Assertions.assertEquals(editedUser.getPhone(), editUserDto.getPhone());
+        Assertions.assertEquals(editedUser.getRole().getName(), editUserDto.getRole());
+        Assertions.assertEquals(editedUser.getPassword(), editUserDto.getPassword());
     }
 
     @Test

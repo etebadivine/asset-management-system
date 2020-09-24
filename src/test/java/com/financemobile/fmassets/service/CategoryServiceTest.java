@@ -115,10 +115,10 @@ public class CategoryServiceTest {
         editCategoryDto.setCategoryId(category.getId());
         editCategoryDto.setName("Computers");
 
-        Category category1 = categoryService.editCategory(editCategoryDto);
+        Category editedCategory = categoryService.editCategory(editCategoryDto);
 
-        Assertions.assertNotNull(category1.getId());
-        Assertions.assertEquals(category1.getName(),editCategoryDto.getName());
+        Assertions.assertNotNull(editedCategory.getId());
+        Assertions.assertEquals(editedCategory.getName(),editCategoryDto.getName());
     }
 
     @Test
