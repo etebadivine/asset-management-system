@@ -20,8 +20,11 @@ pipelines:
           - mysql
     - step:
         name: Build and Push Docker Image
+        condition:
+
         image: google/cloud-sdk:latest
         deployment: production
+        trigger: 'manual'
         script:
           - echo $GCLOUD_API_KEYFILE > ~/.gcloud-api-key.json
 
