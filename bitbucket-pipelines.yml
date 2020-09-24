@@ -5,20 +5,20 @@
 image: maven:3.6.1
 
 pipelines:
-  default:
-    - step:
-        name: Maven Build
-        image: maven:3.6.1
-        caches:
-          - maven
-        script:
-          - mvn clean package
-          - mvn -B verify
-        artifacts:
-          - target/**
-        services:
-          - mysql
   branches:
+    '{staging, master}':
+      - step:
+          name: Maven Build
+          image: maven:3.6.1
+          caches:
+            - maven
+          script:
+            - mvn clean package
+            - mvn -B verify
+          artifacts:
+            - target/**
+          services:
+            - mysql
     master:
       - step:
           name: Build and Push Docker Image
@@ -46,7 +46,6 @@ definitions:
   services:
     mysql:
       image: mysql:8.0
-      memory: 2048
       variables:
         MYSQL_DATABASE: 'fmassets'
         MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
