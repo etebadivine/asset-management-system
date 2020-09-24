@@ -7,27 +7,34 @@ import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.dto.CreateAssetDto;
 import com.financemobile.fmassets.dto.EditAssetDto;
 import com.financemobile.fmassets.querySpec.AssetSpec;
-import com.financemobile.fmassets.querySpec.AssignmentHistorySpec;
 import com.financemobile.fmassets.security.OAuth2Helper;
 import com.financemobile.fmassets.service.*;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Date;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 public class AssetControllerTest extends OAuth2Helper {
+
+    @Autowired
+    private WebApplicationContext webApplicationContext;
 
     @MockBean
     private AssignmentHistoryService assignmentHistoryService;
@@ -296,5 +303,39 @@ public class AssetControllerTest extends OAuth2Helper {
                 .andExpect(jsonPath("data.department.name", is(asset.getDepartment().getName())))
                 .andExpect(jsonPath("data.category.name", is(asset.getCategory().getName())))
                 .andExpect(jsonPath("data.user.id", is(asset.getUser().getId().intValue())));
+    }
+
+    @Test
+    public void test_uploadAssetImage() throws Exception {
+        Asset asset = new Asset();
+        asset.setId(300L);
+        asset.setCreatedBy("Samuel");
+        asset.setName("HP");
+        asset.setStatus(AssetStatus.AVAILABLE);
+
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "file",
+                "asset.png",
+                MediaType.TEXT_PLAIN_VALUE,
+                "the image data".getBytes()
+        );
+
+        AssetDetails assetDetails = new AssetDetails();
+        assetDetails.setModel("Compact");
+        assetDetails.setColor("Black");
+        assetDetails.setImageBytes("imagebytes");
+        asset.setAssetDetails(assetDetails);
+
+        Mockito.when(assetService.uploadAssetImage(300L, file.getBytes()))
+                .thenReturn(asset);
+
+        mockMvc.perform(multipart("/asset/" + asset.getId() +"/image")
+                .file(file)
+                .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data.assetDetails.imageBytes", is("imagebytes")));
     }
 }
