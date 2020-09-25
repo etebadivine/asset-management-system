@@ -100,6 +100,7 @@ public class AssetServiceImpl implements AssetService {
         assetDetails.setPurchasedDate(createAssetDto.getPurchasedDate());
         asset.setAssetDetails(assetDetails);
 
+
         //check if the category exist
         Category category = categoryService.getCategoryByName(createAssetDto.getCategory());
         asset.setCategory(category);
