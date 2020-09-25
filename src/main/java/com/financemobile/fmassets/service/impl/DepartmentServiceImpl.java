@@ -1,8 +1,11 @@
 package com.financemobile.fmassets.service.impl;
 
+import com.financemobile.fmassets.dto.EditAssetDto;
+import com.financemobile.fmassets.dto.EditDepartmentDto;
+import com.financemobile.fmassets.enums.AssetStatus;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
-import com.financemobile.fmassets.model.Department;
+import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.repository.DepartmentRepository;
 import com.financemobile.fmassets.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +28,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
        Department department = new Department();
        department.setName(name);
-       department.setCreatedBy("Kevin");
+       department.setCreatedBy("Divine");
        return departmentRepository.save(department);
     }
 
@@ -57,5 +60,24 @@ public class DepartmentServiceImpl implements DepartmentService {
     public List<Department> getAllDepartments() {
 
         return departmentRepository.findAll();
+    }
+
+    @Override
+    public Department editDepartment(EditDepartmentDto editDepartmentDto) {
+
+        Optional<Department> departmentOptional = departmentRepository.findById(editDepartmentDto.getDepartmentId());
+        if (departmentOptional.isPresent()){
+            Department department = departmentOptional.get();
+            department.setName(editDepartmentDto.getName());
+
+            return departmentRepository.save(department);
+        }
+
+        throw new DataNotFoundException("Department not found");
+    }
+
+    @Override
+    public void removeDepartment(Long id) {
+        departmentRepository.deleteById(id);
     }
 }

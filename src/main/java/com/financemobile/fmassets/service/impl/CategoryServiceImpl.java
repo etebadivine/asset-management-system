@@ -1,8 +1,11 @@
 package com.financemobile.fmassets.service.impl;
 
+import com.financemobile.fmassets.dto.EditCategoryDto;
+import com.financemobile.fmassets.dto.EditDepartmentDto;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.Category;
+import com.financemobile.fmassets.model.Department;
 import com.financemobile.fmassets.repository.CategoryRepository;
 import com.financemobile.fmassets.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +61,20 @@ public class CategoryServiceImpl implements CategoryService {
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
+
+    @Override
+    public Category editCategory(EditCategoryDto editCategoryDto) {
+
+        Optional<Category> categoryOptional = categoryRepository.findById(editCategoryDto.getCategoryId());
+        if (categoryOptional.isPresent()){
+            Category category = categoryOptional.get();
+            category.setName(editCategoryDto.getName());
+
+            return categoryRepository.save(category);
+        }
+        throw new DataNotFoundException("Category not found");
+    }
+
 
     @Override
     public void removeCategory(Long id) {

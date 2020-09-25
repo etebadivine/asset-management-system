@@ -3,6 +3,7 @@ package com.financemobile.fmassets.dto;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Date;
 import java.util.Map;
 
 
@@ -28,6 +29,7 @@ public class CreateAssetDto {
     private String imageBytes;
     private String warranty;
     private String licenses;
+    private Date purchasedDate;
     private Long userId;
     private Map<String, String> metaData;
 

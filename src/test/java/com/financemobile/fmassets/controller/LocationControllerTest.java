@@ -1,7 +1,10 @@
 package com.financemobile.fmassets.controller;
 
 import com.financemobile.fmassets.dto.CreateLocationDto;
+import com.financemobile.fmassets.dto.EditLocationDto;
+import com.financemobile.fmassets.dto.EditRoleDto;
 import com.financemobile.fmassets.model.Location;
+import com.financemobile.fmassets.model.Role;
 import com.financemobile.fmassets.security.OAuth2Helper;
 import com.financemobile.fmassets.service.LocationService;
 import com.google.gson.Gson;
@@ -16,8 +19,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -41,15 +43,14 @@ public class LocationControllerTest extends OAuth2Helper {
         location.setDateCreated(new Date());
         location.setDateModified(new Date());
 
-        Mockito.when(locationService.addLocation(location.getName(),
-                location.getCity(), location.getCountry()))
+        Mockito.when(locationService.addLocation(Mockito.any(CreateLocationDto.class)))
                 .thenReturn(location);
 
         // payload for the endpoint
         CreateLocationDto createLocationDto = new CreateLocationDto();
-        createLocationDto.setName(location.getName());
-        createLocationDto.setCity(location.getCity());
-        createLocationDto.setCountry(location.getCountry());
+        createLocationDto.setName("Amasaman");
+        createLocationDto.setCity("Accra");
+        createLocationDto.setCountry("Ghana");
 
         // fire request
         mockMvc.perform(post("/location")
@@ -95,6 +96,62 @@ public class LocationControllerTest extends OAuth2Helper {
                 .andExpect(jsonPath("$.data[0].name", is(location.getName())))
                 .andExpect(jsonPath("$.data[0].city", is(location.getCity())))
                 .andExpect(jsonPath("$.data[0].country", is(location.getCountry())));
+    }
+
+    @Test
+    public void test_editLocation() throws Exception {
+
+        Location location = new Location();
+        location.setId(300L);
+        location.setName("Amasaman");
+        location.setCity("Accra");
+        location.setCountry("Ghana");
+        location.setDateCreated(new Date());
+        location.setDateModified(new Date());
+
+        Mockito.when(locationService.editLocation(Mockito.any(EditLocationDto.class)))
+                .thenReturn(location);
+
+        EditLocationDto editLocationDto = new EditLocationDto();
+        editLocationDto.setLocationId(location.getId());
+        editLocationDto.setName("Nsawam");
+        editLocationDto.setCity("Accra");
+        editLocationDto.setCountry("Ghana");
+
+        mockMvc.perform(put("/location")
+                .content(gson.toJson(editLocationDto))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data.id", is(location.getId().intValue())))
+                .andExpect(jsonPath("data.name", is(location.getName())))
+                .andExpect(jsonPath("data.city", is(location.getCity())))
+                .andExpect(jsonPath("data.country", is(location.getCountry())));
+    }
+
+    @Test
+    public void test_removeLocation() throws Exception {
+
+        Location location = new Location();
+        location.setId(300L);
+        location.setName("Amasaman");
+        location.setCity("Accra");
+        location.setCountry("Ghana");
+        location.setDateCreated(new Date());
+        location.setDateModified(new Date());
+
+        locationService.removeLocation(Mockito.any(Long.class));
+
+        mockMvc.perform(delete("/location/" + location.getId())
+                .content(gson.toJson(location))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data", is("Deleted")));
     }
 }
 

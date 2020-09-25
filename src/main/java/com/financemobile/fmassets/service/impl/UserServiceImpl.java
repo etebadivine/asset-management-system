@@ -5,11 +5,15 @@ import com.financemobile.fmassets.dto.*;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.exception.PasswordMismatchException;
+import com.financemobile.fmassets.model.Department;
 import com.financemobile.fmassets.model.Role;
+import com.financemobile.fmassets.model.Supplier;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.repository.UserRepository;
+import com.financemobile.fmassets.service.DepartmentService;
+import com.financemobile.fmassets.service.RoleService;
 import com.financemobile.fmassets.service.UserService;
 import com.financemobile.fmassets.service.messaging.EmailComposer;
 import com.financemobile.fmassets.service.messaging.SendEmailService;
@@ -36,6 +40,12 @@ public class UserServiceImpl implements UserService {
     private RoleRepository roleRepository;
 
     @Autowired
+    private RoleService roleService;
+
+    @Autowired
+    private DepartmentService departmentService;
+
+    @Autowired
     private EmailComposer emailComposer;
 
     @Autowired
@@ -60,6 +70,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> searchUsers(UserSpec userSpec, Pageable pageable) {
+
         List<User> userList = new ArrayList<>();
         Page<User> usersPage = userRepository.findAll(userSpec, pageable);
         if (usersPage.hasContent())
@@ -189,6 +200,32 @@ public class UserServiceImpl implements UserService {
 
         }
         return sent;
+    }
+
+    @Override
+    public User editUser(EditUserDto editUserDto) {
+
+        Optional<User> userOptional = userRepository.findById(editUserDto.getUserId());
+        if (userOptional.isPresent()){
+            User user = userOptional.get();
+            user.setFirstName(editUserDto.getFirstName());
+            user.setLastName(editUserDto.getLastName());
+            user.setEmail(editUserDto.getEmail());
+            user.setPhone(editUserDto.getPhone());
+            Department department = departmentService.getDepartmentByName(editUserDto.getDepartment());
+            user.setDepartment(department);
+            Role role = roleService.getRoleByName(editUserDto.getRole());
+            user.setRole(role);
+            user.setPassword(editUserDto.getPassword());
+
+            return userRepository.save(user);
+        }
+        throw new DataNotFoundException("User not found");
+    }
+
+    @Override
+    public void removeUser(Long id) {
+        userRepository.deleteById(id);
     }
 }
 
