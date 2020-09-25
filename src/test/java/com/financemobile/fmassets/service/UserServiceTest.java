@@ -435,6 +435,10 @@ public class UserServiceTest {
         CreateUserDto createUserDto = new CreateUserDto(firstName, lastName, email, phone, password);
         User user = userService.addUser(createUserDto);
 
+        Department department = new Department();
+        department.setName("Engineering");
+        department = departmentRepository.save(department);
+
         Role role = new Role();
         role.setName("USER");
         role = roleRepository.save(role);
@@ -445,6 +449,7 @@ public class UserServiceTest {
         editUserDto.setLastName("Adanu");
         editUserDto.setEmail("kwasi@gmail.com");
         editUserDto.setPhone("0269277920");
+        editUserDto.setDepartment(department.getName());
         editUserDto.setRole(role.getName());
         editUserDto.setPassword("password");
 
