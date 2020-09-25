@@ -305,7 +305,6 @@ public class AssetControllerTest extends OAuth2Helper {
                 .andExpect(jsonPath("data.user.id", is(asset.getUser().getId().intValue())));
     }
 
-
     @Test
     public void test_uploadAssetImage() throws Exception {
         Asset asset = new Asset();
@@ -316,5 +315,54 @@ public class AssetControllerTest extends OAuth2Helper {
                 = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         mockMvc.perform(multipart("/asset/" + asset.getId() +"/image").file(file))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void test_removeAsset() throws Exception {
+
+        Location location = new Location();
+        location.setName("Tema");
+        location.setCreatedBy("divine");
+
+        Supplier supplier = new Supplier();
+        supplier.setName("Mockito's Bakery");
+        supplier.setAddress("Accra");
+        supplier.setTelephone("+211 24 333 9999");
+        supplier.setMobile("+233 54 214 878");
+
+        Department department = new Department();
+        department.setName("Kitchen");
+
+        Category category = new Category();
+        category.setName("Biscuits");
+        category.setDescription("Fried,Baked");
+
+        User user = new User();
+        user.setId(20L);
+        user.setFirstName("Reynolds");
+        user.setLastName("Adanu");
+
+        Asset asset = new Asset();
+        asset.setId(300L);
+        asset.setName("Digestive");
+        asset.setLocation(location);
+        asset.setSupplier(supplier);
+        asset.setDepartment(department);
+        asset.setCategory(category);
+        asset.setUser(user);
+        asset.setCreatedBy("Reynolds");
+        asset.setDateCreated(new Date());
+        asset.setDateModified(new Date());
+
+        assetService.removeAsset(Mockito.any(Long.class));
+
+        mockMvc.perform(delete("/asset/" + asset.getId())
+                .content(gson.toJson(asset))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data", is("Deleted")));
     }
 }

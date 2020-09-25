@@ -130,6 +130,29 @@ public class LocationControllerTest extends OAuth2Helper {
                 .andExpect(jsonPath("data.city", is(location.getCity())))
                 .andExpect(jsonPath("data.country", is(location.getCountry())));
     }
+
+    @Test
+    public void test_removeLocation() throws Exception {
+
+        Location location = new Location();
+        location.setId(300L);
+        location.setName("Amasaman");
+        location.setCity("Accra");
+        location.setCountry("Ghana");
+        location.setDateCreated(new Date());
+        location.setDateModified(new Date());
+
+        locationService.removeLocation(Mockito.any(Long.class));
+
+        mockMvc.perform(delete("/location/" + location.getId())
+                .content(gson.toJson(location))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data", is("Deleted")));
+    }
 }
 
 

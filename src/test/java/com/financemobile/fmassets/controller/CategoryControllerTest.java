@@ -121,4 +121,25 @@ public class CategoryControllerTest extends OAuth2Helper {
                 .andExpect(jsonPath("data.id", is(category.getId().intValue())))
                 .andExpect(jsonPath("data.name", is(category.getName())));
     }
+
+    @Test
+    public void test_removeCategoryr() throws Exception {
+
+        Category category = new Category();
+        category.setId(300L);
+        category.setName("Computers");
+        category.setDateCreated(new Date());
+        category.setDateModified(new Date());
+
+        categoryService.removeCategory(Mockito.any(Long.class));
+
+        mockMvc.perform(delete("/category/" + category.getId())
+                .content(gson.toJson(category))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data", is("Deleted")));
+    }
 }

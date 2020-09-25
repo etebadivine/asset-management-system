@@ -5,7 +5,6 @@ import com.financemobile.fmassets.dto.*;
 import com.financemobile.fmassets.enums.UserStatus;
 import com.financemobile.fmassets.model.Department;
 import com.financemobile.fmassets.model.Role;
-import com.financemobile.fmassets.model.Supplier;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.security.OAuth2Helper;
@@ -479,4 +478,44 @@ public class UserControllerTest extends OAuth2Helper {
                 .andExpect(jsonPath("data.password", is(user.getPassword())));
     }
 
+    @Test
+    public void test_removeUser() throws Exception {
+
+        Department department = new Department();
+        department.setId(43L);
+        department.setName("Engineering");
+        department.setCreatedBy("Admin");
+        department.setDateCreated(new Date());
+        department.setDateModified(new Date());
+
+        Role role = new Role();
+        role.setId(3L);
+        role.setName("USER");
+        role.setDateCreated(new Date());
+        role.setDateModified(new Date());
+
+        User user = new User();
+        user.setId(300L);
+        user.setFirstName("Tony");
+        user.setLastName("Stark");
+        user.setEmail("tonystark@gmail.com");
+        user.setPhone("+233 54 214 878");
+        user.setDepartment(department);
+        user.setRole(role);
+        user.setPassword("password");
+        user.setCreatedBy("Reynolds");
+        user.setDateCreated(new Date());
+        user.setDateModified(new Date());
+
+        userService.removeUser(Mockito.any(Long.class));
+
+        mockMvc.perform(delete("/user/" + user.getId())
+                .content(gson.toJson(user))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data", is("Deleted")));
+    }
 }

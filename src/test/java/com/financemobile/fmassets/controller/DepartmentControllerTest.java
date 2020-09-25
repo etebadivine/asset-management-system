@@ -113,4 +113,25 @@ public class DepartmentControllerTest extends OAuth2Helper {
                 .andExpect(jsonPath("data.id", is(department.getId().intValue())))
                 .andExpect(jsonPath("data.name", is(department.getName())));
     }
+
+    @Test
+    public void test_removeDepartment() throws Exception {
+
+        Department department = new Department();
+        department.setId(300L);
+        department.setName("Communication");
+        department.setDateCreated(new Date());
+        department.setDateModified(new Date());
+
+        departmentService.removeDepartment(Mockito.any(Long.class));
+
+        mockMvc.perform(delete("/department/" + department.getId())
+                .content(gson.toJson(department))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data", is("Deleted")));
+    }
 }

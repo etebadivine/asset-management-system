@@ -113,4 +113,25 @@ public class RoleControllerTest extends OAuth2Helper {
                 .andExpect(jsonPath("data.id", is(role.getId().intValue())))
                 .andExpect(jsonPath("data.name", is(role.getName())));
     }
+
+    @Test
+    public void test_removeRole() throws Exception {
+
+        Role role = new Role();
+        role.setId(300L);
+        role.setName("USER");
+        role.setDateCreated(new Date());
+        role.setDateModified(new Date());
+
+        roleService.removeRole(Mockito.any(Long.class));
+
+        mockMvc.perform(delete("/role/" + role.getId())
+                .content(gson.toJson(role))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data", is("Deleted")));
+    }
 }

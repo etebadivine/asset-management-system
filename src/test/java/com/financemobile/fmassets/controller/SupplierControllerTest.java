@@ -10,6 +10,7 @@ import com.financemobile.fmassets.security.OAuth2Helper;
 import com.financemobile.fmassets.service.SupplierService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -160,7 +161,7 @@ public class SupplierControllerTest extends OAuth2Helper {
         supplier.setDateCreated(new Date());
         supplier.setDateModified(new Date());
 
-        supplierService.removeSupplier(Mockito.anyLong());
+        supplierService.removeSupplier(Mockito.any(Long.class));
 
         mockMvc.perform(delete("/supplier/" + supplier.getId())
                 .content(gson.toJson(supplier))
@@ -169,7 +170,6 @@ public class SupplierControllerTest extends OAuth2Helper {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("status", is(true)))
                 .andExpect(jsonPath("message", is("Success")))
-                .andExpect(jsonPath("data", is(null)));
-
+                .andExpect(jsonPath("data", is("Deleted")));
     }
 }
