@@ -92,7 +92,7 @@ public class SupplierControllerTest extends OAuth2Helper {
 
         List<Supplier> supplierList = Arrays.asList(supplier);
 
-        Mockito.when(supplierRepository.findAll())
+        Mockito.when(supplierService.getAllSuppliers())
                 .thenReturn(supplierList);
 
         // fire request
