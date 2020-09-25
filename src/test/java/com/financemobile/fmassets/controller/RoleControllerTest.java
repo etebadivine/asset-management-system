@@ -1,7 +1,10 @@
 package com.financemobile.fmassets.controller;
 
 import com.financemobile.fmassets.dto.CreateRoleDto;
+import com.financemobile.fmassets.dto.EditRoleDto;
+import com.financemobile.fmassets.dto.EditSupplierDto;
 import com.financemobile.fmassets.model.Role;
+import com.financemobile.fmassets.model.Supplier;
 import com.financemobile.fmassets.security.OAuth2Helper;
 import com.financemobile.fmassets.service.RoleService;
 import com.google.gson.Gson;
@@ -16,8 +19,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -83,5 +85,32 @@ public class RoleControllerTest extends OAuth2Helper {
                 .andExpect(jsonPath("$.data", hasSize(1)))
                 .andExpect(jsonPath("$.data[0].id", is(role.getId().intValue())))
                 .andExpect(jsonPath("$.data[0].name", is(role.getName())));
+    }
+
+    @Test
+    public void test_editRole() throws Exception {
+
+        Role role = new Role();
+        role.setId(300L);
+        role.setName("USER");
+        role.setDateCreated(new Date());
+        role.setDateModified(new Date());
+
+        Mockito.when(roleService.editRole(Mockito.any(EditRoleDto.class)))
+                .thenReturn(role);
+
+        EditRoleDto editRoleDto = new EditRoleDto();
+        editRoleDto.setRoleId(role.getId());
+        editRoleDto.setName("ADMIN");
+
+        mockMvc.perform(put("/role")
+                .content(gson.toJson(editRoleDto))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data.id", is(role.getId().intValue())))
+                .andExpect(jsonPath("data.name", is(role.getName())));
     }
 }

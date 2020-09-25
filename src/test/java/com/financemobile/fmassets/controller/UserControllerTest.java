@@ -5,6 +5,7 @@ import com.financemobile.fmassets.dto.*;
 import com.financemobile.fmassets.enums.UserStatus;
 import com.financemobile.fmassets.model.Department;
 import com.financemobile.fmassets.model.Role;
+import com.financemobile.fmassets.model.Supplier;
 import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.security.OAuth2Helper;
@@ -21,8 +22,7 @@ import java.util.Date;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -419,4 +419,64 @@ public class UserControllerTest extends OAuth2Helper {
                 .andExpect(jsonPath("$.data.phone", is(user.getPhone())))
                 .andExpect(jsonPath("$.data.status", is(user.getStatus().toString())));
     }
+
+    @Test
+    public void test_editUser() throws Exception {
+
+        Department department = new Department();
+        department.setId(43L);
+        department.setName("Engineering");
+        department.setCreatedBy("Admin");
+        department.setDateCreated(new Date());
+        department.setDateModified(new Date());
+
+        Role role = new Role();
+        role.setId(3L);
+        role.setName("USER");
+        role.setDateCreated(new Date());
+        role.setDateModified(new Date());
+
+        User user = new User();
+        user.setId(300L);
+        user.setFirstName("Tony");
+        user.setLastName("Stark");
+        user.setEmail("tonystark@gmail.com");
+        user.setPhone("+233 54 214 878");
+        user.setDepartment(department);
+        user.setRole(role);
+        user.setPassword("password");
+        user.setCreatedBy("Reynolds");
+        user.setDateCreated(new Date());
+        user.setDateModified(new Date());
+
+        Mockito.when(userService.editUser(Mockito.any(EditUserDto.class)))
+                .thenReturn(user);
+
+        EditUserDto editUserDto = new EditUserDto();
+        editUserDto.setUserId(user.getId());
+        editUserDto.setFirstName("Anthony");
+        editUserDto.setLastName("Stark");
+        editUserDto.setEmail("tonystark@gmail.com");
+        editUserDto.setPhone("+233 54 214 878");
+        editUserDto.setDepartment("Finance");
+        editUserDto.setRole("Admin");
+        editUserDto.setPassword("password");
+
+        mockMvc.perform(put("/user")
+                .content(gson.toJson(editUserDto))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data.id", is(user.getId().intValue())))
+                .andExpect(jsonPath("data.firstName", is(user.getFirstName())))
+                .andExpect(jsonPath("data.lastName", is(user.getLastName())))
+                .andExpect(jsonPath("data.email", is(user.getEmail())))
+                .andExpect(jsonPath("data.phone", is(user.getPhone())))
+                .andExpect(jsonPath("data.department.name", is(user.getDepartment().getName())))
+                .andExpect(jsonPath("data.role.name", is(user.getRole().getName())))
+                .andExpect(jsonPath("data.password", is(user.getPassword())));
+    }
+
 }

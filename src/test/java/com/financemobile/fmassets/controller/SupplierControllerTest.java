@@ -2,22 +2,26 @@ package com.financemobile.fmassets.controller;
 
 
 import com.financemobile.fmassets.dto.CreateSupplierDto;
-import com.financemobile.fmassets.model.Supplier;
+import com.financemobile.fmassets.dto.EditAssetDto;
+import com.financemobile.fmassets.dto.EditSupplierDto;
+import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.repository.SupplierRepository;
 import com.financemobile.fmassets.security.OAuth2Helper;
+import com.financemobile.fmassets.service.SupplierService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+
+import java.awt.*;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -26,6 +30,9 @@ public class SupplierControllerTest extends OAuth2Helper {
 
     @MockBean
     private SupplierRepository supplierRepository;
+
+    @MockBean
+    private SupplierService supplierService;
 
     private final Gson gson = new Gson();
 
@@ -100,5 +107,69 @@ public class SupplierControllerTest extends OAuth2Helper {
                 .andExpect(jsonPath("$.data[0].address", is(supplier.getAddress())))
                 .andExpect(jsonPath("$.data[0].telephone", is(supplier.getTelephone())))
                 .andExpect(jsonPath("$.data[0].mobile", is(supplier.getMobile())));
+    }
+
+    @Test
+    public void test_editSupplier() throws Exception {
+
+        Supplier supplier = new Supplier();
+        supplier.setId(300L);
+        supplier.setName("Franko Tranding Enterplise");
+        supplier.setAddress("Accra");
+        supplier.setTelephone("+211 24 333 9999");
+        supplier.setMobile("+233 54 214 878");
+        supplier.setCreatedBy("Reynolds");
+        supplier.setDateCreated(new Date());
+        supplier.setDateModified(new Date());
+
+        Mockito.when(supplierService.editSupplier(Mockito.any(EditSupplierDto.class)))
+                .thenReturn(supplier);
+
+        EditSupplierDto editSupplierDto = new EditSupplierDto();
+        editSupplierDto.setSupplierId(supplier.getId());
+        editSupplierDto.setName("Franko Trading Enterprise");
+        editSupplierDto.setAddress("Accra");
+        editSupplierDto.setTelephone("+211 24 333 9999");
+        editSupplierDto.setMobile("+233 50 215 878");
+
+
+        mockMvc.perform(put("/supplier")
+                .content(gson.toJson(editSupplierDto))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data.id", is(supplier.getId().intValue())))
+                .andExpect(jsonPath("data.name", is(supplier.getName())))
+                .andExpect(jsonPath("data.address", is(supplier.getAddress())))
+                .andExpect(jsonPath("data.telephone", is(supplier.getTelephone())))
+                .andExpect(jsonPath("data.mobile", is(supplier.getMobile())));
+    }
+
+    @Test
+    public void test_removeSupplier() throws Exception {
+
+        Supplier supplier = new Supplier();
+        supplier.setId(300L);
+        supplier.setName("Franko Tranding Enterplise");
+        supplier.setAddress("Accra");
+        supplier.setTelephone("+211 24 333 9999");
+        supplier.setMobile("+233 54 214 878");
+        supplier.setCreatedBy("Reynolds");
+        supplier.setDateCreated(new Date());
+        supplier.setDateModified(new Date());
+
+        supplierService.removeSupplier(Mockito.anyLong());
+
+        mockMvc.perform(delete("/supplier/" + supplier.getId())
+                .content(gson.toJson(supplier))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data", is(null)));
+
     }
 }

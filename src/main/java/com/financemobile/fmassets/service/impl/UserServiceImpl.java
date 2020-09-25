@@ -12,6 +12,7 @@ import com.financemobile.fmassets.model.User;
 import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.repository.UserRepository;
+import com.financemobile.fmassets.service.DepartmentService;
 import com.financemobile.fmassets.service.RoleService;
 import com.financemobile.fmassets.service.UserService;
 import com.financemobile.fmassets.service.messaging.EmailComposer;
@@ -40,6 +41,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private DepartmentService departmentService;
+
     @Autowired
     private EmailComposer emailComposer;
 
@@ -207,6 +212,8 @@ public class UserServiceImpl implements UserService {
             user.setLastName(editUserDto.getLastName());
             user.setEmail(editUserDto.getEmail());
             user.setPhone(editUserDto.getPhone());
+            Department department = departmentService.getDepartmentByName(editUserDto.getDepartment());
+            user.setDepartment(department);
             Role role = roleService.getRoleByName(editUserDto.getRole());
             user.setRole(role);
             user.setPassword(editUserDto.getPassword());

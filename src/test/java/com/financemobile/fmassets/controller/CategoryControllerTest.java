@@ -1,7 +1,10 @@
 package com.financemobile.fmassets.controller;
 
 import com.financemobile.fmassets.dto.CreateCategoryDto;
+import com.financemobile.fmassets.dto.EditCategoryDto;
+import com.financemobile.fmassets.dto.EditRoleDto;
 import com.financemobile.fmassets.model.Category;
+import com.financemobile.fmassets.model.Role;
 import com.financemobile.fmassets.security.OAuth2Helper;
 import com.financemobile.fmassets.service.CategoryService;
 import com.google.gson.Gson;
@@ -16,8 +19,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -91,5 +93,32 @@ public class CategoryControllerTest extends OAuth2Helper {
                 .andExpect(jsonPath("$.data[0].id", is(category.getId().intValue())))
                 .andExpect(jsonPath("$.data[0].name", is(category.getName())))
                 .andExpect(jsonPath("$.data[0].description", is(category.getDescription())));
+    }
+
+    @Test
+    public void test_editCategory() throws Exception {
+
+        Category category = new Category();
+        category.setId(300L);
+        category.setName("Computense");
+        category.setDateCreated(new Date());
+        category.setDateModified(new Date());
+
+        Mockito.when(categoryService.editCategory(Mockito.any(EditCategoryDto.class)))
+                .thenReturn(category);
+
+        EditCategoryDto editCategoryDto = new EditCategoryDto();
+        editCategoryDto.setCategoryId(category.getId());
+        editCategoryDto.setName("Computers");
+
+        mockMvc.perform(put("/category")
+                .content(gson.toJson(editCategoryDto))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("status", is(true)))
+                .andExpect(jsonPath("message", is("Success")))
+                .andExpect(jsonPath("data.id", is(category.getId().intValue())))
+                .andExpect(jsonPath("data.name", is(category.getName())));
     }
 }
