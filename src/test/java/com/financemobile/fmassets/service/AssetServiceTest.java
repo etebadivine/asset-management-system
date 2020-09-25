@@ -1,11 +1,8 @@
 package com.financemobile.fmassets.service;
 
-import com.financemobile.fmassets.dto.AssignAssetDto;
-import com.financemobile.fmassets.dto.UpdateAssetStatusDto;
+import com.financemobile.fmassets.dto.*;
 import com.financemobile.fmassets.enums.AssetStatus;
 import com.financemobile.fmassets.exception.DataNotFoundException;
-import com.financemobile.fmassets.dto.CreateAssetDto;
-import com.financemobile.fmassets.dto.EditAssetDto;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.querySpec.AssetSpec;
@@ -296,15 +293,15 @@ public class AssetServiceTest {
         editAssetDto.setCategory(category1.getName());
         editAssetDto.setUserId(user1.getId());
 
-        Asset asset1 = assetService.editAsset(editAssetDto);
+        Asset editedAsset = assetService.editAsset(editAssetDto);
 
-        Assertions.assertNotNull(asset1.getId());
-        Assertions.assertEquals(asset1.getName(), editAssetDto.getName());
-        Assertions.assertEquals(asset1.getLocation().getName(), editAssetDto.getLocation());
-        Assertions.assertEquals(asset1.getSupplier().getName(), editAssetDto.getSupplier());
-        Assertions.assertEquals(asset1.getDepartment().getName(), editAssetDto.getDepartment());
-        Assertions.assertEquals(asset1.getCategory().getName(), editAssetDto.getCategory());
-        Assertions.assertEquals(asset1.getUser().getId(), editAssetDto.getUserId().intValue());
+        Assertions.assertNotNull(editedAsset.getId());
+        Assertions.assertEquals(editedAsset.getName(), editAssetDto.getName());
+        Assertions.assertEquals(editedAsset.getLocation().getName(), editAssetDto.getLocation());
+        Assertions.assertEquals(editedAsset.getSupplier().getName(), editAssetDto.getSupplier());
+        Assertions.assertEquals(editedAsset.getDepartment().getName(), editAssetDto.getDepartment());
+        Assertions.assertEquals(editedAsset.getCategory().getName(), editAssetDto.getCategory());
+        Assertions.assertEquals(editedAsset.getUser().getId(), editAssetDto.getUserId().intValue());
     }
 
     @Test
@@ -475,7 +472,59 @@ public class AssetServiceTest {
         });
     }
 
-//     this should always be the last method
+
+    @Test
+    public void test_removeAsset() {
+        Location location = new Location();
+        location.setId(1l);
+        location.setName("Tema");
+        location = locationRepository.save(location);
+
+        Supplier supplier = new Supplier();
+        supplier.setId(2L);
+        supplier.setName("Orca Home");
+        supplier = supplierRepository.save(supplier);
+
+        Department department = new Department();
+        department.setId(3L);
+        department.setName("Human Resource");
+        department = departmentRepository.save(department);
+
+        Category category = new Category();
+        category.setId(4L);
+        category.setName("Furniture");
+        category = categoryRepository.save(category);
+
+        User user = new User();
+        user.setFirstName("Reynolds");
+        user.setLastName("Adanu");
+        user = userRepository.save(user);
+
+        AssetDetails assetDetails = new AssetDetails();
+        assetDetails.setMake("");
+        assetDetails.setModel("");
+        assetDetails.setColor("Black");
+        assetDetails.setManufacturer("Orca Deco");
+        assetDetails.setSerialNumber("3232121232132123");
+
+        Asset asset = new Asset();
+        asset.setName("HP Laptop");
+        asset.setLocation(location);
+        asset.setSupplier(supplier);
+        asset.setDepartment(department);
+        asset.setCategory(category);
+        asset.setAssetDetails(assetDetails);
+        asset.setUser(user);
+        asset = assetRepository.save(asset);
+
+        assetService.removeAsset(asset.getId());
+
+        Assertions.assertThrows(DataNotFoundException.class, ()->{
+            assetService.getAssetByName("HP Laptop");
+        });
+    }
+
+     //this should always be the last method
     @AfterEach
     public void tearDown() {
         assignmentHistoryRepository.deleteAll();

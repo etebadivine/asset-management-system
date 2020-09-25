@@ -17,6 +17,11 @@ public class CreateLocationDto {
 
         @NotBlank
         private String country;
+
+        public CreateLocationDto(){
+
+        }
+
 }
 
 

@@ -20,6 +20,8 @@ public interface UserService {
     Boolean forgotPassword(ForgotPasswordDto forgotPasswordDto);
     User updateUserRole(UpdateUserRoleDto updateuserRoleDto);
     Boolean sendUserInvite(UserInviteDto userInviteDto);
+    User editUser(EditUserDto editUserDto);
+    void removeUser(Long id);
 }
 
 

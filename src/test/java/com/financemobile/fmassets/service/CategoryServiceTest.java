@@ -1,8 +1,10 @@
 package com.financemobile.fmassets.service;
 
+import com.financemobile.fmassets.dto.*;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.Category;
+import com.financemobile.fmassets.model.Department;
 import com.financemobile.fmassets.repository.CategoryRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -99,6 +101,35 @@ public class CategoryServiceTest {
         Assertions.assertEquals(categoryList.get(0).getDescription(), description);
     }
 
+
+    @Test
+    public void test_editCategory() {
+        String name = "Computerssss";
+        String description = "Laptops,etc.";
+        CreateCategoryDto createCategoryDto = new CreateCategoryDto();
+        createCategoryDto.setName(name);
+        createCategoryDto.setDescription(description);
+        Category category = categoryService.addCategory(createCategoryDto.getName(),createCategoryDto.getDescription() );
+
+        EditCategoryDto editCategoryDto = new EditCategoryDto();
+        editCategoryDto.setCategoryId(category.getId());
+        editCategoryDto.setName("Computers");
+
+        Category editedCategory = categoryService.editCategory(editCategoryDto);
+
+        Assertions.assertNotNull(editedCategory.getId());
+        Assertions.assertEquals(editedCategory.getName(),editCategoryDto.getName());
+    }
+
+    @Test
+    public void test_editCategory_notFound(){
+        EditCategoryDto editCategoryDto = new EditCategoryDto();
+        editCategoryDto.setCategoryId(40L);
+        Assertions.assertThrows(DataNotFoundException.class, ()->{
+            categoryService.editCategory(editCategoryDto);
+        });
+    }
+
     @Test
     public void test_removeCategory(){
         String name = "Furniture";
@@ -111,7 +142,6 @@ public class CategoryServiceTest {
             categoryService.getCategoryByName(name);
         });
     }
-
 
     //this should always be the last method
     @AfterEach

@@ -2,6 +2,7 @@ package com.financemobile.fmassets.service.impl;
 
 import ch.qos.logback.classic.Logger;
 import com.financemobile.fmassets.dto.CreateSupplierDto;
+import com.financemobile.fmassets.dto.EditSupplierDto;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.Supplier;
@@ -60,6 +61,22 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     public List<Supplier> getAllSuppliers() {
         return supplierRepository.findAll();
+    }
+
+    @Override
+    public Supplier editSupplier(EditSupplierDto editSupplierDto) {
+
+        Optional<Supplier> supplierOptional = supplierRepository.findById(editSupplierDto.getSupplierId());
+        if (supplierOptional.isPresent()){
+            Supplier supplier = supplierOptional.get();
+            supplier.setName(editSupplierDto.getName());
+            supplier.setAddress(editSupplierDto.getAddress());
+            supplier.setTelephone(editSupplierDto.getTelephone());
+            supplier.setMobile(editSupplierDto.getMobile());
+
+            return supplierRepository.save(supplier);
+        }
+        throw new DataNotFoundException("Supplier not found");
     }
 
     @Override

@@ -1,8 +1,11 @@
 package com.financemobile.fmassets.service;
 
+import com.financemobile.fmassets.dto.*;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.model.Department;
+import com.financemobile.fmassets.model.Location;
+import com.financemobile.fmassets.model.Role;
 import com.financemobile.fmassets.repository.DepartmentRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -89,6 +92,43 @@ public class DepartmentServiceTest {
         Assertions.assertEquals(departmentList.size(), 1);
         Assertions.assertEquals(departmentList.get(0).getName(), name);
         Assertions.assertEquals(departmentList.get(0).getNumberOfAssets(), 0L);
+    }
+
+    @Test
+    public void test_editDepartment() {
+        String name = "Communicationssss";
+        CreateDepartmentDto createDepartmentDto = new CreateDepartmentDto();
+        createDepartmentDto.setName(name);
+        Department department = departmentService.addDepartment(createDepartmentDto.getName());
+
+        EditDepartmentDto editDepartmentDto = new EditDepartmentDto();
+        editDepartmentDto.setDepartmentId(department.getId());
+        editDepartmentDto.setName("Communication");
+
+        Department editedDepartment = departmentService.editDepartment(editDepartmentDto);
+
+        Assertions.assertNotNull(editedDepartment.getId());
+        Assertions.assertEquals(editedDepartment.getName(),editDepartmentDto.getName());
+    }
+
+    @Test
+    public void test_editDepartment_notFound(){
+        EditDepartmentDto editDepartmentDto = new EditDepartmentDto();
+        editDepartmentDto.setDepartmentId(40L);
+        Assertions.assertThrows(DataNotFoundException.class, ()->{
+            departmentService.editDepartment(editDepartmentDto);
+        });
+    }
+
+    @Test
+    public void test_removeDepartment() {
+        String name = "Communications";
+        Department department = departmentService.addDepartment(name);
+        departmentService.removeDepartment(department.getId());
+
+        Assertions.assertThrows(DataNotFoundException.class, ()->{
+            departmentService.getDepartmentByName(name);
+        });
     }
 
     @AfterEach

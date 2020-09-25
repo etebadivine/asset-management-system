@@ -12,8 +12,10 @@ public interface AssetService {
 
     List<Asset> searchAssets(AssetSpec assetSpec, Pageable pageable);
     Asset addAsset(CreateAssetDto createAssetDto);
+    Asset getAssetByName(String name);
     Asset editAsset(EditAssetDto editAssetDto);
     Asset updateAssetStatus(UpdateAssetStatusDto updateAssetStatusDto);
     Asset assignAsset(AssignAssetDto assignAssetDto);
     Asset uploadAssetImage(Long assetId, byte[] imagebytes);
+    void removeAsset(Long id);
 }
