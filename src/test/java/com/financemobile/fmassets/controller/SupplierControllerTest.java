@@ -51,7 +51,7 @@ public class SupplierControllerTest extends OAuth2Helper {
         supplier.setDateCreated(new Date());
         supplier.setDateModified(new Date());
 
-        Mockito.when(supplierRepository.save(Mockito.any(Supplier.class)))
+        Mockito.when(supplierService.addSupplier(Mockito.any(CreateSupplierDto.class)))
                 .thenReturn(supplier);
 
         // payload for the endpoint
