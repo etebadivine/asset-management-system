@@ -524,7 +524,7 @@ public class AssetServiceTest {
         });
     }
 
-//     this should always be the last method
+     //this should always be the last method
     @AfterEach
     public void tearDown() {
         assignmentHistoryRepository.deleteAll();
