@@ -9,6 +9,8 @@ import com.financemobile.fmassets.model.Supplier;
 import com.financemobile.fmassets.repository.SupplierRepository;
 import com.financemobile.fmassets.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,14 +24,18 @@ public class SupplierServiceImpl implements SupplierService {
 
     public Supplier addSupplier(CreateSupplierDto createSupplierDto) {
 
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
         if(supplierRepository.existsByName(createSupplierDto.getName()))
-                throw new AlreadyExistException("record already exists");
+                throw new AlreadyExistException("Supplier already exists");
 
         Supplier supplier = new Supplier();
         supplier.setName(createSupplierDto.getName());
         supplier.setAddress(createSupplierDto.getAddress());
         supplier.setTelephone(createSupplierDto.getTelephone());
         supplier.setMobile(createSupplierDto.getMobile());
+        supplier.setCreatedBy(authentication.getName());
 
         return supplierRepository.save(supplier);
     }

@@ -9,6 +9,8 @@ import com.financemobile.fmassets.model.Department;
 import com.financemobile.fmassets.repository.CategoryRepository;
 import com.financemobile.fmassets.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,13 +26,16 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category addCategory(String name, String description) {
 
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
         if(categoryRepository.existsByName(name))
-            throw new AlreadyExistException("record already exists");
+            throw new AlreadyExistException("Category already exists");
 
         Category category = new Category();
         category.setName(name);
         category.setDescription(description);
-        category.setCreatedBy("Sam");// change this later
+        category.setCreatedBy(authentication.getName());
         return categoryRepository.save(category);
     }
 
@@ -42,7 +47,7 @@ public class CategoryServiceImpl implements CategoryService {
             return categoryOptional.get();
         }
 
-        throw new DataNotFoundException("record not found");
+        throw new DataNotFoundException("Category not found");
     }
 
     @Override
@@ -54,7 +59,7 @@ public class CategoryServiceImpl implements CategoryService {
             return categoryOptional.get();
         }
 
-        throw new DataNotFoundException("record not found");
+        throw new DataNotFoundException("Category not found");
     }
 
     @Override

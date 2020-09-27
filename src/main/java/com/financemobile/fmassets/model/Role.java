@@ -21,6 +21,8 @@ public class Role {
     private Long id;
     @Column(unique = true)
     private String name;
+    @Column(name = "created_by")
+    private String createdBy;
     @CreationTimestamp
     @Column(name = "date_created")
     private Date dateCreated;

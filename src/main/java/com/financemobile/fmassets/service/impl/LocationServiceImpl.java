@@ -9,6 +9,8 @@ import com.financemobile.fmassets.model.Location;
 import com.financemobile.fmassets.repository.LocationRepository;
 import com.financemobile.fmassets.service.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,14 +26,17 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public Location addLocation(CreateLocationDto createLocationDto) {
 
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
         if(locationRepository.existsByName(createLocationDto.getName()))
-            throw new AlreadyExistException("record already exists");
+            throw new AlreadyExistException("Location already exists");
 
         Location location = new Location();
         location.setName(createLocationDto.getName());
         location.setCity(createLocationDto.getCity());
         location.setCountry(createLocationDto.getCountry());
-        location.setCreatedBy("divine");
+        location.setCreatedBy(authentication.getName());
         return locationRepository.save(location);
     }
 
@@ -44,7 +49,7 @@ public class LocationServiceImpl implements LocationService {
             return locationOptional.get();
         }
 
-        throw new DataNotFoundException("record not found");
+        throw new DataNotFoundException("Location not found");
     }
 
     @Override
@@ -55,7 +60,7 @@ public class LocationServiceImpl implements LocationService {
                 return locationOptional.get();
             }
 
-            throw new DataNotFoundException("record not found");
+            throw new DataNotFoundException("Location not found");
     }
 
     @Override
