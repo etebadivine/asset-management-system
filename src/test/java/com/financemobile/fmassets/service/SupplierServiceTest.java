@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class SupplierServiceTest {
     private SupplierRepository supplierRepository;
 
     @Test
+    @WithAnonymousUser
     public void test_addSupplier(){
         String name = "Orca Home";
         String address = "Accra";

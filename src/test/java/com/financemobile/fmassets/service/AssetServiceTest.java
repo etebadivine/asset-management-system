@@ -9,12 +9,15 @@ import com.financemobile.fmassets.querySpec.AssetSpec;
 import com.financemobile.fmassets.repository.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithSecurityContext;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -55,32 +58,41 @@ public class AssetServiceTest {
     @Autowired
     private AssignmentHistoryRepository assignmentHistoryRepository;
 
+    Authentication authentication =
+            SecurityContextHolder.getContext().getAuthentication();
+
     @Test
     @WithAnonymousUser
     public void test_addAsset(){
+
         Location location = new Location();
         location.setId(1L);
         location.setName("Tema");
+        location.setCreatedBy(authentication.getName());
         location = locationRepository.save(location);
 
         Supplier supplier = new Supplier();
         supplier.setId(2L);
         supplier.setName("Orca Home");
+        supplier.setCreatedBy(authentication.getName());
         supplier = supplierRepository.save(supplier);
 
         Department department = new Department();
         department.setId(3L);
         department.setName("Human Resource");
+        department.setCreatedBy(authentication.getName());
         department = departmentRepository.save(department);
 
         Category category = new Category();
         category.setId(4L);
         category.setName("Furniture");
+        category.setCreatedBy(authentication.getName());
         category = categoryRepository.save(category);
 
         User user = new User();
         user.setFirstName("Reynolds");
         user.setLastName("Adanu");
+        user.setCreatedBy(authentication.getName());
         user = userRepository.save(user);
 
         CreateAssetDto createAssetDto = new CreateAssetDto();
@@ -117,11 +129,13 @@ public class AssetServiceTest {
         Category category = new Category();
         category.setId(4L);
         category.setName("Furniture");
+        category.setCreatedBy(authentication.getName());
         category = categoryRepository.save(category);
 
         Supplier supplier = new Supplier();
         supplier.setId(2L);
         supplier.setName("Orca Home");
+        supplier.setCreatedBy(authentication.getName());
         supplier = supplierRepository.save(supplier);
 
         CreateAssetDto createAssetDto = new CreateAssetDto();
@@ -135,6 +149,7 @@ public class AssetServiceTest {
         createAssetDto.setSerialNumber("65465465465456564");
         createAssetDto.setImageBytes("dHJ5dGZ5dGZ5dGZ5dA==");
         createAssetDto.setWarranty("One Year");
+
 
         assetService.addAsset(createAssetDto);
         Assertions.assertThrows(AlreadyExistException.class, ()->{
@@ -149,11 +164,13 @@ public class AssetServiceTest {
         Supplier supplier = new Supplier();
         supplier.setId(2L);
         supplier.setName("Orca Home");
+        supplier.setCreatedBy(authentication.getName());
         supplier = supplierRepository.save(supplier);
 
         Category category = new Category();
         category.setId(4L);
         category.setName("Furniture");
+        category.setCreatedBy(authentication.getName());
         category = categoryRepository.save(category);
 
         CreateAssetDto createAssetDto = new CreateAssetDto();
@@ -168,6 +185,7 @@ public class AssetServiceTest {
         createAssetDto.setImageBytes("dHJ5dGZ5dGZ5dGZ5dA==");
         createAssetDto.setWarranty("One Year");
 
+
         Asset asset = assetService.addAsset(createAssetDto);
         Assertions.assertNotNull(asset.getId());
         Assertions.assertEquals(asset.getName(), createAssetDto.getName());
@@ -180,17 +198,19 @@ public class AssetServiceTest {
     public void test_searchAssets () {
         Department department = new Department();
         department.setName("Finance");
+        department.setCreatedBy(authentication.getName());
         department = departmentRepository.save(department);
 
         Location location = new Location();
         location.setName("Tema");
-        location.setCreatedBy("divine");
+        location.setCreatedBy(authentication.getName());
         location = locationRepository.save(location);
 
         Asset asset = new Asset();
         asset.setName("Laptop");
         asset.getAssetDetails();
         asset.getDateCreated();
+        asset.setCreatedBy(authentication.getName());
         assetRepository.save(asset);
 
         Sort sort = Sort.by(Sort.Direction.DESC, "dateCreated");
@@ -231,26 +251,31 @@ public class AssetServiceTest {
         Location location = new Location();
         location.setId(1l);
         location.setName("Tema");
+        location.setCreatedBy(authentication.getName());
         location = locationRepository.save(location);
 
         Supplier supplier = new Supplier();
         supplier.setId(2L);
         supplier.setName("Orca Home");
+        supplier.setCreatedBy(authentication.getName());
         supplier = supplierRepository.save(supplier);
 
         Department department = new Department();
         department.setId(3L);
         department.setName("Human Resource");
+        department.setCreatedBy(authentication.getName());
         department = departmentRepository.save(department);
 
         Category category = new Category();
         category.setId(4L);
         category.setName("Furniture");
+        category.setCreatedBy(authentication.getName());
         category = categoryRepository.save(category);
 
         User user = new User();
         user.setFirstName("Reynolds");
         user.setLastName("Adanu");
+        user.setCreatedBy(authentication.getName());
         user = userRepository.save(user);
 
         Asset asset = new Asset();
@@ -260,28 +285,34 @@ public class AssetServiceTest {
         asset.setDepartment(department);
         asset.setCategory(category);
         asset.setUser(user);
+        asset.setCreatedBy(authentication.getName());
         asset = assetRepository.save(asset);
 
 
         Location location1 = new Location();
         location1.setName("Kumasi");
+        location1.setCreatedBy(authentication.getName());
         location1 = locationRepository.save(location1);
 
         Supplier supplier1 = new Supplier();
         supplier1.setName("Franko Trading Enterprise");
+        supplier1.setCreatedBy(authentication.getName());
         supplier1 = supplierRepository.save(supplier1);
 
         Department department1 = new Department();
         department1.setName("Finance");
+        department1.setCreatedBy(authentication.getName());
         department1 = departmentRepository.save(department1);
 
         Category category1 = new Category();
         category1.setName("Computers");
+        category1.setCreatedBy(authentication.getName());
         category1 = categoryRepository.save(category1);
 
         User user1 = new User();
         user1.setFirstName("Kwasi");
         user1.setLastName("Adanu");
+        user1.setCreatedBy(authentication.getName());
         user1 = userRepository.save(user1);
 
         EditAssetDto editAssetDto = new EditAssetDto();
@@ -317,6 +348,7 @@ public class AssetServiceTest {
     public void test_updateAssetStatus() throws Exception {
         Department department = new Department();
         department.setName("Engineering");
+        department.setCreatedBy(authentication.getName());
         department = departmentRepository.save(department);
 
         Asset asset = new Asset();
@@ -324,6 +356,7 @@ public class AssetServiceTest {
         asset.setName("Laptop");
         asset.setStatus(AssetStatus.DAMAGED);
         asset.setDepartment(department);
+        asset.setCreatedBy(authentication.getName());
         asset = assetRepository.save(asset);
 
         UpdateAssetStatusDto updateAssetStatusDto =
@@ -352,26 +385,31 @@ public class AssetServiceTest {
         Location location = new Location();
         location.setId(1l);
         location.setName("Tema");
+        location.setCreatedBy(authentication.getName());
         location = locationRepository.save(location);
 
         Supplier supplier = new Supplier();
         supplier.setId(2L);
         supplier.setName("Orca Home");
+        supplier.setCreatedBy(authentication.getName());
         supplier = supplierRepository.save(supplier);
 
         Department department = new Department();
         department.setId(3L);
         department.setName("Human Resource");
+        department.setCreatedBy(authentication.getName());
         department = departmentRepository.save(department);
 
         Category category = new Category();
         category.setId(4L);
         category.setName("Furniture");
+        category.setCreatedBy(authentication.getName());
         category = categoryRepository.save(category);
 
         User user = new User();
         user.setFirstName("Reynolds");
         user.setLastName("Adanu");
+        user.setCreatedBy(authentication.getName());
         user = userRepository.save(user);
 
         Asset asset = new Asset();
@@ -381,6 +419,7 @@ public class AssetServiceTest {
         asset.setDepartment(department);
         asset.setCategory(category);
         asset.setUser(user);
+        asset.setCreatedBy(authentication.getName());
         asset = assetRepository.save(asset);
 
         AssignAssetDto assignAssetDto = new AssignAssetDto();
@@ -415,26 +454,31 @@ public class AssetServiceTest {
         Location location = new Location();
         location.setId(1l);
         location.setName("Tema");
+        location.setCreatedBy(authentication.getName());
         location = locationRepository.save(location);
 
         Supplier supplier = new Supplier();
         supplier.setId(2L);
         supplier.setName("Orca Home");
+        supplier.setCreatedBy(authentication.getName());
         supplier = supplierRepository.save(supplier);
 
         Department department = new Department();
         department.setId(3L);
         department.setName("Human Resource");
+        department.setCreatedBy(authentication.getName());
         department = departmentRepository.save(department);
 
         Category category = new Category();
         category.setId(4L);
         category.setName("Furniture");
+        category.setCreatedBy(authentication.getName());
         category = categoryRepository.save(category);
 
         User user = new User();
         user.setFirstName("Reynolds");
         user.setLastName("Adanu");
+        user.setCreatedBy(authentication.getName());
         user = userRepository.save(user);
 
         AssetDetails assetDetails = new AssetDetails();
@@ -452,6 +496,7 @@ public class AssetServiceTest {
         asset.setCategory(category);
         asset.setAssetDetails(assetDetails);
         asset.setUser(user);
+        asset.setCreatedBy(authentication.getName());
         asset = assetRepository.save(asset);
 
         String imageString = "sample.jpg";
@@ -478,26 +523,31 @@ public class AssetServiceTest {
         Location location = new Location();
         location.setId(1l);
         location.setName("Tema");
+        location.setCreatedBy(authentication.getName());
         location = locationRepository.save(location);
 
         Supplier supplier = new Supplier();
         supplier.setId(2L);
         supplier.setName("Orca Home");
+        supplier.setCreatedBy(authentication.getName());
         supplier = supplierRepository.save(supplier);
 
         Department department = new Department();
         department.setId(3L);
         department.setName("Human Resource");
+        department.setCreatedBy(authentication.getName());
         department = departmentRepository.save(department);
 
         Category category = new Category();
         category.setId(4L);
         category.setName("Furniture");
+        category.setCreatedBy(authentication.getName());
         category = categoryRepository.save(category);
 
         User user = new User();
         user.setFirstName("Reynolds");
         user.setLastName("Adanu");
+        user.setCreatedBy(authentication.getName());
         user = userRepository.save(user);
 
         AssetDetails assetDetails = new AssetDetails();
@@ -515,6 +565,7 @@ public class AssetServiceTest {
         asset.setCategory(category);
         asset.setAssetDetails(assetDetails);
         asset.setUser(user);
+        asset.setCreatedBy(authentication.getName());
         asset = assetRepository.save(asset);
 
         assetService.removeAsset(asset.getId());
@@ -524,7 +575,7 @@ public class AssetServiceTest {
         });
     }
 
-     //this should always be the last method
+//     this should always be the last method
     @AfterEach
     public void tearDown() {
         assignmentHistoryRepository.deleteAll();

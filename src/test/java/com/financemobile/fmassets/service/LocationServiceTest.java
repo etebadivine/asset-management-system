@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class LocationServiceTest {
     private LocationRepository locationRepository;
 
     @Test
+    @WithAnonymousUser
     public void test_addLocation() {
 
         String name = "Comm 8";
