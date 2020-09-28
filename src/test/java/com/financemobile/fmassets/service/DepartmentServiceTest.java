@@ -39,6 +39,7 @@ public class DepartmentServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_addDepartment_duplicate(){
         String name = "Human Resource";
         departmentService.addDepartment(name);
@@ -49,6 +50,7 @@ public class DepartmentServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_getDepartmentByName(){
         String name = "Human Resource";
         Department department = departmentService.addDepartment(name);
@@ -67,6 +69,7 @@ public class DepartmentServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_getDepartmentById(){
         String name = "Human Resource";
         Department department = departmentService.addDepartment(name);
@@ -85,6 +88,7 @@ public class DepartmentServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_getAllDepartments(){
         String name = "Human Resource";
         Department department = departmentService.addDepartment(name);
@@ -97,6 +101,7 @@ public class DepartmentServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_editDepartment() {
         String name = "Communicationssss";
         CreateDepartmentDto createDepartmentDto = new CreateDepartmentDto();
@@ -123,6 +128,7 @@ public class DepartmentServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_removeDepartment() {
         String name = "Communications";
         Department department = departmentService.addDepartment(name);

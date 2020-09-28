@@ -42,6 +42,7 @@ public class SupplierServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_addSupplier_duplicate(){
         String name = "Orca Home";
         String address = "Accra";
@@ -56,6 +57,7 @@ public class SupplierServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_getSupplierById(){
         String name = "Orca Home";
         String address = " Accra";
@@ -80,6 +82,7 @@ public class SupplierServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_getSupplierByName(){
         String name = "Orca Home";
         String address = " Accra";
@@ -104,6 +107,7 @@ public class SupplierServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_getAllSuppliers(){
         String name = "Orca Home";
         String address = " Accra";
@@ -121,6 +125,7 @@ public class SupplierServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_editSupplier() {
         String name = "Orca Home";
         String address = "Accra";
@@ -155,6 +160,7 @@ public class SupplierServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_removeSupplier() {
         String name = "Orca Home";
         String address = " Accra";

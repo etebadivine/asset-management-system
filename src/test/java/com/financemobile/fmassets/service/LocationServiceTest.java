@@ -47,6 +47,7 @@ public class LocationServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_addLocation_duplicate() {
         String name = "Comm 8";
         String city = "Tema";
@@ -63,6 +64,7 @@ public class LocationServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_getLocationByName() {
         String name = "comm 8";
         String city = "Tema";
@@ -90,6 +92,7 @@ public class LocationServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_getLocationById(){
         String name = "comm 8";
         String city = "Tema";
@@ -135,6 +138,7 @@ public class LocationServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_editLocation() {
         String name = "Comm 8";
         String city = "Tema";
@@ -169,6 +173,7 @@ public class LocationServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_removeLocation() {
         String name = "Amasaman";
         String city = "Accra";

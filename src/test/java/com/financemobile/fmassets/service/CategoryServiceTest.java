@@ -43,6 +43,7 @@ public class CategoryServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_addCategory_duplicate(){
         String name = "Furniture";
         String description = "Chairs, Tables, Desks, Cabinets etc";
@@ -54,6 +55,7 @@ public class CategoryServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_getCategory(){
         String name = "Furniture";
         String description = "Chairs, Tables, Desks, Cabinets etc";
@@ -74,6 +76,7 @@ public class CategoryServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_getCategoryByName(){
         String name = "Furniture";
         String description = "Chairs, Tables, Desks, Cabinets etc";
@@ -94,6 +97,7 @@ public class CategoryServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_getAllCategories(){
         String name = "Furniture";
         String description = "Chairs, Tables, Desks, Cabinets etc";
@@ -108,6 +112,7 @@ public class CategoryServiceTest {
 
 
     @Test
+    @WithAnonymousUser
     public void test_editCategory() {
         String name = "Computerssss";
         String description = "Laptops,etc.";
@@ -136,6 +141,7 @@ public class CategoryServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_removeCategory(){
         String name = "Furniture";
         String description = "Chairs, Tables, Desks, Cabinets etc";

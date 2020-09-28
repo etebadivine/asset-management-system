@@ -37,6 +37,7 @@ public class RoleServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_addRole_duplicate(){
         String name = "Manager";
         roleService.addRole(name);
@@ -47,6 +48,7 @@ public class RoleServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_getRoleById(){
         String name = "Management";
         Long id = 204L;
@@ -63,6 +65,7 @@ public class RoleServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_getAllRoles(){
         String name = "Management";
         Role role = roleService.addRole(name);
@@ -74,6 +77,7 @@ public class RoleServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_editRole() {
         String name = "USER";
         CreateRoleDto createRoleDto = new CreateRoleDto();
@@ -99,6 +103,7 @@ public class RoleServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_removeRole() {
         String name = "Manager";
         Role role = roleService.addRole(name);
