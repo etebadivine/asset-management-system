@@ -19,8 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 
@@ -52,9 +50,6 @@ public class UserServiceTest {
         departmentRepository.deleteAll();
         roleRepository.deleteAll();
     }
-
-    Authentication authentication =
-            SecurityContextHolder.getContext().getAuthentication();
 
     @Test
     @WithAnonymousUser
@@ -94,12 +89,10 @@ public class UserServiceTest {
     public void test_searchUsers() {
         Department department = new Department();
         department.setName("Engineering");
-        department.setCreatedBy(authentication.getName());
         department = departmentRepository.save(department);
 
         Role role = new Role();
         role.setName("USER");
-        role.setCreatedBy(authentication.getName());
         role = roleRepository.save(role);
 
         User user = new User();
@@ -111,7 +104,6 @@ public class UserServiceTest {
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);
-        user.setCreatedBy(authentication.getName());
         userRepository.save(user);
 
         Sort sort = Sort.by(Sort.Direction.DESC, "dateCreated");
@@ -150,12 +142,10 @@ public class UserServiceTest {
     public void test_getUserById() {
         Department department = new Department();
         department.setName("Engineering");
-        department.setCreatedBy(authentication.getName());
         department = departmentRepository.save(department);
 
         Role role = new Role();
         role.setName("USER");
-        role.setCreatedBy(authentication.getName());
         role = roleRepository.save(role);
 
         User user = new User();
@@ -167,7 +157,6 @@ public class UserServiceTest {
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);
-        user.setCreatedBy(authentication.getName());
         userRepository.save(user);
 
         User createdUser = userService.getUserById(user.getId());
@@ -190,13 +179,10 @@ public class UserServiceTest {
     public void test_getUserByEmail() {
         Department department = new Department();
         department.setName("Engineering");
-        department.setCreatedBy(authentication.getName());
-
         department = departmentRepository.save(department);
 
         Role role = new Role();
         role.setName("USER");
-        role.setCreatedBy(authentication.getName());
         role = roleRepository.save(role);
 
         User user = new User();
@@ -208,7 +194,6 @@ public class UserServiceTest {
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);
-        user.setCreatedBy(authentication.getName());
         userRepository.save(user);
 
         User createdUser = userService.getUserByEmail(user.getEmail());
@@ -231,12 +216,10 @@ public class UserServiceTest {
     public void test_updateStatus() throws Exception {
         Department department = new Department();
         department.setName("Engineering");
-        department.setCreatedBy(authentication.getName());
         department = departmentRepository.save(department);
 
         Role role = new Role();
         role.setName("USER");
-        role.setCreatedBy(authentication.getName());
         role = roleRepository.save(role);
 
         User user = new User();
@@ -248,7 +231,6 @@ public class UserServiceTest {
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);
-        user.setCreatedBy(authentication.getName());
         user = userRepository.save(user);
 
         UpdateUserStatusDto updateUserStatusDto = new UpdateUserStatusDto();
@@ -273,12 +255,10 @@ public class UserServiceTest {
     public void test_resetPassword() {
         Department department = new Department();
         department.setName("Engineering");
-        department.setCreatedBy(authentication.getName());
         department = departmentRepository.save(department);
 
         Role role = new Role();
         role.setName("USER");
-        role.setCreatedBy(authentication.getName());
         role = roleRepository.save(role);
 
         User user = new User();
@@ -291,7 +271,6 @@ public class UserServiceTest {
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);
-        user.setCreatedBy(authentication.getName());
         user = userRepository.save(user);
 
         ResetPasswordDto resetPasswordDto =
@@ -314,12 +293,10 @@ public class UserServiceTest {
     public void test_resetPassword_passwordMismatch() {
         Department department = new Department();
         department.setName("Engineering");
-        department.setCreatedBy(authentication.getName());
         department = departmentRepository.save(department);
 
         Role role = new Role();
         role.setName("USER");
-        role.setCreatedBy(authentication.getName());
         role = roleRepository.save(role);
 
         User user = new User();
@@ -332,7 +309,6 @@ public class UserServiceTest {
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);
-        user.setCreatedBy(authentication.getName());
         user = userRepository.save(user);
 
         ResetPasswordDto resetPasswordDto = new ResetPasswordDto();
@@ -347,12 +323,10 @@ public class UserServiceTest {
     public void test_forgotPassword() {
         Department department = new Department();
         department.setName("Engineering");
-        department.setCreatedBy(authentication.getName());
         department = departmentRepository.save(department);
 
         Role role = new Role();
         role.setName("USER");
-        role.setCreatedBy(authentication.getName());
         role = roleRepository.save(role);
 
         User user = new User();
@@ -364,7 +338,6 @@ public class UserServiceTest {
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);
-        user.setCreatedBy(authentication.getName());
         user = userRepository.save(user);
 
         ForgotPasswordDto forgotPasswordDto = new ForgotPasswordDto();
@@ -387,13 +360,11 @@ public class UserServiceTest {
     public void test_updateUserRole() {
         Department department = new Department();
         department.setName("Engineering");
-        department.setCreatedBy(authentication.getName());
         department = departmentRepository.save(department);
 
         Role role = new Role();
         role.setId(200L);
         role.setName("USER");
-        role.setCreatedBy(authentication.getName());
         role = roleRepository.save(role);
 
         User user = new User();
@@ -405,7 +376,6 @@ public class UserServiceTest {
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
         user.setRole(role);
-        user.setCreatedBy(authentication.getName());
         user = userRepository.save(user);
 
         Role updatedRole = new Role();
@@ -469,12 +439,10 @@ public class UserServiceTest {
 
         Department department = new Department();
         department.setName("Engineering");
-        department.setCreatedBy(authentication.getName());
         department = departmentRepository.save(department);
 
         Role role = new Role();
         role.setName("USER");
-        role.setCreatedBy(authentication.getName());
         role = roleRepository.save(role);
 
         EditUserDto editUserDto = new EditUserDto();
@@ -524,12 +492,12 @@ public class UserServiceTest {
         });
     }
 
-    @AfterEach
-    public void tearDown() {
-        userRepository.deleteAll();
-        departmentRepository.deleteAll();
-        roleRepository.deleteAll();
-    }
+//    @AfterEach
+//    public void tearDown() {
+//        userRepository.deleteAll();
+//        departmentRepository.deleteAll();
+//        roleRepository.deleteAll();
+//    }
 }
 
 
