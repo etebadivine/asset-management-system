@@ -119,6 +119,7 @@ public class LocationServiceTest {
 
 
     @Test
+    @WithAnonymousUser
     public void test_getAllLocations(){
         String name = "comm 8";
         String city = "Tema";

@@ -71,6 +71,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_addUser_duplicate() {
         String firstName = "Reynolds";
         String lastName = "Adanu";
@@ -428,6 +429,7 @@ public class UserServiceTest {
 
 
     @Test
+    @WithAnonymousUser
     public void test_editUser() {
         String firstName = "Reynolds";
         String lastName = "Adanu";
@@ -476,6 +478,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_removeUser() {
         String firstName = "Reynolds";
         String lastName = "Adanu";
