@@ -186,7 +186,7 @@ public class AssetServiceImpl implements AssetService {
             return assetRepository.save(asset);
         }
 
-        throw new DataNotFoundException("record not found");
+        throw new DataNotFoundException("Asset not found");
     }
 
     @Override

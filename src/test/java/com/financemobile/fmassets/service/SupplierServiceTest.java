@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class SupplierServiceTest {
     private SupplierRepository supplierRepository;
 
     @Test
+    @WithAnonymousUser
     public void test_addSupplier(){
         String name = "Orca Home";
         String address = "Accra";
@@ -40,6 +42,7 @@ public class SupplierServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_addSupplier_duplicate(){
         String name = "Orca Home";
         String address = "Accra";
@@ -54,6 +57,7 @@ public class SupplierServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_getSupplierById(){
         String name = "Orca Home";
         String address = " Accra";
@@ -78,6 +82,7 @@ public class SupplierServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_getSupplierByName(){
         String name = "Orca Home";
         String address = " Accra";
@@ -102,6 +107,7 @@ public class SupplierServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_getAllSuppliers(){
         String name = "Orca Home";
         String address = " Accra";
@@ -119,6 +125,7 @@ public class SupplierServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_editSupplier() {
         String name = "Orca Home";
         String address = "Accra";
@@ -153,6 +160,7 @@ public class SupplierServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_removeSupplier() {
         String name = "Orca Home";
         String address = " Accra";

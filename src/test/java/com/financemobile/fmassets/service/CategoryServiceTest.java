@@ -11,6 +11,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+
 import java.util.List;
 
 
@@ -24,6 +28,7 @@ public class CategoryServiceTest {
     private CategoryRepository categoryRepository;
 
     @Test
+    @WithAnonymousUser
     public void test_addCategory(){
 
         String name = "Furniture";
@@ -38,6 +43,7 @@ public class CategoryServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_addCategory_duplicate(){
         String name = "Furniture";
         String description = "Chairs, Tables, Desks, Cabinets etc";
@@ -49,6 +55,7 @@ public class CategoryServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_getCategory(){
         String name = "Furniture";
         String description = "Chairs, Tables, Desks, Cabinets etc";
@@ -69,6 +76,7 @@ public class CategoryServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_getCategoryByName(){
         String name = "Furniture";
         String description = "Chairs, Tables, Desks, Cabinets etc";
@@ -89,6 +97,7 @@ public class CategoryServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_getAllCategories(){
         String name = "Furniture";
         String description = "Chairs, Tables, Desks, Cabinets etc";
@@ -103,6 +112,7 @@ public class CategoryServiceTest {
 
 
     @Test
+    @WithAnonymousUser
     public void test_editCategory() {
         String name = "Computerssss";
         String description = "Laptops,etc.";
@@ -131,6 +141,7 @@ public class CategoryServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_removeCategory(){
         String name = "Furniture";
         String description = "Chairs, Tables, Desks, Cabinets etc";

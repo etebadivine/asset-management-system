@@ -9,6 +9,8 @@ import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.service.RoleService;
 import org.apache.tomcat.jni.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,11 +25,16 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role addRole(String name) {
+
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
         if (roleRepository.existsByName(name))
-            throw new AlreadyExistException("role already exists");
+            throw new AlreadyExistException("Role already exists");
 
         Role role = new Role();
         role.setName (name);
+        role.setCreatedBy(authentication.getName());
         return roleRepository.save(role);
     }
 
@@ -39,7 +46,7 @@ public class RoleServiceImpl implements RoleService {
             return roleOptional.get();
         }
 
-        throw new DataNotFoundException("role not found");
+        throw new DataNotFoundException("Role not found");
     }
 
     @Override

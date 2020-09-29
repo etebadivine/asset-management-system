@@ -20,6 +20,8 @@ import com.financemobile.fmassets.service.messaging.SendEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +57,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User addUser(CreateUserDto createUserDto) {
 
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
         if (userRepository.existsByEmail(createUserDto.getEmail())) {
             throw new AlreadyExistException("User already exist");
         }
@@ -65,6 +70,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(createUserDto.getEmail());
         user.setPhone(createUserDto.getPhone());
         user.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
+        user.setCreatedBy(authentication.getName());
         return userRepository.save(user);
     }
 
@@ -86,7 +92,7 @@ public class UserServiceImpl implements UserService {
             return userOptional.get();
         }
 
-        throw new DataNotFoundException("user not found");
+        throw new DataNotFoundException("User not found");
     }
 
 
@@ -98,7 +104,7 @@ public class UserServiceImpl implements UserService {
             return userOptional.get();
         }
 
-        throw new DataNotFoundException("record not found");
+        throw new DataNotFoundException("User not found");
     }
 
     @Override
@@ -113,7 +119,7 @@ public class UserServiceImpl implements UserService {
             return userRepository.save(user);
         }
 
-        throw new DataNotFoundException("record not found");
+        throw new DataNotFoundException("User not found");
     }
 
     @Override
@@ -128,7 +134,7 @@ public class UserServiceImpl implements UserService {
             }
             throw new PasswordMismatchException("password mismatch");
         }
-        throw new DataNotFoundException("user not found");
+        throw new DataNotFoundException("User not found");
     }
 
     @Override
@@ -169,7 +175,7 @@ public class UserServiceImpl implements UserService {
 
         if (roleOptional.isPresent()) {
             user.setRole(roleOptional.get());
-        } else throw new DataNotFoundException("role not found");
+        } else throw new DataNotFoundException("Role not found");
 
         return userRepository.save(user);
     }

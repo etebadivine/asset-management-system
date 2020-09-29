@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 
 import javax.persistence.criteria.Predicate;
 import java.util.List;
@@ -51,6 +52,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_addUser() {
         String firstName = "Reynolds";
         String lastName = "Adanu";
@@ -69,6 +71,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_addUser_duplicate() {
         String firstName = "Reynolds";
         String lastName = "Adanu";
@@ -426,6 +429,7 @@ public class UserServiceTest {
 
 
     @Test
+    @WithAnonymousUser
     public void test_editUser() {
         String firstName = "Reynolds";
         String lastName = "Adanu";
@@ -474,6 +478,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_removeUser() {
         String firstName = "Reynolds";
         String lastName = "Adanu";
