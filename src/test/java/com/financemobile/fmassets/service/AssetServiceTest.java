@@ -9,12 +9,15 @@ import com.financemobile.fmassets.querySpec.AssetSpec;
 import com.financemobile.fmassets.repository.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithSecurityContext;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -54,6 +57,7 @@ public class AssetServiceTest {
 
     @Autowired
     private AssignmentHistoryRepository assignmentHistoryRepository;
+
 
     @Test
     @WithAnonymousUser
@@ -168,6 +172,7 @@ public class AssetServiceTest {
         createAssetDto.setImageBytes("dHJ5dGZ5dGZ5dGZ5dA==");
         createAssetDto.setWarranty("One Year");
 
+
         Asset asset = assetService.addAsset(createAssetDto);
         Assertions.assertNotNull(asset.getId());
         Assertions.assertEquals(asset.getName(), createAssetDto.getName());
@@ -184,7 +189,6 @@ public class AssetServiceTest {
 
         Location location = new Location();
         location.setName("Tema");
-        location.setCreatedBy("divine");
         location = locationRepository.save(location);
 
         Asset asset = new Asset();
@@ -236,6 +240,7 @@ public class AssetServiceTest {
         Supplier supplier = new Supplier();
         supplier.setId(2L);
         supplier.setName("Orca Home");
+
         supplier = supplierRepository.save(supplier);
 
         Department department = new Department();
@@ -524,7 +529,7 @@ public class AssetServiceTest {
         });
     }
 
-     //this should always be the last method
+//     this should always be the last method
     @AfterEach
     public void tearDown() {
         assignmentHistoryRepository.deleteAll();

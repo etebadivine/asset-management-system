@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class LocationServiceTest {
     private LocationRepository locationRepository;
 
     @Test
+    @WithAnonymousUser
     public void test_addLocation() {
 
         String name = "Comm 8";
@@ -45,6 +47,7 @@ public class LocationServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_addLocation_duplicate() {
         String name = "Comm 8";
         String city = "Tema";
@@ -61,6 +64,7 @@ public class LocationServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_getLocationByName() {
         String name = "comm 8";
         String city = "Tema";
@@ -88,6 +92,7 @@ public class LocationServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_getLocationById(){
         String name = "comm 8";
         String city = "Tema";
@@ -114,6 +119,7 @@ public class LocationServiceTest {
 
 
     @Test
+    @WithAnonymousUser
     public void test_getAllLocations(){
         String name = "comm 8";
         String city = "Tema";
@@ -133,6 +139,7 @@ public class LocationServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_editLocation() {
         String name = "Comm 8";
         String city = "Tema";
@@ -167,6 +174,7 @@ public class LocationServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_removeLocation() {
         String name = "Amasaman";
         String city = "Accra";

@@ -9,6 +9,8 @@ import com.financemobile.fmassets.model.*;
 import com.financemobile.fmassets.repository.DepartmentRepository;
 import com.financemobile.fmassets.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,12 +25,16 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public Department addDepartment(String name) {
+
+       Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
        if(departmentRepository.existsByName(name))
-           throw new AlreadyExistException("record already exists");
+           throw new AlreadyExistException("Department already exists");
 
        Department department = new Department();
        department.setName(name);
-       department.setCreatedBy("Divine");
+       department.setCreatedBy(authentication.getName());
        return departmentRepository.save(department);
     }
 
@@ -41,7 +47,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             return departmentOptional.get();
         }
 
-        throw new DataNotFoundException(("record not found"));
+        throw new DataNotFoundException(("Department not found"));
     }
 
     @Override
@@ -53,7 +59,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             return departmentOptional.get();
         }
 
-        throw new DataNotFoundException("record not found");
+        throw new DataNotFoundException("Department not found");
     }
 
     @Override
