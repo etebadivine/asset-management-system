@@ -84,9 +84,9 @@ public class AssetServiceImpl implements AssetService {
         if(!StringUtils.isEmpty(createAssetDto.getDepartment())){
             Department department =
                     departmentService.getDepartmentByName(createAssetDto.getDepartment());
-            Long numOfAssets = department.getNumberOfAssets();
-            numOfAssets+=1;
-            department.setNumberOfAssets(numOfAssets);
+//            Long numOfAssets = department.getNumberOfAssets();
+//            numOfAssets+=1;
+//            department.setNumberOfAssets(numOfAssets);
             asset.setDepartment(department);
         }
 
