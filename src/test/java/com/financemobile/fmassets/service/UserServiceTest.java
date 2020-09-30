@@ -10,6 +10,7 @@ import com.financemobile.fmassets.querySpec.UserSpec;
 import com.financemobile.fmassets.repository.DepartmentRepository;
 import com.financemobile.fmassets.repository.RoleRepository;
 import com.financemobile.fmassets.repository.UserRepository;
+import org.apache.tomcat.util.buf.UDecoder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -455,7 +456,6 @@ public class UserServiceTest {
         editUserDto.setPhone("0269277920");
         editUserDto.setDepartment(department.getName());
         editUserDto.setRole(role.getName());
-        editUserDto.setPassword("password");
 
         User editedUser= userService.editUser(editUserDto);
 
@@ -465,7 +465,6 @@ public class UserServiceTest {
         Assertions.assertEquals(editedUser.getEmail(), editUserDto.getEmail());
         Assertions.assertEquals(editedUser.getPhone(), editUserDto.getPhone());
         Assertions.assertEquals(editedUser.getRole().getName(), editUserDto.getRole());
-        Assertions.assertEquals(editedUser.getPassword(), editUserDto.getPassword());
     }
 
     @Test

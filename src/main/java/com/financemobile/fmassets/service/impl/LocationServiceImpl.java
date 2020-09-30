@@ -73,6 +73,8 @@ public class LocationServiceImpl implements LocationService {
         if (locationOptional.isPresent()){
             Location location = locationOptional.get();
             location.setName(editLocationDto.getName());
+            location.setCity(editLocationDto.getCity());
+            location.setCountry(editLocationDto.getCountry());
 
             return locationRepository.save(location);
         }
