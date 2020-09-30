@@ -16,8 +16,8 @@ import org.springframework.data.jpa.domain.Specification;
         @Spec(path = "location.name", params="location", spec = Equal.class),
         @Spec(path = "department.name", params="department", spec = Equal.class),
         @Spec(path = "supplier.name", params="supplier", spec = Equal.class),
+        @Spec(path = "user.id", params="user_id", spec = Equal.class),
         @Spec(path = "dateCreated", params={"created_after", "created_before"}, spec = DateBetween.class, config="yyyy-MM-dd")
-
 })
 
 public interface AssetSpec extends Specification<Asset> { }
