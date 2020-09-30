@@ -222,7 +222,6 @@ public class UserServiceImpl implements UserService {
             user.setDepartment(department);
             Role role = roleService.getRoleByName(editUserDto.getRole());
             user.setRole(role);
-            user.setPassword(editUserDto.getPassword());
 
             return userRepository.save(user);
         }

@@ -459,7 +459,6 @@ public class UserControllerTest extends OAuth2Helper {
         editUserDto.setPhone("+233 54 214 878");
         editUserDto.setDepartment("Finance");
         editUserDto.setRole("Admin");
-        editUserDto.setPassword("password");
 
         mockMvc.perform(put("/user")
                 .content(gson.toJson(editUserDto))
@@ -474,8 +473,7 @@ public class UserControllerTest extends OAuth2Helper {
                 .andExpect(jsonPath("data.email", is(user.getEmail())))
                 .andExpect(jsonPath("data.phone", is(user.getPhone())))
                 .andExpect(jsonPath("data.department.name", is(user.getDepartment().getName())))
-                .andExpect(jsonPath("data.role.name", is(user.getRole().getName())))
-                .andExpect(jsonPath("data.password", is(user.getPassword())));
+                .andExpect(jsonPath("data.role.name", is(user.getRole().getName())));
     }
 
     @Test

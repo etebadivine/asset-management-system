@@ -74,6 +74,7 @@ public class CategoryServiceImpl implements CategoryService {
         if (categoryOptional.isPresent()){
             Category category = categoryOptional.get();
             category.setName(editCategoryDto.getName());
+            category.setDescription(editCategoryDto.getDescription());
 
             return categoryRepository.save(category);
         }
