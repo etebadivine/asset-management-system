@@ -84,6 +84,9 @@ public class AssetServiceImpl implements AssetService {
         if(!StringUtils.isEmpty(createAssetDto.getDepartment())){
             Department department =
                     departmentService.getDepartmentByName(createAssetDto.getDepartment());
+//            Long numOfAssets = department.getNumberOfAssets();
+//            numOfAssets+=1;
+//            department.setNumberOfAssets(numOfAssets);
             Long numOfAssets = department.getNumberOfAssets();
             department.setNumberOfAssets(numOfAssets+=1);
             asset.setDepartment(department);
@@ -101,7 +104,6 @@ public class AssetServiceImpl implements AssetService {
         assetDetails.setLicenses(createAssetDto.getLicenses());
         assetDetails.setPurchasedDate(createAssetDto.getPurchasedDate());
         asset.setAssetDetails(assetDetails);
-
 
         //check if the category exist
         Category category = categoryService.getCategoryByName(createAssetDto.getCategory());
