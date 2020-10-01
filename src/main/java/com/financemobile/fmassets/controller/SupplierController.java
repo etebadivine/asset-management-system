@@ -27,7 +27,7 @@ public class SupplierController {
 
     @PostMapping(value = "")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse createSupplier(@RequestBody CreateSupplierDto createSupplierDto) {
+    public ApiResponse createSupplier(@RequestBody @Valid CreateSupplierDto createSupplierDto) {
 
         Supplier supplier = supplierService.addSupplier(createSupplierDto);
         ApiResponse response = new ApiResponse();

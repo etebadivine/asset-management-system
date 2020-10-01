@@ -27,7 +27,7 @@ public class DepartmentController {
 
     @PostMapping(value = "")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse createDepartment(@RequestBody CreateDepartmentDto createDepartmentDto) {
+    public ApiResponse createDepartment(@RequestBody @Valid CreateDepartmentDto createDepartmentDto) {
 
         Department department = departmentService.addDepartment(
                 createDepartmentDto.getName()
