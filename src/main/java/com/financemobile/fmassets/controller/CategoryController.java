@@ -28,7 +28,7 @@ public class CategoryController extends ExceptionHandlerController{
 
     @PostMapping(value = "")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse createCategory(@RequestBody CreateCategoryDto createCategoryDto){
+    public ApiResponse createCategory(@RequestBody @Valid CreateCategoryDto createCategoryDto){
 
         Category category = categoryService.addCategory(
                 createCategoryDto.getName(),
