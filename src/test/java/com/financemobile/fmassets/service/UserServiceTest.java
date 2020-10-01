@@ -405,6 +405,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void test_userInvite() {
 
         UserInviteDto userInviteDto = new UserInviteDto();
