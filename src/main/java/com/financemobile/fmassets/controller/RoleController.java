@@ -26,7 +26,7 @@ public class RoleController {
 
     @PostMapping(value = "")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse createRole(@RequestBody CreateRoleDto createRoleDto) {
+    public ApiResponse createRole(@RequestBody @Valid CreateRoleDto createRoleDto) {
 
         Role role = roleService.addRole(
                 createRoleDto.getName()
