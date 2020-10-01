@@ -2,6 +2,7 @@ package com.financemobile.fmassets.service.impl;
 
 
 import com.financemobile.fmassets.dto.*;
+import com.financemobile.fmassets.enums.UserStatus;
 import com.financemobile.fmassets.exception.AlreadyExistException;
 import com.financemobile.fmassets.exception.DataNotFoundException;
 import com.financemobile.fmassets.exception.PasswordMismatchException;
@@ -57,9 +58,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User addUser(CreateUserDto createUserDto) {
 
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
-
         if (userRepository.existsByEmail(createUserDto.getEmail())) {
             throw new AlreadyExistException("User already exist");
         }
@@ -69,8 +67,8 @@ public class UserServiceImpl implements UserService {
         user.setLastName(createUserDto.getLastName());
         user.setEmail(createUserDto.getEmail());
         user.setPhone(createUserDto.getPhone());
+        user.setStatus(UserStatus.ACTIVE);
         user.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
-        user.setCreatedBy(authentication.getName());
         return userRepository.save(user);
     }
 
@@ -183,6 +181,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean sendUserInvite(UserInviteDto userInviteDto) {
 
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
         if (userRepository.existsByEmail(userInviteDto.getEmail())) {
             throw new AlreadyExistException("email user already exist");
         }
@@ -191,7 +192,8 @@ public class UserServiceImpl implements UserService {
 
         Map<String, Object> params = new HashMap<>();
         params.put("email",userInviteDto.getEmail());
-        params.put("first_name",userInviteDto.getName());
+        params.put("firstName",userInviteDto.getName());
+        params.put("adminName",authentication.getName());
 
         String content = emailComposer.composeMessageContent(
                 params, "user_invite.vm");
